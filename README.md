@@ -1,6 +1,10 @@
 # Ambient Innovation
 
 
+## Intro
+
+This project was developed in cooperation with Ambient Innovation as part of the Capstone Project at the University of Cologne.
+
 
 ## Getting started
 
