@@ -1,9 +1,9 @@
-# Ambient Innovation
+# Ambient Digital
 
 
 ## Intro
 
-This project was developed in cooperation with Ambient Innovation as part of the Capstone Project at the University of Cologne.
+This project was developed in cooperation with Ambient Digital as part of the Capstone Project at the University of Cologne.
 
 
 ## Getting started
