@@ -1,25 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeItem: {
+        quiz_name: "",
+        pub_date: "",
+        nr_of_rows: ""
+      },
+      quiz: []
+      };
+  }
+
+    async componentDidMount() {
+      try {
+        const res = await fetch('http://localhost:8000/api/quiz/');
+        const quiz = await res.json();
+        this.setState({
+          quiz
+        });
+      } catch (e) {
+        console.log(e);
+    }
+    }
+    renderItems = () => {
+      const newItems = this.state.quiz
+      return newItems.map(item => (
+        <li 
+          key={item.id}
+          className="list-group-item d-flex justify-content-between align-items-center"
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+          <span 
+            className={`quiz-title mr-2`}
+            quiz_name={item.description}
+          >
+            {item.nr_of_rows}
+            {item.quiz_name}
+            {item.pub_date}
+          </span>
+        </li>
+      ));
+    };
 
+    render() {
+      return (
+        <main className="content">
+        <div className="row">
+          <div className="col-md-6 col-sm-10 mx-auto p-0">
+            <div className="card p-3">
+              <ul className="list-group list-group-flush">
+                {this.renderItems()}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+      )
+    }
+  }
+  
 export default App;
