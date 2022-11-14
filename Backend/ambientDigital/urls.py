@@ -17,13 +17,17 @@ from django.contrib import admin
 
 from django.urls import include, path
 from rest_framework import routers
-from quiz import views  
+from quiz import api_views  
 
 router = routers.DefaultRouter()                   
-router.register(r'quiz', views.QuizView, 'quiz')  
+router.register(r'quiz', api_views.QuizView, 'quiz')
+router.register(r'categorie', api_views.CategorieView, 'categorie')
+router.register(r'question', api_views.QuestionView, 'question')
+router.register(r'field', api_views.FieldView, 'field')  
 
 # localhost:8000/api/quiz/
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',  include(router.urls)),
+
 ]
