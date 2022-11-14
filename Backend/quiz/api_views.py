@@ -1,4 +1,4 @@
-from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
+from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, WholeQuizSerializer
 from rest_framework import viewsets      
 from .models import Quiz, Categorie, Question, Field                 
 
@@ -17,3 +17,7 @@ class QuestionView(viewsets.ModelViewSet):
 class FieldView(viewsets.ModelViewSet):  
     serializer_class = FieldSerializer   
     queryset = Field.objects.all()  
+
+class WholeQuizView(viewsets.ModelViewSet):
+    serializer_class=WholeQuizSerializer
+    queryset=Quiz.objects.all()

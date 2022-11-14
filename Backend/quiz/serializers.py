@@ -4,12 +4,12 @@ from .models import Quiz, Categorie, Question, Field
 class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
-        fields = ('quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories')
+        fields = ('id','quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories')
 
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
-        fields = ('categorie_name')
+        fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,4 +19,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 class FieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = Field
-        fields = ('quiz' ,'point', 'question', 'categorie')
+        fields = '__all__'
+
+class WholeQuizSerializer(serializers.ModelSerializer):
+    quiz_field=FieldSerializer(many=True, read_only=True)
+
+    class Meta:
+        model= Quiz
+        fields = '__all__'

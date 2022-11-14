@@ -28,4 +28,4 @@ class Field(models.Model):
     point = models.PositiveIntegerField(default=100, validators=[MaxValueValidator(1000)])
     question = models.ForeignKey(Question, on_delete=models.CASCADE) 
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='quiz_field')
