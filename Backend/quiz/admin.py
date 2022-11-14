@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question, Quiz, Field, Categorie
+from .models import Question, Quiz, Field, Profile
 
 class FieldInline(admin.TabularInline):
     model = Field
@@ -18,3 +18,4 @@ class QuizAdmin(admin.ModelAdmin):
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Question)
+admin.site.register(Profile)
