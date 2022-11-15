@@ -1,0 +1,9 @@
+.my-container{
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color: #f2f2f2;
+}
+
+.big-title{
+    font-size: 1.5rem;
+}
