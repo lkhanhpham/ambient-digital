@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -25,7 +26,8 @@ class Quiz(models.Model):
     pub_date = models.DateTimeField('date published',auto_now_add=True)
     last_edit = models.DateTimeField('date published',auto_now=True)
     nr_of_rows = models.PositiveIntegerField(default=5,validators=[MinValueValidator(1), MaxValueValidator(10)])
-    nr_of_categories = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    nr_of_categories = models.PositiveIntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,)
     def __str__(self):
         return self.quiz_name
 
@@ -40,6 +42,7 @@ class Question(models.Model):
     answer_text=models.CharField(max_length=500)
     pub_date = models.DateTimeField('date published',auto_now_add=True)
     last_edit = models.DateTimeField('date published',auto_now=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,)
     def __str__(self):
         return self.question_text
 
