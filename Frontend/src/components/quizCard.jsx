@@ -14,7 +14,7 @@ const Quiz = ({ title, pub_date, nr_of_categories, onClick }) => {
                 height: '287px'
             }}>
             <div className='d-flex justify-content-center p-3'>
-                <p className='body-text'> {title} </p>
+                <p className='quiz-title'> {title} </p>
             </div>
             <div className='d-flex justify-content-center p-3'>
                 <p className='body-text'> {nr_of_categories} categories</p>
@@ -22,9 +22,16 @@ const Quiz = ({ title, pub_date, nr_of_categories, onClick }) => {
             <div className='d-flex justify-content-center p-3'>
                 <p className='body-text text-muted'> Created: {pub_date}</p>
             </div>
+            <div className='d-flex justify-content-end p-3'>
+                <a className='me-3' href='#'> edit </a>
+                <a className='me-3' href='#'> delete </a>
+            </div>
             <style jsx="true">
                 {`.custom-card{
                     border-radius: 1rem
+                }
+                .quiz-title{
+                    font-weight: 500
                 }
                 .body-text{
                     font-size: 1rem
