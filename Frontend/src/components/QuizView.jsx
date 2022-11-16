@@ -22,8 +22,12 @@ const QuizView = () => {
         }, []
     )
 
-    const deleteItem = async (noteId) => {
+    const deleteItem = async (quizId) => {
         // delete function
+    }
+
+    const editItem = async (quizId) => {
+        // edit function
     }
 
     return (
@@ -32,7 +36,7 @@ const QuizView = () => {
                 <div className="card-header d-flex justify-content-between">
                     <span className="small-title float-left">Quizzes</span>
 
-                    <button className="btn btn-primary btn-sm float-right" > Create quiz</button>
+                    <button className="btn btn-primary btn-sm float-right" > Create quizz</button>
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">
@@ -46,7 +50,8 @@ const QuizView = () => {
                                         title={item.quiz_name}
                                         pub_date={item.pub_date.substring(0,10)}
                                         nr_of_categories={item.nr_of_categories}
-                                        onClick={() => deleteItem(item.id)}
+                                        deleteItem ={() => deleteItem(item.id)}
+                                        editItem ={() => editItem(item.id)}
                                     />
                                 )
                                 )
@@ -57,7 +62,8 @@ const QuizView = () => {
 
                             ) : (
                                 <div>
-                                    <p>No quiz created</p>
+                                    <p>There are no quizzes yet.</p>
+                                    <p>Create a new quiz and start adding questions!</p>
                                 </div>
                             )
 
@@ -66,7 +72,7 @@ const QuizView = () => {
                     </div>
                 </div>
                     <div class="p-3">
-                    <a href="#" className="btn btn-secondary">View all</a>
+                    <a href="#" className="btn btn-secondary">View all &rarr;</a>
                     </div>
                     <style jsx='true'>{`
       

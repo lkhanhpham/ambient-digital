@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-const Quiz = ({ title, pub_date, nr_of_categories, onClick }) => {
+const Quiz = ({ title, pub_date, nr_of_categories, deleteItem, editItem }) => {
 
     return (
         <div className='d-inline-block custom-card m-3'
@@ -22,19 +22,28 @@ const Quiz = ({ title, pub_date, nr_of_categories, onClick }) => {
             <div className='d-flex justify-content-center p-3'>
                 <p className='body-text text-muted'> Created: {pub_date}</p>
             </div>
-            <div className='d-flex justify-content-end p-3'>
-                <a className='me-3' href='#'> edit </a>
-                <a className='me-3' href='#'> delete </a>
+            <div className='d-flex justify-content-center p-3'>
+                <div className='row '>
+                    <button className="col me-3 my-btn " onClick={editItem}>Edit</button>
+                    <button className="col my-btn" onClick={deleteItem}>Delete</button>
+                </div>
             </div>
             <style jsx="true">
                 {`.custom-card{
                     border-radius: 1rem
                 }
-                .quiz-title{
-                    font-weight: 500
+                .my-btn{
+                    border-radius: 0.5rem;
+                    background-color: #e7e7e7;
+                    border-color: #e7e7e7;
+                    color: black;
                 }
-                .body-text{
-                    font-size: 1rem
+                
+                .my-btn:hover {
+                    background: white ;
+                }
+                .quiz-title{
+                    font-weight: 500;
                 }
                   `
                 }
