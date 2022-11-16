@@ -36,7 +36,7 @@ const QuizView = () => {
                 <div className="card-header d-flex justify-content-between">
                     <span className="small-title float-left">Quizzes</span>
 
-                    <button className="btn btn-primary btn-sm float-right" > Create quizz</button>
+                    <button className="btn btn-primary btn-sm float-right" > Create quiz</button>
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">
