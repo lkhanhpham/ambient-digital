@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    image: "${BACKEND_IMAGE}"
+    command: gunicorn ambientDigital.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/src/static
+      - media_volume:/src/media
+    ports:
+      - 8000:8000
+    env_file: .env
+  nginx:
+    image: "${NGINX_IMAGE}"
+    volumes:
+      - static_volume:/src/static
+      - media_volume:/src/media
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+
+volumes:
+  static_volume:
+  media_volume:
+
