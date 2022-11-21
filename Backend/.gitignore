@@ -2,3 +2,5 @@
 
 # dependencies
 /ambientDigital/__pycache__
+
+db.sqlite3
