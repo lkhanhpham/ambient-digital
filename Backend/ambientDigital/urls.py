@@ -27,6 +27,7 @@ router.register(r'field', api_views.FieldView, 'field')  # localhost:8000/api/fi
 router.register(r'wholequiz', api_views.WholeQuizView, 'wholequiz')  # localhost:8000/api/wholequiz/
 
 urlpatterns = [
+    path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/',  include(router.urls)),
 

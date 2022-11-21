@@ -3,3 +3,4 @@
 # dependencies
 /ambientDigital/__pycache__
 /quiz/__pycache__
+db.sqlite3

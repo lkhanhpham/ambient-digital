@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: ambient_backend
+    build: ./Backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./Backend/:/usr/src/Backend/
+    ports:
+      - "8000:8000"
+    env_file: ./Backend/docker-compose.env
+    depends_on:
+      - db
+
+  db:
+    container_name: ambient_database
+    restart: always
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=my-password
+      - POSTGRES_DB=ambient_lcd
+
+    ports:
+      - "5431:5432"
+
+
+  frontend:
+    container_name: ambient_frontend
+    depends_on:
+      - backend
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    command: bash -c "npm install; npm start"
+    env_file: ./Frontend/docker-compose.env
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+      - /app/build
+    ports:
+      - "3000:3000"
+    restart: "no" # If this container stopped it probably had a good reason
+
+volumes:
+  postgres_data:
