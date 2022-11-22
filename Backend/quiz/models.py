@@ -69,7 +69,7 @@ class Question(models.Model):
 
 class FurtherAnswer(models.Model):
     text=models.CharField(max_length=500)
-    question=models.ForeignKey(Question,on_delete=models.CASCADE,)
+    question=models.ForeignKey(Question,on_delete=models.CASCADE,related_name='answer_option')
     is_correct =models.BooleanField(default=False)
 
     def clean(self):
