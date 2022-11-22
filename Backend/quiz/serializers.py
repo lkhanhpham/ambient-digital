@@ -14,7 +14,7 @@ class CategorieSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('question_text','answer_text' ,'pub_date','author')
+        fields = ('question_text','pub_date','author')
 
 class FieldSerializer(serializers.ModelSerializer):
     categorie_name= serializers.ReadOnlyField(source='categorie.categorie_name')
