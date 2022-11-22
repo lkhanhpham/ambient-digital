@@ -36,15 +36,50 @@ class Categorie(models.Model):
     def __str__(self):
         return self.categorie_name
 
+class DefaultAnswer(models.Model):
+    text=models.CharField(max_length=500)
+    is_correct =models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.text
+    
 class Question(models.Model):
+    MULTI = 'MC'
+    SIMPLE = 'SC'
+    ESTIMATE = 'EQ'
     question_text=models.CharField(max_length=500)
-    answer_text=models.CharField(max_length=500)
     pub_date = models.DateTimeField('date published',auto_now_add=True)
     last_edit = models.DateTimeField('date published',auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,)
+    default_answer=models.ForeignKey(DefaultAnswer,on_delete=models.CASCADE)
+    multiplayer= models.BooleanField(default=False)
+    QUESTION_CHOICES = [
+        (MULTI, 'Multiple choice'),
+        (SIMPLE, 'Simple question'),
+        (ESTIMATE, 'Estimation question'),
+    ]
+    question_type = models.CharField(
+        max_length=2,
+        choices=QUESTION_CHOICES,
+        default=SIMPLE,
+    )
+
     def __str__(self):
         return self.question_text
+
+class FurtherAnswer(models.Model):
+    text=models.CharField(max_length=500)
+    question=models.ForeignKey(Question,on_delete=models.CASCADE,)
+    is_correct =models.BooleanField(default=False)
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if not (self.question.question_type == 'MC'):
+            raise ValidationError('not multiple choice')
+
+    def __str__(self):
+        return self.text
+
 
 class Field(models.Model):
     point = models.PositiveIntegerField(default=100, validators=[MaxValueValidator(1000)])
