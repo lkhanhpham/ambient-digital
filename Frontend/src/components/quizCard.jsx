@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 // For each created quiz one quizcard is rendered
 const Quiz = ({ title, pub_date, nr_of_categories, deleteItem, editItem }) => {
 

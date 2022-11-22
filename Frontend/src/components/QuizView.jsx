@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Quiz from './quizCard'
+import { Link } from "react-router-dom";
 //all created quizes are inserted into the quizview
 const QuizView = () => {
     const [quizzes, setQuizzes] = useState([])
@@ -29,6 +30,8 @@ const QuizView = () => {
 
     const editItem = async (quizId) => {
         // edit function
+        //leads uder to the quizEditor page for the chosen quiz
+
     }
 
     return (
@@ -37,7 +40,7 @@ const QuizView = () => {
                 <div className="card-header d-flex justify-content-between">
                     <span className="small-title float-left">Quizzes</span>
 
-                    <button className="btn btn-primary btn-sm float-right" > Create quiz</button>
+                    <Link to = "/QuizCreator" ><button className='btn btn-primary'>  Create quiz</button></Link>
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">
@@ -72,9 +75,6 @@ const QuizView = () => {
 
                     </div>
                 </div>
-                    <div class="p-3">
-                    <a href="#" className="btn btn-secondary">View all &rarr;</a>
-                    </div>
                     <style jsx='true'>{`
       
         .scrollable{
