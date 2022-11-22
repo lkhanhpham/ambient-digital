@@ -9,7 +9,7 @@ class FieldInline(admin.TabularInline):
 class QuizAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        (None,               {'fields': ['quiz_name']}),
+        (None,               {'fields': ['quiz_name','author','nr_of_rows','nr_of_categories']}),
     ]
     inlines = [FieldInline]
     list_display = ('quiz_name',)
