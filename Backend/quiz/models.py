@@ -51,3 +51,8 @@ class Field(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE) 
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='quiz_field')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['quiz', 'question'], name='unique_question_quiz')
+        ]

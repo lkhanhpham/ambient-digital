@@ -4,7 +4,7 @@ from .models import Quiz, Categorie, Question, Field
 class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
-        fields = ('quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories')
+        fields = ('quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author')
 
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +14,7 @@ class CategorieSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('question_text','answer_text' ,'pub_date')
+        fields = ('question_text','answer_text' ,'pub_date','author')
 
 class FieldSerializer(serializers.ModelSerializer):
     categorie_name= serializers.ReadOnlyField(source='categorie.categorie_name')
