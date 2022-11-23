@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import React, { Component } from "react";
 import { Link, useNavigate} from "react-router-dom";
-const InitializeQuiz = () => {
+const QuizForm = () => {
 
     const [quiz, setNewQuizs] = useState(null)
     const [quizName, setQuizName] = useState('')
@@ -122,4 +122,4 @@ const InitializeQuiz = () => {
     );
 }
 
-export default InitializeQuiz;
+export default QuizForm;

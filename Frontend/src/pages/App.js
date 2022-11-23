@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 import Library from "./Library";
-import InitializeQuiz from "./InitializeQuiz";
+import QuizForm from "./QuizForm";
 import NewQuiz from "./NewQuiz";
 import {
   Route,
@@ -19,7 +19,7 @@ class App extends Component {
         <Routes>
         <Route exact path="/" element={<Library/>} />
         <Route exact path="/Library" element={<Library/>} />
-        <Route exact path="/QuizCreator/*" element={<InitializeQuiz/>} />
+        <Route exact path="/QuizCreator/*" element={<QuizForm/>} />
         <Route path="/QuizCreator/NewQuiz" element={<NewQuiz/>} />
         </Routes>
     </div>
