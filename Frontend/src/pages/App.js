@@ -2,7 +2,8 @@ import React, { Component } from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 import Library from "./Library";
-import QuizCreator from "./QuizCreator";
+import InitializeQuiz from "./InitializeQuiz";
+import NewQuiz from "./NewQuiz";
 import {
   Route,
   Routes
@@ -18,7 +19,8 @@ class App extends Component {
         <Routes>
         <Route exact path="/" element={<Library/>} />
         <Route exact path="/Library" element={<Library/>} />
-        <Route exact path="/QuizCreator" element={<QuizCreator/>} />
+        <Route exact path="/QuizCreator/*" element={<InitializeQuiz/>} />
+        <Route path="/QuizCreator/NewQuiz" element={<NewQuiz/>} />
         </Routes>
     </div>
     </>

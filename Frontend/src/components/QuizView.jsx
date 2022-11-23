@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Quiz from './quizCard'
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 //all created quizes are inserted into the quizview
 const QuizView = () => {
     const [quizzes, setQuizzes] = useState([])

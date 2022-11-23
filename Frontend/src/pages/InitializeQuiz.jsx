@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-const QuizCreator = () => {
+import { Link, useNavigate} from "react-router-dom";
+const InitializeQuiz = () => {
 
     const [quiz, setNewQuizs] = useState(null)
     const [quizName, setQuizName] = useState('')
     const [nrOfRows, setNrOfRows] = useState('')
     const [nrOfCols, setNrOfCols] = useState('')
+
+    const navigate = useNavigate();
 
     function update(){
         var select1 = document.getElementById('NrOfRows')
@@ -37,6 +39,10 @@ const QuizCreator = () => {
         setQuizName("")
         setNrOfRows("")
         setNrOfCols("")
+        event.preventDefault()
+    }
+    function createFrontendQuiz(event){
+        navigate("/QuizCreator/Newquiz", {state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}} )
         event.preventDefault()
     }
 
@@ -95,8 +101,11 @@ const QuizCreator = () => {
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    <button className="btn btn-primary"
-                    onClick={createQuiz}>Create</button>
+                    {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
+                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
+                    > */}
+                    <button onClick={createFrontendQuiz} className="btn btn-primary">Create</button>
+                    {/* </Link> */}
                 </div>
                 </div>
             </div>
@@ -113,4 +122,4 @@ const QuizCreator = () => {
     );
 }
 
-export default QuizCreator;
+export default InitializeQuiz;
