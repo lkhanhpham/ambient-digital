@@ -1,6 +1,7 @@
-from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, WholeQuizSerializer, AnswerSerializer
+from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
+from .serializers import WholeQuizSerializer, AnswerSerializer,QuizAuthorSerializer, DefaultAnswerSerializer
 from rest_framework import viewsets      
-from .models import Quiz, Categorie, Question, Field, FurtherAnswer                 
+from .models import Quiz, Categorie, Question, Field, FurtherAnswer, User , DefaultAnswer             
 
 class QuizView(viewsets.ModelViewSet):  
     serializer_class = QuizSerializer   
@@ -22,6 +23,7 @@ class WholeQuizView(viewsets.ModelViewSet):
     serializer_class=WholeQuizSerializer
     queryset=Quiz.objects.all()
 
-class AnswerOptionView(viewsets.ModelViewSet):
-    serializer_class=AnswerSerializer
-    queryset=FurtherAnswer.objects.all()
+class QuizAuthorView(viewsets.ModelViewSet):
+    serializer_class = QuizAuthorSerializer
+    queryset=User.objects.all()
+    lookup_field = 'id'
