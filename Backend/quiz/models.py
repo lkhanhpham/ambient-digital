@@ -64,6 +64,18 @@ class Question(models.Model):
         default=SIMPLE,
     )
 
+    def clean(self):
+        further_answer_list=[]
+        further_answer_list=FurtherAnswer.objects.filter(question=self.id)
+        for answers in further_answer_list:
+            if not(self.question_type=='MC'):
+               from django.core.exceptions import ValidationError 
+               raise ValidationError('not multiple choice')
+
+    def save(self, *args,**kwargs):
+        self.full_clean()
+        return super(Question, self).save(*args,**kwargs)
+
     def __str__(self):
         return self.question_text
 
@@ -76,6 +88,10 @@ class FurtherAnswer(models.Model):
         from django.core.exceptions import ValidationError
         if not (self.question.question_type == 'MC'):
             raise ValidationError('not multiple choice')
+
+    def save(self, *args,**kwargs):
+        self.full_clean()
+        return super(FurtherAnswer, self).save(*args,**kwargs)
 
     def __str__(self):
         return self.text

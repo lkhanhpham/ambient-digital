@@ -69,6 +69,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             id=default_answer_orig.id
         )
         default_answer_instance.text=default_answer.get('text')
+        default_answer_instance.save()
         instance.default_answer=default_answer_instance
 
         answer_option_list = []
