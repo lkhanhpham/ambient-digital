@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import axios from "axios"
-import React, { Component } from "react";
+import React from "react";
 import { Link, useNavigate} from "react-router-dom";
 const QuestionForm = () => {
 
@@ -21,10 +21,10 @@ const QuestionForm = () => {
                 url: "http://localhost:8000/api/question/",
                 data: {
                     question_text: questionText,
-                    question_answer1: questionAnswer,
-                    question_answer2: questionAnswer2,
+                    answer_text: questionAnswer,
+                    /* question_answer2: questionAnswer2,
                     question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4,
+                    question_answer4: questionAnswer4, */
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -44,15 +44,15 @@ const QuestionForm = () => {
             {state: 
                 {
                     question_text: questionText,
-                    question_answer1: questionAnswer,
-                    question_answer2: questionAnswer2,
+                    answer_text: questionAnswer,
+                     question_answer2: questionAnswer2,
                     question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4, 
+                    question_answer4: questionAnswer4,  
                 }
             } 
         )
         event.preventDefault()
-        console.log()
+       
     }
 
 
@@ -70,6 +70,7 @@ const QuestionForm = () => {
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder="New Question"
                                 text={questionText}
+                                onChange={(e) => setQuestionText(e.target.value)}
                                 ></input>
                         </div>
                         <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers  <button className="btn btn-primary">Add</button></label>
@@ -78,6 +79,7 @@ const QuestionForm = () => {
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder="New Answer"
                                 text={questionAnswer}
+                                onChange={(e) => setQuestionAnswer1(e.target.value)}
                                 ></input>
                         </div>
                         <div className="form-group m-3">
@@ -85,6 +87,7 @@ const QuestionForm = () => {
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder="New Answer"
                                 text={questionAnswer2}
+                                onChange={(e) => setQuestionAnswer2(e.target.value)}
                                 ></input>
                         </div>
                         <div className="form-group m-3">
@@ -92,6 +95,7 @@ const QuestionForm = () => {
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder="New Answer"
                                 text={questionAnswer3}
+                                onChange={(e) => setQuestionAnswer3(e.target.value)}
                                 ></input>
                         </div>
                         <div className="form-group m-3">
@@ -99,7 +103,7 @@ const QuestionForm = () => {
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder="New Answer"
                                 text={questionAnswer4}
-                                
+                                onChange={(e) => setQuestionAnswer4(e.target.value)}
                                 ></input>
                         </div>
                     </form>
