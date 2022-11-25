@@ -8,6 +8,7 @@ const QuizForm = () => {
     const [quizName, setQuizName] = useState('')
     const [nrOfRows, setNrOfRows] = useState('')
     const [nrOfCols, setNrOfCols] = useState('')
+    const [author, setAuthor] = useState('')
 
     const navigate = useNavigate();
 
@@ -19,16 +20,21 @@ const QuizForm = () => {
         setNrOfCols(select2.options[select2.selectedIndex].value)
         console.log(select1.options[select2.selectedIndex].value);
     }
-    function createQuiz(event) {
+    function createFrontendQuiz(){
+        createQuiz()
+        navigate("/QuizCreator/Newquiz", {state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}} )
+    }
+    const createQuiz = async (event) => {
          
         axios(
             {
                 method: "POST",
-                url: "http://localhost:8000/api/wholequiz/",
+                url: "http://localhost:8000/api/quiz/",
                 data: {
                     quiz_name: quizName,
                     nr_of_rows: nrOfRows,
                     nr_of_categories: nrOfCols,
+                    author: author,
 
                 },
                 headers: {'Content-Type': 'application/json'}
@@ -39,12 +45,11 @@ const QuizForm = () => {
         setQuizName("")
         setNrOfRows("")
         setNrOfCols("")
+        setAuthor("")
         event.preventDefault()
+        createFrontendQuiz()
     }
-    function createFrontendQuiz(event){
-        navigate("/QuizCreator/Newquiz", {state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}} )
-        event.preventDefault()
-    }
+  
 
 
     return (
@@ -94,6 +99,13 @@ const QuizForm = () => {
                                 <option value={10}>10</option>
                             </select>
                         </div>
+                        <div className="form-group m-3">
+                            <label className="mb-2"  htmlFor="exampleFormControlInput1">Author</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                                placeholder="Author"
+                                text={author}
+                                onChange={(e) => setAuthor(e.target.value)}></input>
+                        </div>
 
                     </form>
 
@@ -104,7 +116,7 @@ const QuizForm = () => {
                     {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
                     state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
                     > */}
-                    <button onClick={createFrontendQuiz} className="btn btn-primary">Create</button>
+                    <button onClick={createQuiz} className="btn btn-primary">Create</button>
                     {/* </Link> */}
                 </div>
                 </div>
