@@ -52,6 +52,37 @@ class QuestionSerializer(serializers.ModelSerializer):
             )
 
         return created_question
+    def update(self, instance, validated_data):
+
+        if validated_data.get('question_answer_option'):
+            FurtherAnswer.objects.filter(question_id=instance.id).delete()
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.question_text = validated_data.get('question_text', instance.question_text)
+        instance.author = validated_data.get('author', instance.author)
+        instance.multiplayer = validated_data.get('multiplayer', instance.multiplayer)
+        instance.question_type = validated_data.get('question_type', instance.question_type)
+
+        default_answer = validated_data.pop('default_answer')
+        default_answer_orig =instance.default_answer 
+        default_answer_instance=DefaultAnswer.objects.get(
+            id=default_answer_orig.id
+        )
+        default_answer_instance.text=default_answer.get('text')
+        instance.default_answer=default_answer_instance
+
+        answer_option_list = []
+        if validated_data.get('question_answer_option'):
+            answer_option_list = validated_data.pop('question_answer_option')
+
+        for answer_option in answer_option_list:
+            FurtherAnswer.objects.create(
+                text=answer_option.get('text'),
+                is_correct=answer_option.get('is_correct', False),
+                question_id=instance.id
+            )
+        instance.save()
+        return instance
 
 class FieldSerializer(serializers.ModelSerializer):
     categorie_name= serializers.ReadOnlyField(source='categorie.categorie_name')
@@ -63,8 +94,8 @@ class FieldSerializer(serializers.ModelSerializer):
         fields = ('point','categorie','categorie_name','quiz','question_id','question')
     
     def create(self, validated_data: dict):
-        question_instance=validated_data.get('question',9999)
-        question_instance = Question.objects.get(id=question_instance.get('id',5555))
+        question_instance = validated_data.get('question')
+        question_instance = Question.objects.get(id=question_instance.get('id'))
 
         created_field = Field.objects.create(
                 point=validated_data.get('point'),
@@ -73,6 +104,17 @@ class FieldSerializer(serializers.ModelSerializer):
                 quiz=validated_data.get('quiz')
             )
         return created_field
+    def update(self, instance, validated_data):
+        instance.point = validated_data.get('point', instance.point)
+        instance.categorie = validated_data.get('categorie', instance.categorie)
+        instance.quiz = validated_data.get('quiz', instance.quiz)
+
+        question_instance=validated_data.get('question')
+        question_instance = Question.objects.get(id=question_instance.get('id'))
+        instance.question=question_instance
+
+        instance.save()
+        return instance
 
 class WholeQuizSerializer(serializers.ModelSerializer):
     field_quiz=FieldSerializer(many=True, read_only=True)
