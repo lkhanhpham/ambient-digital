@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import Library from "./Library";
 import QuizForm from "./QuizForm";
 import NewQuiz from "./NewQuiz";
+import QuestionForm from "./QuestionForm";
+import NewQuestion from "./NewQuestion";
 import {
   Route,
   Routes
@@ -21,6 +23,8 @@ class App extends Component {
         <Route exact path="/Library" element={<Library/>} />
         <Route exact path="/QuizCreator/*" element={<QuizForm/>} />
         <Route path="/QuizCreator/NewQuiz" element={<NewQuiz/>} />
+        <Route exact path="/QuestionCreator/*" element={<QuestionForm/>} />
+        <Route path="/QuestionCreator/NewQuestion" element={<NewQuestion/>} />
         </Routes>
     </div>
     </>
