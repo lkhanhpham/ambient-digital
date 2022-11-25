@@ -1,0 +1,41 @@
+{% extends "rest_framework/base.html" %}
+
+{% block content %}
+    <div style="padding: 1rem 0">
+        <button onclick="toggleExplanations()">Show explanations</button>
+        <ul id="explanationList" style="display: none; padding: 1rem">
+            <li>
+                Die Quiz Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können
+            </li>
+            <li>
+                Die Quiz Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können
+            </li>
+            <li>
+                Die Quiz Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können
+            </li>
+            <li>
+                Die Quiz Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können
+            </li>
+            <li>
+                Die Quiz Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können
+            </li>
+            <li>
+                Die Quiz Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können
+            </li>
+        </ul>
+    </div>
+
+    <script>
+      function toggleExplanations() {
+        const explanationList = document.getElementById('explanationList')
+        explanationList.style.display = explanationList.style.display === 'none' ? 'block' : 'none'
+      }
+    </script>
+    {{ block.super }}
+{% endblock %}
