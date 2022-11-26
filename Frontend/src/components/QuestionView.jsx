@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Question from './QuestionCard'
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 
 const QuestionView = () => {
     const [questions, setQuiz] = useState([])
+    const navigate = useNavigate();
 
     const getAllQuestions = async () => {
         const response = await fetch('http://127.0.0.1:8000/api/question')
@@ -29,7 +30,10 @@ const QuestionView = () => {
     }
 
     const editItem = async (questionId) => {
-        // edit function
+        navigate("/QuestionCreator/EditQuestion", 
+      
+        )
+        questionId.preventDefault()
     }
 
     return (

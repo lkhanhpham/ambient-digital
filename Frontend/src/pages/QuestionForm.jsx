@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from "axios"
 import React from "react";
 import { Link, useNavigate} from "react-router-dom";
+import $ from "jquery";
 const QuestionForm = () => {
 
     const [questionText, setQuestionText] = useState('')
@@ -10,7 +11,8 @@ const QuestionForm = () => {
     const [questionAnswer3, setQuestionAnswer3] = useState('')
     const [questionAnswer4, setQuestionAnswer4] = useState('')
     
-   
+    var x = 1; 
+    const $ = require( "jquery" );
     const navigate = useNavigate();
 
     function createQuestion(event) {
@@ -22,9 +24,10 @@ const QuestionForm = () => {
                 data: {
                     question_text: questionText,
                     answer_text: questionAnswer,
-                    /* question_answer2: questionAnswer2,
+/*                     question_answer2: questionAnswer2,
                     question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4, */
+                    question_answer4: questionAnswer4, */ 
+                    //author: "author",
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -45,16 +48,44 @@ const QuestionForm = () => {
                 {
                     question_text: questionText,
                     answer_text: questionAnswer,
-                     question_answer2: questionAnswer2,
+/*                     question_answer2: questionAnswer2,
                     question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4,  
+                    question_answer4: questionAnswer4,   */
                 }
             } 
         )
         event.preventDefault()
        
     }
-
+    /* $(document).ready(function() {
+        var max_fields = 4;
+        var wrapper = $(".container1");
+        var add_button = $(".add_form_field");
+        var x=1;
+        $(add_button).click(function(e) {
+            e.preventDefault();
+            
+            if (x < max_fields) {
+                x++;
+                if(x===2){
+                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 2</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer2} onChange={(e) => setQuestionAnswer2(e.target.value)} /><a href="#" class="delete">Delete</a></div>'); //add input box
+                }
+                 if(x===3){
+                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 3</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer3}  onChange={(e) => setQuestionAnswer3(e.target.value)} /><a href="#" class="delete">Delete</a></div>'); //add input box
+                }if(x===4){
+                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 4</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer4} onChange={(e) => setQuestionAnswer4(e.target.value)} /><a href="#" class="delete">Delete</a></div>'); //add input box
+                } 
+                } else {
+                alert('You Reached the limits')
+            }
+        });
+    
+        $(wrapper).on("click", ".delete", function(e) {
+            e.preventDefault();
+            $(this).parent('div').remove();
+            x--;
+        })
+    }); */
 
     return (
         <>
@@ -73,38 +104,12 @@ const QuestionForm = () => {
                                 onChange={(e) => setQuestionText(e.target.value)}
                                 ></input>
                         </div>
-                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers  <button className="btn btn-primary">Add</button></label>
-                        <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlSelect1">Choice 1 </label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
-                                placeholder="New Answer"
-                                text={questionAnswer}
-                                onChange={(e) => setQuestionAnswer1(e.target.value)}
-                                ></input>
-                        </div>
-                        <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlSelect1">Choice 2</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
-                                placeholder="New Answer"
-                                text={questionAnswer2}
-                                onChange={(e) => setQuestionAnswer2(e.target.value)}
-                                ></input>
-                        </div>
-                        <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlSelect1">Choice 3</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
-                                placeholder="New Answer"
-                                text={questionAnswer3}
-                                onChange={(e) => setQuestionAnswer3(e.target.value)}
-                                ></input>
-                        </div>
-                        <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlSelect1">Choice 4</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
-                                placeholder="New Answer"
-                                text={questionAnswer4}
-                                onChange={(e) => setQuestionAnswer4(e.target.value)}
-                                ></input>
+                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers <button className="add_form_field btn btn-primary">Add  &nbsp;  </button> </label>
+                        <div class="container1"> 
+                        <label htmlFor="exampleFormControlInput1">Choice 1</label>
+                        <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer} 
+                                onChange={(e) => setQuestionAnswer1(e.target.value)}></input></div>
                         </div>
                     </form>
 
