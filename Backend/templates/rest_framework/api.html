@@ -30,6 +30,14 @@
                 Die <b>authorquiz</b> Schnittstelle ist identisch zur quiz Schnittstelle, mit dem Unterschied, dass abhängig vom Author 
                 und nicht von der Id des Quiz gefiltert wird. Diese Schnittstelle ist nicht für Änderungen an den Quiz gedacht.
             </li>
+            <li>
+                Die <b>registration</b> Schnittstelle wird zur Registrierung neuer Nutzer verwendet. Es ist nicht möglich Nutzer zu
+                bearbeiten, löschen oder ähnliches. Dafür muss weiterhin das Django-Admin-Interface genutzt werden.
+            </li>
+            <li>
+                Die <b>token</b> Schnittstelle ist nicht im Router registriert und muss über api/token angesteuert werden. Diese kann
+                verwendet werden um einen refresh und einen access token zu erhalten
+            </li>
         </ul>
     </div>
 

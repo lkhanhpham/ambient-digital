@@ -17,7 +17,8 @@ from django.contrib import admin
 
 from django.urls import include, path
 from rest_framework import routers
-from quiz import api_views  
+from quiz import api_views 
+from quiz.api_views import MyTokenObtainPairView
 
 router = routers.DefaultRouter()                   
 router.register(r'quiz', api_views.QuizView, 'quiz') # localhost:8000/api/quiz/
@@ -26,10 +27,11 @@ router.register(r'question', api_views.QuestionView, 'question') # localhost:800
 router.register(r'field', api_views.FieldView, 'field')  # localhost:8000/api/field/
 router.register(r'wholequiz', api_views.WholeQuizView, 'wholequiz')  # localhost:8000/api/wholequiz/
 router.register(r'authorquiz',api_views.QuizAuthorView,'authorquiz')
+router.register(r'registration',api_views.RegisterView,'registration')
 
 urlpatterns = [
    # path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/',  include(router.urls)),
-
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair')
 ]
