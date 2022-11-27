@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavItem from "./NavItem";
+import {Link, Router, useNavigate, withRouter, } from "react-router-dom";
 
 //building the navbar for the webiste, which includes links for the home, projekt, statistics, about us and impressum site,
 // to navigate through the webiste  
@@ -7,7 +7,7 @@ import NavItem from "./NavItem";
 
 const MENU_LIST = [
   { text: "Home", href: "/" },
-  {text: "My Library", href: "/"},
+  {text: "My Library", href: "/Library"},
   { text: "Quiz-Room", href: "/" },
   { text: "Profile", href: "/" },
 
@@ -29,21 +29,26 @@ const Navbar = () => {
 
         </div>
         <div className={`${navActive ? "active" : ""} nav__menu-list bg-light center`}>
-          {MENU_LIST.map((menu, idx) => (
-            <div
-              onClick={() => {
-                setActiveIdx(idx);
-                setNavActive(false);
-              }}
-              key={menu.text}
-            >
-              <NavItem active={activeIdx === idx} {...menu} />
-            </div>
-          ))}
+          <Link to ="/">Home</Link>
+          <Link to ="/Library">My Library</Link>
+          <Link to ="/">Quiz-Room</Link>
+          <Link to ="/">Profile</Link>
         </div>
       <style jsx>
       {`
-
+        Link{
+          color: #AAADB6;
+          text-align: right;
+        }
+        .nav__item:hover{
+          font-weight: bold;
+          color:black;
+          cursor: pointer;
+        }
+        .active{
+          font-weight: bold;
+          color:#fca311;
+        }
         a{
             text-decoration: none;
             color: inherit;
@@ -53,14 +58,14 @@ const Navbar = () => {
             z-index: 30;
             top: 0;
           }
-        //   nav{
-        //     display: flex;
-        //     padding-left: 16px;
-        //     justify-content: space-between;
-        //     align-items: center;
-        //     background-color: inherit;
+          nav{
+            display: flex;
+            padding-left: 16px;
+            justify-content: space-between;
+            align-items: center;
+            background-color: inherit;
 
-        //   }
+          }
           .nav__menu-bar{
             width: 40px;
             display: flex;
