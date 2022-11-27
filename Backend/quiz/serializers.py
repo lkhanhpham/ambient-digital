@@ -14,7 +14,7 @@ class CategorieSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('question_text','answer_text' ,'pub_date','author')
+        fields = ('id','question_text','answer_text' ,'pub_date','author')
 
 #This class will lead to merge-conflicts, when merging the feature/backend-Fragen-erweitern branch into a branch containing this class
 #When this happens replace this classs with the FieldSerializer in the other branch, because the model has been updated

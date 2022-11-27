@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Question from './QuestionCard'
 import { Link, useNavigate} from "react-router-dom";
+import axios from "axios"
 
 const QuestionView = () => {
     const [questions, setQuiz] = useState([])
@@ -26,16 +27,30 @@ const QuestionView = () => {
     )
 
     const deleteItem = async (questionId) => {
-        navigate ('/QuestionCreator/questionId')
+        console.log(questionId)
+        
+        axios(
+            {
+                method: "DELETE",
+                url: "http://localhost:8000/api/question/"+questionId+"/",
+                headers: {'Content-Type': 'application/json'}
+            }
+        ).then((response) => {
+            console.log(response.data)
+        })
+        window.location.reload();
 
     }
 
     const editItem = async (questionId) => {
         console.log(questionId)
         navigate("/QuestionCreator/EditQuestion", 
-
+            {state: 
+            {   
+                id: questionId, 
+            }
+        } 
         )
-        questionId.preventDefault()
     }
 
     return (
@@ -57,9 +72,9 @@ const QuestionView = () => {
                                         question_text={item.question_text}
                                         pub_date={item.pub_date.substring(0,10)}
                                         
-                                        deleteItem ={() => deleteItem(item.key)}
+                                        deleteItem ={() => deleteItem(item.id)}
                                         
-                                        editItem ={() => editItem(item.key)} 
+                                        editItem ={() => editItem(item.id)} 
                                     />
                                     
                                 )

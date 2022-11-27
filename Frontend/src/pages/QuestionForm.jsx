@@ -25,6 +25,7 @@ const QuestionForm = () => {
 /*                     question_answer2: questionAnswer2,
                 question_answer3: questionAnswer3,
                 question_answer4: questionAnswer4,   */
+                author: 1,
             }
         } 
         )

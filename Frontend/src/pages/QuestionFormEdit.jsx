@@ -3,12 +3,17 @@ import axios from "axios"
 import { Link, useNavigate} from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {React, useEffect } from 'react';
-import Question from '../components/QuestionCard'
+import Question from '../components/QuestionCard';
 
 
 
-const QuestionFormEdit = (questionid) => {
+const QuestionFormEdit = (id) => {
 
+    const location = useLocation();
+    const idQuestion= location.state.id
+
+    const url= "http://localhost:8000/api/question/"+idQuestion+"/";
+   
     const [questions, setQuiz] = useState([])
     const navigate = useNavigate();
     const [questionText, setQuestionText] = useState('')
@@ -20,12 +25,12 @@ const QuestionFormEdit = (questionid) => {
     
 
 
-    function editFrontendQuestion(event){
+    function editQuestion(event){
         event.preventDefault()
         axios(
             {
                 method: "PUT",
-                url: "http://localhost:8000/api/question/1/",/** Feste Frage wird geholt*/
+                url: url,
                 data: {
                     question_text: questionText,
                     answer_text: questionAnswer,
@@ -52,22 +57,18 @@ const QuestionFormEdit = (questionid) => {
                 }
             } 
         )
-        console.log(questionText, "  ",questionAnswer)
         
     }
     const getAllQuestions = async () => {
-        
-        const response = await fetch('http://127.0.0.1:8000/api/question/1/') /** Feste Frage wird geholt*/
+        const response = await fetch(url) 
         const data = await response.json()
         if (response.ok) {
             console.log(data)
             setQuiz(data)
-            console.log(questionid)
         }
         else {
             console.log(response.status)
             console.log("Failed Network request")
-
         }
     }
     useEffect(
@@ -111,7 +112,7 @@ const QuestionFormEdit = (questionid) => {
                     {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
                     state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
                     > */}
-                    <button  className="btn btn-primary" onClick={editFrontendQuestion}>Create</button>
+                    <button  className="btn btn-primary" onClick={editQuestion}>Create</button>
                     {/* </Link> */}
                     
                 </div>
