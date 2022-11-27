@@ -41,8 +41,30 @@ const QuestionFormEdit = (id ) => {
         )
         
     }
+
+    const getAllQuestions = async () => {
+        const response = await fetch(url) 
+        const data = await response.json()
+        if (response.ok) {
+            console.log(data)
+            setQuiz(data)
+            setQuestionText(data.question_text)
+            setQuestionAnswer1(data.answer_text)
+            setAuthorId(1)
+        }
+        else {
+            console.log(response.status)
+            console.log("Failed Network request")
+        }
+
+    }
+    useEffect(
+        () => {
+            getAllQuestions();
+        }, []
+    )
     function editQuestion(event){
-        event.preventDefault()
+        event.preventDefault()       
         axios(
             {
                 method: "PUT",
@@ -74,25 +96,9 @@ const QuestionFormEdit = (id ) => {
             } 
         )
         
+    
     }
-    const getAllQuestions = async () => {
-        const response = await fetch(url) 
-        const data = await response.json()
-        if (response.ok) {
-            console.log(data)
-            setQuiz(data)
-        }
-        else {
-            console.log(response.status)
-            console.log("Failed Network request")
-        }
-    }
-    useEffect(
-        () => {
-            getAllQuestions();
-        }, []
-    )
-
+    
     return (
         <>
             <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">

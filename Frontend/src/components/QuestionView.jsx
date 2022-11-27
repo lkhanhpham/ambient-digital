@@ -17,7 +17,6 @@ const QuestionView = () => {
         else {
             console.log(response.status)
             console.log("Failed Network request")
-
         }
     }
     useEffect(
