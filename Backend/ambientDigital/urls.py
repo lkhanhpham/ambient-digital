@@ -19,6 +19,7 @@ from django.urls import include, path
 from rest_framework import routers
 from quiz import api_views 
 from quiz.api_views import MyTokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 router = routers.DefaultRouter()                   
 router.register(r'quiz', api_views.QuizView, 'quiz') # localhost:8000/api/quiz/
@@ -33,5 +34,7 @@ urlpatterns = [
    # path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/',  include(router.urls)),
-    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair')
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify')
 ]
