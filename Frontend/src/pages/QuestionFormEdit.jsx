@@ -7,28 +7,20 @@ import Question from '../components/QuestionCard'
 
 
 
-const QuestionForm = () => {
-
-    /* const location = useLocation();
-    const question_text= location.state.question_text
-    const answer_text =location.state.answer_text
-    const question_answer2 =location.state.question_answer2
-    const question_answer3 =location.state.question_answer3
-    const question_answer4 =location.state.question_answer4
-    const [questionText, setQuestionText] = useState('')
-    const [questionAnswer, setQuestionAnswer1] = useState('')
-    const [questionAnswer2, setQuestionAnswer2] = useState('')
-    const [questionAnswer3, setQuestionAnswer3] = useState('')
-    const [questionAnswer4, setQuestionAnswer4] = useState('')
-    const navigate = useNavigate(); */
+const QuestionFormEdit = (questionid) => {
 
     const [questions, setQuiz] = useState([])
     const navigate = useNavigate();
     const [questionText, setQuestionText] = useState('')
     const [questionAnswer, setQuestionAnswer1] = useState('')
+    const [author, setAuthorId] = useState('')
+    const [questionAnswer2, setQuestionAnswer2] = useState('')
+    const [questionAnswer3, setQuestionAnswer3] = useState('')
+    const [questionAnswer4, setQuestionAnswer4] = useState('')
+    
 
 
-    function createFrontendQuestion(event){
+    function editFrontendQuestion(event){
         navigate("/QuestionCreator/NewQuestion", 
             {state: 
                 {
@@ -41,16 +33,40 @@ const QuestionForm = () => {
             } 
         )
         event.preventDefault()
-       
+        axios(
+            {
+                method: "PUT",
+                url: "http://localhost:8000/api/question/3",
+                data: {
+                    question_text: questionText,
+                    answer_text: questionAnswer,
+/*                     question_answer2: questionAnswer2,
+                    question_answer3: questionAnswer3,
+                    question_answer4: questionAnswer4, */ 
+                    author: 1,
+                },
+                headers: {'Content-Type': 'application/json'}
+            }
+        ).then((response) => {
+            console.log(response.data)
+        })
+        setQuestionText("Dummy")
+        setQuestionAnswer1("Dummy")
+        setQuestionAnswer2("Dummy")
+        setQuestionAnswer3("Dummy")
+        setQuestionAnswer4("Dummy")
+        setAuthorId(1)
+        event.preventDefault()
         
-       
     }
     const getAllQuestions = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/question/23') /** Feste Frage wird geholt*/
+        
+        const response = await fetch('http://127.0.0.1:8000/api/question/3') /** Feste Frage wird geholt*/
         const data = await response.json()
         if (response.ok) {
             console.log(data)
             setQuiz(data)
+            console.log(questionid)
         }
         else {
             console.log(response.status)
@@ -66,8 +82,8 @@ const QuestionForm = () => {
 
     return (
         <>
-             <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
-                <h3 className="big-title">New quiz</h3>
+            <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
+                <h3 className="big-title">Edit Question</h3>
             </div>
             <div className="row justify-content-center">
 
@@ -75,7 +91,7 @@ const QuestionForm = () => {
                     <form className="text-light">
                        
                         <div className="form-group m-3">
-                            <label className="mb-2" htmlFor="exampleFormControlSelect1">Question</label>
+                            <label className="mb-2" htmlFor="exampleFormControlSelect1">Question </label>
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder={questions.question_text}
                                 text={questions.question_text}
@@ -99,7 +115,7 @@ const QuestionForm = () => {
                     {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
                     state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
                     > */}
-                    <button  className="btn btn-primary" onClick={createFrontendQuestion}>Create</button>
+                    <button  className="btn btn-primary" onClick={editFrontendQuestion}>Create</button>
                     {/* </Link> */}
                     
                 </div>
@@ -119,4 +135,4 @@ const QuestionForm = () => {
     );
 }
 
-export default QuestionForm;
+export default QuestionFormEdit;

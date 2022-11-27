@@ -4,18 +4,31 @@ import React from "react";
 import { Link, useNavigate} from "react-router-dom";
 import $ from "jquery";
 const QuestionForm = () => {
-
+    var x=1;
     const [questionText, setQuestionText] = useState('')
     const [questionAnswer, setQuestionAnswer1] = useState('')
+    const [author, setAuthorId] = useState('')
     const [questionAnswer2, setQuestionAnswer2] = useState('')
     const [questionAnswer3, setQuestionAnswer3] = useState('')
     const [questionAnswer4, setQuestionAnswer4] = useState('')
     
-    var x = 1; 
+    
     const $ = require( "jquery" );
     const navigate = useNavigate();
 
     function createQuestion(event) {
+        navigate("/QuestionCreator/NewQuestion", 
+        {state: 
+            {
+                question_text: questionText,
+                answer_text: questionAnswer,
+/*                     question_answer2: questionAnswer2,
+                question_answer3: questionAnswer3,
+                question_answer4: questionAnswer4,   */
+            }
+        } 
+        )
+        event.preventDefault()
          
         axios(
             {
@@ -27,7 +40,7 @@ const QuestionForm = () => {
 /*                     question_answer2: questionAnswer2,
                     question_answer3: questionAnswer3,
                     question_answer4: questionAnswer4, */ 
-                    //author: "author",
+                    author: 1,
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -39,7 +52,9 @@ const QuestionForm = () => {
         setQuestionAnswer2("Dummy")
         setQuestionAnswer3("Dummy")
         setQuestionAnswer4("Dummy")
+        setAuthorId(1)
         event.preventDefault()
+
     }
     function createFrontendQuestion(event){
         //Set new attributes and post
@@ -57,35 +72,30 @@ const QuestionForm = () => {
         event.preventDefault()
        
     }
-    /* $(document).ready(function() {
-        var max_fields = 4;
-        var wrapper = $(".container1");
-        var add_button = $(".add_form_field");
-        var x=1;
-        $(add_button).click(function(e) {
-            e.preventDefault();
+    function addField(){
+        $(document).ready(function() {
+            var max_fields = 4;
+            var wrapper = $(".container1");
+            var add_button = $(".add_form_field");
             
-            if (x < max_fields) {
-                x++;
-                if(x===2){
-                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 2</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer2} onChange={(e) => setQuestionAnswer2(e.target.value)} /><a href="#" class="delete">Delete</a></div>'); //add input box
-                }
-                 if(x===3){
-                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 3</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer3}  onChange={(e) => setQuestionAnswer3(e.target.value)} /><a href="#" class="delete">Delete</a></div>'); //add input box
-                }if(x===4){
-                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 4</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer4} onChange={(e) => setQuestionAnswer4(e.target.value)} /><a href="#" class="delete">Delete</a></div>'); //add input box
-                } 
+            $(add_button).click(function(e) {
+                e.preventDefault();
+                
+                if (x < max_fields) {
+                    $(wrapper).append('<div><label className="mb-2"  htmlFor="exampleFormControlInput1">Choice 2</label><input type="text" name="mytext[]" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" /><a href="#" class="delete">Delete</a></div>'); //add input bo
+                    x++
                 } else {
-                alert('You Reached the limits')
-            }
-        });
-    
-        $(wrapper).on("click", ".delete", function(e) {
-            e.preventDefault();
-            $(this).parent('div').remove();
-            x--;
-        })
-    }); */
+                    alert('You Reached the limit of 4')
+                }
+            });
+        
+            $(wrapper).on("click", ".delete", function(e) {
+                e.preventDefault();
+                $(this).parent('div').remove();
+                x--;
+            })
+        }); 
+    }
 
     return (
         <>
@@ -104,12 +114,12 @@ const QuestionForm = () => {
                                 onChange={(e) => setQuestionText(e.target.value)}
                                 ></input>
                         </div>
-                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers <button className="add_form_field btn btn-primary">Add  &nbsp;  </button> </label>
+                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers <button className="add_form_field btn btn-primary">Add</button> </label>
                         <div class="container1"> 
                         <label htmlFor="exampleFormControlInput1">Choice 1</label>
                         <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer} 
-                                onChange={(e) => setQuestionAnswer1(e.target.value)}></input></div>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={questionAnswer} 
+                            onChange={(e) => setQuestionAnswer1(e.target.value)}></input></div>
                         </div>
                     </form>
 
@@ -118,7 +128,7 @@ const QuestionForm = () => {
                     <button className="btn btn-secondary me-2" >Cancel</button>
                     </Link>
                     
-                    <button onClick={createFrontendQuestion} className="btn btn-primary">Create</button>
+                    <button onClick={createQuestion} className="btn btn-primary">Create</button>
                    
                 </div>
                 </div>

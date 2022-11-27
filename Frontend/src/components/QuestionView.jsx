@@ -26,12 +26,14 @@ const QuestionView = () => {
     )
 
     const deleteItem = async (questionId) => {
-        // delete function
+        navigate ('/QuestionCreator/questionId')
+
     }
 
     const editItem = async (questionId) => {
+        console.log(questionId)
         navigate("/QuestionCreator/EditQuestion", 
-      
+
         )
         questionId.preventDefault()
     }
@@ -55,9 +57,11 @@ const QuestionView = () => {
                                         question_text={item.question_text}
                                         pub_date={item.pub_date.substring(0,10)}
                                         
-                                        deleteItem ={() => deleteItem(item.id)}
-                                        editItem ={() => editItem(item.id)} 
+                                        deleteItem ={() => deleteItem(item.key)}
+                                        
+                                        editItem ={() => editItem(item.key)} 
                                     />
+                                    
                                 )
                                 )
                                 }
