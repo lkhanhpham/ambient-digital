@@ -7,7 +7,7 @@ import Question from '../components/QuestionCard';
 
 
 
-const QuestionFormEdit = (id) => {
+const QuestionFormEdit = (id ) => {
 
     const location = useLocation();
     const idQuestion= location.state.id
@@ -23,8 +23,24 @@ const QuestionFormEdit = (id) => {
     const [questionAnswer3, setQuestionAnswer3] = useState('')
     const [questionAnswer4, setQuestionAnswer4] = useState('')
     
+    function deleteItem(event){
+        event.preventDefault()
+        console.log(idQuestion)
+        
+        axios(
+            {
+                method: "DELETE",
+                url: url,
+                headers: {'Content-Type': 'application/json'}
+            }
+        ).then((response) => {
+            console.log(response.data)
+        })
 
-
+        navigate("/Library", 
+        )
+        
+    }
     function editQuestion(event){
         event.preventDefault()
         axios(
@@ -105,15 +121,13 @@ const QuestionFormEdit = (id) => {
                     </form>
 
                 <div className="d-flex justify-content-end p-3">
-                    <button  className="btn btn-secondary me-2">Delete</button> 
+                    <Link to ="/Library">
+                    <button  className="btn btn-secondary me-2" onClick={deleteItem} >Delete</button> 
+                    </Link>
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
-                    <button  className="btn btn-primary" onClick={editQuestion}>Create</button>
-                    {/* </Link> */}
+                    <button  className="btn btn-primary" onClick={editQuestion}>Update</button>
                     
                 </div>
                 </div>
