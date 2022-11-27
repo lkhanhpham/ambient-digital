@@ -21,22 +21,11 @@ const QuestionFormEdit = (questionid) => {
 
 
     function editFrontendQuestion(event){
-        navigate("/QuestionCreator/NewQuestion", 
-            {state: 
-                {
-                    question_text: questionText,
-                    answer_text: questionAnswer,
-/*                     question_answer2: questionAnswer2,
-                    question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4,   */
-                }
-            } 
-        )
         event.preventDefault()
         axios(
             {
                 method: "PUT",
-                url: "http://localhost:8000/api/question/3",
+                url: "http://localhost:8000/api/question/1/",/** Feste Frage wird geholt*/
                 data: {
                     question_text: questionText,
                     answer_text: questionAnswer,
@@ -50,18 +39,25 @@ const QuestionFormEdit = (questionid) => {
         ).then((response) => {
             console.log(response.data)
         })
-        setQuestionText("Dummy")
-        setQuestionAnswer1("Dummy")
-        setQuestionAnswer2("Dummy")
-        setQuestionAnswer3("Dummy")
-        setQuestionAnswer4("Dummy")
         setAuthorId(1)
         event.preventDefault()
+        navigate("/QuestionCreator/NewQuestion", 
+            {state: 
+                {
+                    question_text: questionText,
+                    answer_text: questionAnswer,
+/*                     question_answer2: questionAnswer2,
+                    question_answer3: questionAnswer3,
+                    question_answer4: questionAnswer4,   */
+                }
+            } 
+        )
+        console.log(questionText, "  ",questionAnswer)
         
     }
     const getAllQuestions = async () => {
         
-        const response = await fetch('http://127.0.0.1:8000/api/question/3') /** Feste Frage wird geholt*/
+        const response = await fetch('http://127.0.0.1:8000/api/question/1/') /** Feste Frage wird geholt*/
         const data = await response.json()
         if (response.ok) {
             console.log(data)
@@ -95,14 +91,14 @@ const QuestionFormEdit = (questionid) => {
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder={questions.question_text}
                                 text={questions.question_text}
-                                onChange={(e) => setQuiz(e.target.value)}></input>
+                                onChange={(e) => setQuestionText(e.target.value)}></input>
                         </div>
                         <div className="form-group m-3">
                             <label className="mb-2"  htmlFor="exampleFormControlSelect1">Answer</label>
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 placeholder={questions.answer_text}
                                 text={questions.answer_text}
-                                onChange={(e) => setQuiz(e.target.value)}></input>
+                                onChange={(e) => setQuestionAnswer1(e.target.value)}></input>
                         </div>
 
                     </form>
