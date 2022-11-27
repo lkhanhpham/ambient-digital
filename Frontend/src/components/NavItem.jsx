@@ -22,7 +22,7 @@ const NavItem = ({ text, href, active }) => {
                 {text}
             </a>
 
-            <style jsx>{`
+            <style jsx = "true">{`
       a{
         color: #AAADB6;
         text-align: right;

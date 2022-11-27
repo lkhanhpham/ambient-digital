@@ -41,7 +41,7 @@ const Navbar = () => {
             </div>
           ))}
         </div>
-      <style jsx>
+      <style jsx = "true">
       {`
 
         a{

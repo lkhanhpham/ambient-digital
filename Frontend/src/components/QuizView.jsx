@@ -38,7 +38,7 @@ const QuizView = () => {
         <>
             <div className="card shadow-sm">
                 <div className="card-header d-flex justify-content-between">
-                    <span className="small-title float-left">Quizzes</span>
+                    <span className="small-title float-left align-self-center">Quizzes</span>
 
                     <Link to = "/QuizCreator" ><button className='btn btn-primary'>  Create quiz</button></Link>
                 </div>
@@ -47,7 +47,7 @@ const QuizView = () => {
                         {quizzes.length > 0 ?
                             (<div className='mx-auto align-items-center justify-content-center'>
                             <div className='d-block'>
-                                {quizzes.slice(0, 5).map((item) => (
+                                {quizzes.map((item) => (
 
                                     <Quiz
                                         key={item.id}

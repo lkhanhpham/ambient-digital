@@ -1,8 +1,8 @@
-const Field = ({ points, question, category }) => {
+const Field = ({ points, question, category_id }) => {
     return (
         <>
-            <div className="card">
-                <p>100</p>
+            <div className="card d-flex justify-content-center ">
+                <p className="align-self-center">{points}</p>
             </div>
             <style jsx="true">{
 

@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { Link, useNavigate} from "react-router-dom";
 const QuizForm = () => {
 
-    const [quiz, setNewQuizs] = useState(null)
     const [quizName, setQuizName] = useState('')
     const [nrOfRows, setNrOfRows] = useState('')
     const [nrOfCols, setNrOfCols] = useState('')
@@ -21,8 +20,7 @@ const QuizForm = () => {
         console.log(select1.options[select2.selectedIndex].value);
     }
     function createFrontendQuiz(){
-        createQuiz()
-        navigate("/QuizCreator/Newquiz", {state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}} )
+        navigate("/QuizCreator/Newquiz1", {state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}} )
     }
     const createQuiz = async (event) => {
          
@@ -64,7 +62,7 @@ const QuizForm = () => {
                     <form className="text-light">
                         <div className="form-group m-3">
                             <label className="mb-2"  htmlFor="exampleFormControlInput1">Quiz Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                            <input type="text" className="form-control" id="exampleFormControlInput1"
                                 placeholder="New quiz"
                                 text={quizName}
                                 onChange={(e) => setQuizName(e.target.value)}></input>
@@ -101,7 +99,7 @@ const QuizForm = () => {
                         </div>
                         <div className="form-group m-3">
                             <label className="mb-2"  htmlFor="exampleFormControlInput1">Author</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                            <input type="text" className="form-control" id="exampleFormControlInput1"
                                 placeholder="Author"
                                 text={author}
                                 onChange={(e) => setAuthor(e.target.value)}></input>
@@ -121,7 +119,7 @@ const QuizForm = () => {
                 </div>
                 </div>
             </div>
-            <style jsx='true'>{`
+            <style jsx="true">{`
         label{
           font-size: 18px;
         }
