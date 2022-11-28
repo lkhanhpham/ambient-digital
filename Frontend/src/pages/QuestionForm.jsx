@@ -9,7 +9,7 @@ const QuestionForm = () => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMutliplayer] = useState('false')
+    const [multiplayer, setMultiplayer] = useState('false')
     const [questiontype, setQuestionType] = useState('MC')
     const [questionAnswerOption, setQuestionAnswerOption] = useState('')
     
@@ -105,7 +105,7 @@ const QuestionForm = () => {
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                         <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox" onChange={(e) => setMutliplayer(e.target.value)}/>
+                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)}/>
                     </form>
 
                     <form className="text-light">
