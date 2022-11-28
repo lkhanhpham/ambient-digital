@@ -22,15 +22,15 @@ const NewQuiz2 = () => {
 
     //create an array that stores all the fields in a column
     const fields = []
-    for (let i = 0; i < nr_of_categories; i++) {
+    for (let i = 0; i < nr_of_rows; i++) {
         var points = 100;
         fields.push(<Field key={i} points={100} category={categories[i]} handleShow = {()=>handleShow(i)}/>)
         points += 100;
     }
     //creates an array that stores all the fields in the quiz
     const rows = [];
-    for (let i = 0; i < nr_of_rows; i++) {
-        rows.push(<div key = {i} className="d-flex d-column justify-content-center">{fields}</div>)
+    for (let i = 0; i < nr_of_categories; i++) {
+        rows.push(<div key = {i} className="d-flex flex-column justify-content-center">{fields}</div>)
     }
 
     //create an array that stores the categories' names
