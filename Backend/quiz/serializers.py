@@ -88,6 +88,8 @@ class QuestionSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+#This class will lead to merge-conflicts, when merging the feature/backend-Fragen-erweitern branch into a branch containing this class
+#When this happens replace this classs with the FieldSerializer in the other branch, because the model has been updated
 class FieldSerializer(serializers.ModelSerializer):
     categorie_name= serializers.ReadOnlyField(source='categorie.categorie_name')
     question_id=serializers.IntegerField(source='question.id')
@@ -116,6 +118,25 @@ class FieldSerializer(serializers.ModelSerializer):
         question_instance=validated_data.get('question')
         question_instance = Question.objects.get(id=question_instance.get('id'))
         instance.question=question_instance
+
+        instance.save()
+        return instance
+
+    def create(self, validated_data: dict):    
+
+        created_field = Field.objects.create(
+                point=validated_data.get('point'),
+                categorie=validated_data.get('categorie'),
+                question=validated_data.get('question'),
+                quiz=validated_data.get('quiz')
+            )
+        return created_field
+    
+    def update(self, instance, validated_data):
+        instance.point = validated_data.get('point', instance.point)
+        instance.categorie = validated_data.get('categorie', instance.categorie)
+        instance.quiz = validated_data.get('quiz', instance.quiz)
+        instance.question = validated_data.get('question',instance.question)
 
         instance.save()
         return instance

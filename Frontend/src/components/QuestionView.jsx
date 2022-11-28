@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Quiz from './quizCard'
+import Question from './QuestionCard'
 import { Link} from "react-router-dom";
-//all created quizes are inserted into the quizview
-const QuizView = () => {
-    const [quizzes, setQuizzes] = useState([])
 
-    const getAllQuizzes = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/wholequiz/')
+const QuestionView = () => {
+    const [questions, setQuiz] = useState([])
+
+    const getAllQuestions = async () => {
+        const response = await fetch('http://127.0.0.1:8000/api/question')
         const data = await response.json()
         if (response.ok) {
             console.log(data)
-            setQuizzes(data)
+            setQuiz(data)
         }
         else {
             console.log(response.status)
@@ -20,42 +20,39 @@ const QuizView = () => {
     }
     useEffect(
         () => {
-            getAllQuizzes();
+            getAllQuestions();
         }, []
     )
 
-    const deleteItem = async (quizId) => {
+    const deleteItem = async (questionId) => {
         // delete function
     }
 
-    const editItem = async (quizId) => {
+    const editItem = async (questionId) => {
         // edit function
-        //leads uder to the quizEditor page for the chosen quiz
-
     }
 
     return (
         <>
-            <div className="card shadow-sm">
+            <div className="card shadow-sm top">
                 <div className="card-header d-flex justify-content-between">
-                    <span className="small-title float-left">Quizzes</span>
+                    <span className="small-title float-left">Questions</span>
 
-                    <Link to = "/QuizCreator" ><button className='btn btn-primary'>  Create quiz</button></Link>
+                    <Link to = "/Question" ><button className='btn btn-primary'>  Create question</button></Link>
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">
-                        {quizzes.length > 0 ?
+                        {questions.length > 0 ?
                             (<div className='mx-auto align-items-center justify-content-center'>
                             <div className='d-block'>
-                                {quizzes.slice(0, 5).map((item) => (
+                                {questions.map((item) => (
 
-                                    <Quiz
-                                        key={item.id}
-                                        title={item.quiz_name}
+                                    <Question
+                                        question_text={item.question_text}
                                         pub_date={item.pub_date.substring(0,10)}
-                                        nr_of_categories={item.nr_of_categories}
+                                        
                                         deleteItem ={() => deleteItem(item.id)}
-                                        editItem ={() => editItem(item.id)}
+                                        editItem ={() => editItem(item.id)} 
                                     />
                                 )
                                 )
@@ -64,12 +61,12 @@ const QuizView = () => {
 
                             </div>
 
-                            ) : (
+                             ) : (
                                 <div>
-                                    <p>There are no quizzes yet.</p>
-                                    <p>Create a new quiz and start adding questions!</p>
+                                    <p>There are no questions yet.</p>
+                                    <p>Create a new question or quiz to get startet!</p>
                                 </div>
-                            )
+                            ) 
 
                         }
 
@@ -78,8 +75,12 @@ const QuizView = () => {
                     <style jsx='true'>{`
       
         .scrollable{
+            
             max-height: 50vh;
             overflow-x: auto;
+        }
+        .top{
+            margin-top:20px;
         }
       `}</style>
             </div>
@@ -87,4 +88,4 @@ const QuizView = () => {
     );
 }
 
-export default QuizView;
+export default QuestionView;
