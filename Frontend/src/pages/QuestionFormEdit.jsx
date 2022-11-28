@@ -17,11 +17,11 @@ const QuestionFormEdit = (id ) => {
     const [questions, setQuiz] = useState([])
     const navigate = useNavigate();
     const [questionText, setQuestionText] = useState('')
-    const [questionAnswer, setQuestionAnswer1] = useState('')
+    const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [questionAnswer2, setQuestionAnswer2] = useState('')
-    const [questionAnswer3, setQuestionAnswer3] = useState('')
-    const [questionAnswer4, setQuestionAnswer4] = useState('')
+    const [multiplayer, setMutliplayer] = useState('false')
+    const [questiontype, setQuestionType] = useState('MC')
+    const [questionAnswerOption, setQuestionAnswerOption] = useState('')
     
     function deleteItem(event){
         event.preventDefault()
@@ -49,7 +49,7 @@ const QuestionFormEdit = (id ) => {
             console.log(data)
             setQuiz(data)
             setQuestionText(data.question_text)
-            setQuestionAnswer1(data.answer_text)
+            setDefaultAnswer(data.defaultAnswer)
             setAuthorId(1)
         }
         else {
@@ -71,11 +71,25 @@ const QuestionFormEdit = (id ) => {
                 url: url,
                 data: {
                     question_text: questionText,
-                    answer_text: questionAnswer,
-/*                     question_answer2: questionAnswer2,
-                    question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4, */ 
+                    default_answer: defaultAnswer,
+                    multiplayer: multiplayer,
+                    question_type: questiontype,
                     author: 1,
+                    question_answer_option:[
+                        {
+                            text: "1",
+                            is_correct: false
+                        },
+                        {
+                            text: "2",
+                            is_correct: false
+                        },
+                        {
+                            text: "3",
+                            is_correct: false
+                        }
+
+                    ]
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -88,10 +102,25 @@ const QuestionFormEdit = (id ) => {
             {state: 
                 {
                     question_text: questionText,
-                    answer_text: questionAnswer,
-/*                     question_answer2: questionAnswer2,
-                    question_answer3: questionAnswer3,
-                    question_answer4: questionAnswer4,   */
+                default_answer: defaultAnswer,
+                multiplayer: multiplayer,
+                question_type: questiontype,
+                author: 1,
+                question_answer_option:[
+                    {
+                        text: "1",
+                        is_correct: false
+                    },
+                    {
+                        text: "2",
+                        is_correct: false
+                    },
+                    {
+                        text: "3",
+                        is_correct: false
+                    }
+
+                ]
                 }
             } 
         )
@@ -107,23 +136,62 @@ const QuestionFormEdit = (id ) => {
             <div className="row justify-content-center">
 
                 <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
-                    <form className="text-light">
-                       
-                        <div className="form-group m-3">
-                            <label className="mb-2" htmlFor="exampleFormControlSelect1">Question </label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
-                                placeholder={questions.question_text}
-                                text={questions.question_text}
-                                onChange={(e) => setQuestionText(e.target.value)}></input>
-                        </div>
-                        <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlSelect1">Answer</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
-                                placeholder={questions.answer_text}
-                                text={questions.answer_text}
-                                onChange={(e) => setQuestionAnswer1(e.target.value)}></input>
-                        </div>
+                <form className="text-light" >
+                        <label for="type">Choose a Type: </label>
+                        <select  id="type" name="type">
+                            <option value="SC">Single Choice</option>
+                            <option value="MC">Multiple Choice</option>
+                            <option value="EQ">Estimate Question</option>
+                        </select>
+                        <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
+                        <input type="checkbox"/>
+                    </form>
 
+                    <form className="text-light">
+
+                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Question Text</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1"
+                            placeholder="New Question"
+                            text={questionText}
+                            onChange={(e) => setQuestionText(e.target.value)}
+                            ></input>
+
+                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers </label> 
+
+                        <div className="container1"> 
+                            <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
+                            <div>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={defaultAnswer} 
+                            onChange={(e) => setDefaultAnswer(e.target.value)}></input>
+                            </div>
+                        </div>
+                        <div className="container2"> 
+                            <label htmlFor="exampleFormControlInput2">Choice 2</label>
+                            <div>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} 
+                            onChange={(e) => setQuestionAnswerOption(questionAnswerOption.push(e.target.value))}
+                            ></input>
+                            <input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label>
+                            </div>
+                        </div>
+                        <div className="container3"> 
+                            <label htmlFor="exampleFormControlInput3">Choice 3</label>
+                            <div>
+                            <input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} 
+                            onChange={(e) => setQuestionAnswerOption(e.target.value)}
+                            ></input>
+                            <input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label>
+                            </div>
+                        </div>
+                        <div className="container4"> 
+                            <label htmlFor="exampleFormControlInput4">Choice 4</label>
+                            <div>
+                            <input className="form-control" type="text"  id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} 
+                            onChange={(e) => setQuestionAnswerOption(e.target.value)}
+                            ></input>
+                            <input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label>
+                            </div>
+                        </div>
                     </form>
 
                 <div className="d-flex justify-content-end p-3">

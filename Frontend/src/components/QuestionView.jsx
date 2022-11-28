@@ -11,8 +11,8 @@ const QuestionView = () => {
         const response = await fetch('http://127.0.0.1:8000/api/question')
         const data = await response.json()
         if (response.ok) {
-            console.log(data)
             setQuiz(data)
+            console.log(questions)
         }
         else {
             console.log(response.status)
