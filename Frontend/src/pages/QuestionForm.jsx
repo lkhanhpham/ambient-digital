@@ -22,40 +22,19 @@ const QuestionForm = () => {
         {state: 
             {
                 question_text: questionText,
-                default_answer: defaultAnswer,
+                default_answer:{
+                    text: defaultAnswer,
+                    is_correct: true
+                },
                 multiplayer: multiplayer,
                 question_type: questiontype,
                 author: 1,
-                question_answer_option:[
-                    {
-                        text: "1",
-                        is_correct: false
-                    },
-                    {
-                        text: "2",
-                        is_correct: false
-                    },
-                    {
-                        text: "3",
-                        is_correct: false
-                    }
-
-                ]
+                question_answer_option: questionAnswerOption
+                
             }
         } 
         )
         event.preventDefault()
-        setQuestionText("Dummy")
-        setDefaultAnswer("Dummy")
-        setMutliplayer(false)
-        setQuestionType("SC")
-        setQuestionAnswerOption([{},{},{}])
-        setAuthorId(1)
-        console.log(questionText)
-        console.log(defaultAnswer)
-        console.log(multiplayer+ "Multiplayer")
-        console.log(questiontype + "QuestionType")
-        console.log(questionAnswerOption + "QuestionOptioon")
 
         axios(
             {
@@ -63,25 +42,14 @@ const QuestionForm = () => {
                 url: "http://localhost:8000/api/question/",
                 data: {
                     question_text: questionText,
-                    default_answer: defaultAnswer,
+                    default_answer: {
+                        text: defaultAnswer,
+                        is_correct: true
+                    },
                     multiplayer: multiplayer,
                     question_type: questiontype,
                     author: 1,
-                    question_answer_option:[
-                        {
-                            text: "1",
-                            is_correct: false
-                        },
-                        {
-                            text: "2",
-                            is_correct: false
-                        },
-                        {
-                            text: "3",
-                            is_correct: false
-                        }
-
-                    ]
+                    question_answer_option: questionAnswerOption
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -99,15 +67,14 @@ const QuestionForm = () => {
     }
     function changeQuestion(value){
         console.log(value)
-        
         var mcString ='<div id= "containerID2" className="container2"> <label htmlFor="exampleFormControlInput2">Choice 2</label><div><input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
         var mcString2='<div id= "containerID3" className="container3"> <label htmlFor="exampleFormControlInput3">Choice 3</label><div><input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
         var mcString3='<div id= "containerID4" className="container4"> <label htmlFor="exampleFormControlInput4">Choice 4</label><div><input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
         if(value==="MC"){
             $(".container1").append(mcString+mcString2+mcString3)
-            dropdownV="McId"
+            dropdownV="MC"
         }else{
-            if(dropdownV==="McId"){
+            if(dropdownV==="MC"){
                 const element2 = document.getElementById('containerID2');
                 const element3 = document.getElementById('containerID3');
                 const element4 = document.getElementById('containerID4');
@@ -117,6 +84,8 @@ const QuestionForm = () => {
                 dropdownV=value
             }
         }
+        setQuestionType(value)
+        console.log(questiontype)
     }
 
     return (
@@ -136,7 +105,7 @@ const QuestionForm = () => {
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                         <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox"/>
+                        <input type="checkbox" onChange={(e) => setMutliplayer(e.target.value)}/>
                     </form>
 
                     <form className="text-light">

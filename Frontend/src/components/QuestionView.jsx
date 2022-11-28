@@ -27,18 +27,23 @@ const QuestionView = () => {
 
     const deleteItem = async (questionId) => {
         console.log(questionId)
-        
-        axios(
-            {
-                method: "DELETE",
-                url: "http://localhost:8000/api/question/"+questionId+"/",
-                headers: {'Content-Type': 'application/json'}
-            }
-        ).then((response) => {
-            console.log(response.data)
-        })
-        window.location.reload();
-
+        if (window.confirm('Do you really want to delete this question?'))
+        {
+            axios(
+                {
+                    method: "DELETE",
+                    url: "http://localhost:8000/api/question/"+questionId+"/",
+                    headers: {'Content-Type': 'application/json'}
+                }
+            ).then((response) => {
+                console.log(response.data)
+            })
+            window.location.reload();
+        }
+        else
+        {
+            // They clicked no
+        }
     }
 
     const editItem = async (questionId) => {
