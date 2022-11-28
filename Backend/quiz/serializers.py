@@ -100,8 +100,8 @@ class FieldSerializer(serializers.ModelSerializer):
         fields = ('point','categorie','categorie_name','quiz','question_id','question')
     
     def create(self, validated_data: dict):
-        question_instanc = validated_data.get('question')
-        question_instance = Question.objects.get(id=question_instanc.get('id'))
+        question_instance = validated_data.get('question')
+        question_instance = Question.objects.get(id=question_instance.get('id'))
 
         created_field = Field.objects.create(
                 point=validated_data.get('point'),
@@ -122,24 +122,6 @@ class FieldSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def create(self, validated_data: dict):    
-
-        created_field = Field.objects.create(
-                point=validated_data.get('point'),
-                categorie=validated_data.get('categorie'),
-                question=validated_data.get('question'),
-                quiz=validated_data.get('quiz')
-            )
-        return created_field
-    
-    def update(self, instance, validated_data):
-        instance.point = validated_data.get('point', instance.point)
-        instance.categorie = validated_data.get('categorie', instance.categorie)
-        instance.quiz = validated_data.get('quiz', instance.quiz)
-        instance.question = validated_data.get('question',instance.question)
-
-        instance.save()
-        return instance
 
 class WholeQuizSerializer(serializers.ModelSerializer):
     field_quiz=FieldSerializer(many=True, read_only=True)
