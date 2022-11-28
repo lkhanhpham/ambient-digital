@@ -1,8 +1,8 @@
-const Field = ({ points, question, category_id }) => {
+const Field = (props) => {
     return (
         <>
-            <div className="card d-flex justify-content-center ">
-                <p className="align-self-center">{points}</p>
+            <div onClick={props.handleShow} className="card field d-flex justify-content-center ">
+                <p className="align-self-center">{props.question}</p>
             </div>
             <style jsx="true">{
 
@@ -10,6 +10,11 @@ const Field = ({ points, question, category_id }) => {
     .card{
             width: 160px;
             height: 80px;
+    }
+    .field:hover{
+        background-color: blue;
+        color: white;
+        cursor: pointer;
     }
         `
             }

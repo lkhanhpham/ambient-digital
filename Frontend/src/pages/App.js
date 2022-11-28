@@ -6,7 +6,7 @@ import QuizForm from "./QuizForm";
 import QuestionForm from "./QuestionForm";
 import NewQuestion from "./NewQuestion";
 import NewQuiz1 from "./NewQuiz_step1";
-import NewQuiz2 from "./NewQuiz_step1";
+import NewQuiz2 from "./NewQuiz_step2";
 import {
   Route,
   Routes

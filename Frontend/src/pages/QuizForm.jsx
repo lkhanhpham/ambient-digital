@@ -32,7 +32,7 @@ const QuizForm = () => {
                     quiz_name: quizName,
                     nr_of_rows: nrOfRows,
                     nr_of_categories: nrOfCols,
-                    author: author,
+                    author: 1,
 
                 },
                 headers: {'Content-Type': 'application/json'}
@@ -96,13 +96,6 @@ const QuizForm = () => {
                                 <option value={9}>9</option>
                                 <option value={10}>10</option>
                             </select>
-                        </div>
-                        <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlInput1">Author</label>
-                            <input type="text" className="form-control" id="exampleFormControlInput1"
-                                placeholder="Author"
-                                text={author}
-                                onChange={(e) => setAuthor(e.target.value)}></input>
                         </div>
 
                     </form>
