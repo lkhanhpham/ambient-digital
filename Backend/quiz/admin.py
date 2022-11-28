@@ -1,6 +1,18 @@
 from django.contrib import admin
 
-from .models import Question, Quiz, Field, Profile, Categorie
+from .models import Question, Quiz, Field, Profile, Categorie, FurtherAnswer, DefaultAnswer
+class FurtherAnswerInline(admin.TabularInline):
+    model=FurtherAnswer
+    extra=0
+
+class QuestionAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['question_text','author','multiplayer','question_type','default_answer']}),
+    ]
+    inlines = [FurtherAnswerInline]
+    list_display = ('question_text',)
+    list_filter = ['pub_date']
+    search_fields = ['question_text'] 
 
 class FieldInline(admin.TabularInline):
     model = Field
@@ -17,6 +29,7 @@ class QuizAdmin(admin.ModelAdmin):
     search_fields = ['quiz_name'] 
 
 admin.site.register(Quiz, QuizAdmin)
-admin.site.register(Question)
+admin.site.register(Question,QuestionAdmin)
 admin.site.register(Profile)
 admin.site.register(Categorie)
+admin.site.register(DefaultAnswer)

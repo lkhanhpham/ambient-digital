@@ -1,0 +1,43 @@
+{% extends "rest_framework/base.html" %}
+
+{% block content %}
+    <div style="padding: 1rem 0">
+        <button onclick="toggleExplanations()">Show explanations</button>
+        <ul id="explanationList" style="display: none; padding: 2rem;font-size:18px">
+            <li>
+                Die <b>quiz</b> Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
+                zu können (beinhaltet keine Fragen, Felder, Kategorien oä.).
+            </li>
+            <li>
+                Die <b>categorie</b> Schnittstelle ist dafür gedacht, die Daten der Kategorien abzurufen, diese zu ändern und löschen
+                zu können.
+            </li>
+            <li>
+                Die <b>question</b> Schnittstelle ist dafür gedacht, die Fragen und Antworten abzurufen, diese zu ändern und löschen
+                zu können.
+            </li>
+            <li>
+                Die <b>field</b> Schnittstelle ist dafür gedacht, die Felder, ihre Punkte und die Referenzen auf zugehörige Objekte abzurufen,
+                sowie die Punkte und Referenzen zu ändern und löschen zu können. Fragen oder ähnliches sollten über diese Schnittstelle nicht
+                anpassbar sein.
+            </li>
+            <li>
+                Die <b>wholequiz</b> Schnittstelle ist dafür gedacht, die Daten des gesamten Quiz abzurufen, 
+                welche zum Spielen des Quiz nötig sind (Quiz, Felder, Kategorien, Fragen). Diese Schnittstelle ist nicht für 
+                Anpassungen an den Fragen, Kategorien, etc gedacht.
+            </li>
+            <li>
+                Die <b>authorquiz</b> Schnittstelle ist identisch zur quiz Schnittstelle, mit dem Unterschied, dass abhängig vom Author 
+                und nicht von der Id des Quiz gefiltert wird. Diese Schnittstelle ist nicht für Änderungen an den Quiz gedacht.
+            </li>
+        </ul>
+    </div>
+
+    <script>
+      function toggleExplanations() {
+        const explanationList = document.getElementById('explanationList')
+        explanationList.style.display = explanationList.style.display === 'none' ? 'block' : 'none'
+      }
+    </script>
+    {{ block.super }}
+{% endblock %}
