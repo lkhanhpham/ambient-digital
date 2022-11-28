@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Quiz, Categorie, Question, Field, FurtherAnswer, User, DefaultAnswer
+from .models import Quiz, Categorie, Question, Field, FurtherAnswer, MyUser, DefaultAnswer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
@@ -100,8 +100,8 @@ class FieldSerializer(serializers.ModelSerializer):
         fields = ('point','categorie','categorie_name','quiz','question_id','question')
     
     def create(self, validated_data: dict):
-        question_instance = validated_data.get('question')
-        question_instance = Question.objects.get(id=question_instance.get('id'))
+        question_instanc = validated_data.get('question')
+        question_instance = Question.objects.get(id=question_instanc.get('id'))
 
         created_field = Field.objects.create(
                 point=validated_data.get('point'),
@@ -156,7 +156,7 @@ class AuthorAssociatedSerializer(serializers.ModelSerializer):
 class QuizAuthorSerializer(serializers.ModelSerializer):
     quiz_author=AuthorAssociatedSerializer(read_only=True, many=True)
     class Meta:
-        model = User
+        model = MyUser
         fields =  ('id','username','quiz_author')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -172,10 +172,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
     email = serializers.EmailField(
-            required=True,validators=[UniqueValidator(queryset=User.objects.all())])
+            required=True,validators=[UniqueValidator(queryset=MyUser.objects.all())])
 
     class Meta:
-        model = User
+        model = MyUser
         fields = ('username', 'password', 'password2','email')
 
     def validate(self, attrs):
@@ -185,7 +185,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = MyUser.objects.create(
             username=validated_data['username'],
             email=validated_data['email'])
             

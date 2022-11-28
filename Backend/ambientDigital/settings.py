@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     
 ]
 
+AUTH_USER_MODEL = 'quiz.MyUser'
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',

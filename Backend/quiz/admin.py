@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question, Quiz, Field, Profile, Categorie, FurtherAnswer, DefaultAnswer
+from .models import Question, Quiz, Field, Categorie, FurtherAnswer, DefaultAnswer, MyUser
 class FurtherAnswerInline(admin.TabularInline):
     model=FurtherAnswer
     extra=0
@@ -30,6 +30,6 @@ class QuizAdmin(admin.ModelAdmin):
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Question,QuestionAdmin)
-admin.site.register(Profile)
 admin.site.register(Categorie)
 admin.site.register(DefaultAnswer)
+admin.site.register(MyUser)
