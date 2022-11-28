@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Quiz from './quizCard'
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
+import axios from "axios"
 //all created quizes are inserted into the quizview
 const QuizView = () => {
     const [quizzes, setQuizzes] = useState([])
+    const navigate = useNavigate()
 
     const getAllQuizzes = async () => {
         const response = await fetch('http://127.0.0.1:8000/api/wholequiz/')
@@ -26,11 +28,31 @@ const QuizView = () => {
 
     const deleteItem = async (quizId) => {
         // delete function
+        console.log(quizId)
+        
+        axios(
+            {
+                method: "DELETE",
+                url: "http://localhost:8000/api/quiz/"+quizId+"/",
+                headers: {'Content-Type': 'application/json'}
+            }
+        ).then((response) => {
+            console.log(response.data)
+        })
+        window.location.reload();
     }
 
     const editItem = async (quizId) => {
         // edit function
         //leads uder to the quizEditor page for the chosen quiz
+        console.log(quizId)
+        navigate("/QuizCreator/EditQuiz", 
+            {state: 
+            {   
+                id: quizId, 
+            }
+        } 
+        )
 
     }
 
