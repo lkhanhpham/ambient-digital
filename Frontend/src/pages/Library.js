@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import QuizView from "../components/QuizView";
+import QuestionView from "../components/QuestionView";
 //the Quizview with the quizcards are inserted into a container
 class Library extends Component {
     render() {
@@ -11,6 +12,9 @@ class Library extends Component {
                 <div>
                 <QuizView />     
                 </div> 
+                <div>
+                    <QuestionView />
+                </div>
             </div>
 
         );
