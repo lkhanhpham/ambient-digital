@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useNavigate} from "react-router-dom";
 import $ from "jquery";
 
-var dropdownV="x";
+var dropdownV="MC";
 
 const QuestionForm = () => {
     
@@ -12,11 +12,14 @@ const QuestionForm = () => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('')
+    const [multiplayer, setMultiplayer] = useState('false')
     const [questionType, setQuestionType] = useState('')
     const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
     const [questionAnswerOption2, setQuestionAnswerOption2] = useState('')
     const [questionAnswerOption3, setQuestionAnswerOption3] = useState('')
+    const [questionAnswerOption1b, setQuestionAnswerOption1b] = useState('false')
+    const [questionAnswerOption2b, setQuestionAnswerOption2b] = useState('false')
+    const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState('false')
     
     
     const $ = require( "jquery" );
@@ -37,15 +40,15 @@ const QuestionForm = () => {
                 question_answer_option: 
                 [{
                     text: questionAnswerOption1,
-                    is_correct: false
+                    is_correct: questionAnswerOption1b
                 },
                 {
                     text: questionAnswerOption2,
-                    is_correct: false
+                    is_correct: questionAnswerOption1b
                 },
                 {
                     text: questionAnswerOption3,
-                    is_correct: false
+                    is_correct: questionAnswerOption1b
                 }]
                 
             }
@@ -68,16 +71,16 @@ const QuestionForm = () => {
                         is_correct: true
                     },
                     question_answer_option: [{
-                        text: "questionAnswerOption1",
-                        is_correct: false
+                        text: questionAnswerOption1,
+                        is_correct: questionAnswerOption1b
                     },
                     {
-                        text: "questionAnswerOption2",
-                        is_correct: false
+                        text: questionAnswerOption2,
+                        is_correct: questionAnswerOption2b
                     },
                     {
-                        text: "questionAnswerOption3",
-                        is_correct: false
+                        text: questionAnswerOption3,
+                        is_correct: questionAnswerOption3b
                     }]
                 
                 },
@@ -91,10 +94,13 @@ const QuestionForm = () => {
         console.log(questionText)
         console.log(defaultAnswer)
         console.log(multiplayer+ "Multiplayer")
-        console.log(questionType + "QuestionType")
+        console.log(dropdownV + "QuestionType")
         console.log(questionAnswerOption1 + "QuestionOption")
         console.log(questionAnswerOption2 + "QuestionOption2")
         console.log(questionAnswerOption3 + "QuestionOption3")
+        console.log(questionAnswerOption1b + "QuestionOption")
+        console.log(questionAnswerOption2b + "QuestionOption2")
+        console.log(questionAnswerOption3b + "QuestionOption3")
     }
 
     function changeQuestion(value){
@@ -119,6 +125,48 @@ const QuestionForm = () => {
         }
         dropdownV=value
     }
+
+    $('#checkbox-value1').text($('#checkbox1').val());
+
+    $("#checkbox1").on('change', function() {
+      if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+        setQuestionAnswerOption1b(true);
+      } else {
+        $(this).attr('value', 'false');
+        setQuestionAnswerOption1b(false);
+      }
+      
+      $('#checkbox-value1').text($('#checkbox1').val());
+    });
+
+    $('#checkbox-value2').text($('#checkbox2').val());
+
+    $("#checkbox2").on('change', function() {
+      if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+        setQuestionAnswerOption2b(true);
+      } else {
+        $(this).attr('value', 'false');
+        setQuestionAnswerOption2b(false);
+      }
+      
+      $('#checkbox-value2').text($('#checkbox2').val());
+    });
+
+    $('#checkbox-value3').text($('#checkbox3').val());
+
+    $("#checkbox3").on('change', function() {
+      if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+        setQuestionAnswerOption3b(true);
+      } else {
+        $(this).attr('value', 'false');
+        setQuestionAnswerOption3b(false);
+      }
+      
+      $('#checkbox-value3').text($('#checkbox3').val());
+    });
 
     return (
         <>
@@ -148,7 +196,6 @@ const QuestionForm = () => {
                             text={questionText}
                             onChange={(e) => setQuestionText(e.target.value)}
                             ></input>
-
                         <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers </label> 
 
                         <div className="container1"> 
@@ -159,18 +206,22 @@ const QuestionForm = () => {
                             </div>
                         </div>
                         <div id= "containerID2" className="container2"> 
-                            <label htmlFor="exampleFormControlInput2">Choice 2</label><div>
-                            <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} 
-                            onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input><input className="right" type="checkbox"S></input> 
-                        <label htmlFor="exampleFormControlInput1">True</label></div></div>
+                            <label htmlFor="exampleFormControlInput2">Choice 2</label>
+                            <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} 
+                                onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input>
+                                <input className="right" id="checkbox1" type="checkbox" value="false"></input> 
+                                <label id="checkbox-value1"></label>
+                            </div>
+                        </div>
                         <div id= "containerID3" className="container3"> 
                             <label htmlFor="exampleFormControlInput3">Choice 3</label>
                             <div>
                                 <input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} 
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
-                                <input className="right" type="checkbox" ></input> 
-                                <label htmlFor="exampleFormControlInput1">True</label>
+                                <input className="right" id="checkbox2" type="checkbox" value="false"></input> 
+                                <label id="checkbox-value2"></label>
                             </div>
                         </div>
                         <div id= "containerID4" className="container4"> 
@@ -179,8 +230,8 @@ const QuestionForm = () => {
                                 <input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} 
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
-                                <input className="right" type="checkbox" ></input> 
-                                <label htmlFor="exampleFormControlInput1">True</label>
+                                <input className="right" id="checkbox3" type="checkbox" value="false"></input> 
+                                <label id="checkbox-value3"></label>
                             </div>
                         </div>
                     </form>
