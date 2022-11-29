@@ -3,6 +3,9 @@ const Field = (props) => {
         <>
             <div onClick={props.handleShow} className="card field d-flex justify-content-center ">
                 <p className="align-self-center">{props.question}</p>
+                <span>cat:{props.category}</span>
+                <span>point:{props.points}</span>
+                <span>position:{props.row},{props.col}</span>
             </div>
             <style jsx="true">{
 

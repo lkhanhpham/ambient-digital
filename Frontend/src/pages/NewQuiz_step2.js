@@ -10,6 +10,7 @@ const NewQuiz2 = () => {
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
     const categories = location.state.categories
+    const catIds = location.state.catIds
     const [show, setShow] = useState(false);
     const [id, setId] = useState(0)
     //close the Category form
@@ -20,16 +21,17 @@ const NewQuiz2 = () => {
         setId(keyProp)
     }
 
-    //create an array that stores all the fields in a column
-    const fields = []
-    for (let i = 0; i < nr_of_rows; i++) {
-        var points = 100;
-        fields.push(<Field key={i} points={100} category={categories[i]} handleShow = {()=>handleShow(i)}/>)
-        points += 100;
-    }
+    
     //creates an array that stores all the fields in the quiz
     const rows = [];
     for (let i = 0; i < nr_of_categories; i++) {
+        var points = 100;
+        //create an array that stores all the fields in a column
+        const fields = []
+        for (let k = 0; k < nr_of_rows; k++) {
+            fields.push(<Field key={k} points={points} category={catIds[i]} row = {k} col = {i} handleShow = {()=>handleShow(k,i)}/>)
+            points += 100;
+        }
         rows.push(<div key = {i} className="d-flex flex-column justify-content-center">{fields}</div>)
     }
 

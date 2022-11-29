@@ -10,9 +10,25 @@ const NewQuiz1 = () => {
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
 
-    const [cat_name] = useState([])
+    // const getQuizId = async () => {
+    //     const response = await fetch('http://127.0.0.1:8000/api/quiz/')
+    //     const data = await response.json()
+    //     if (response.ok) {
+    //         console.log(data)
+    //         setQuiz(data)
+    //     }
+    //     else {
+    //         console.log(response.status)
+    //         console.log("Failed Network request")
 
-    const [chosen] = useState([false])
+    //     }
+    // }
+
+    const quizId = location.state.quizId
+    const [cat_name] = useState([])
+    const [catIds] = useState([])
+
+    const [chosen] = useState(Array(nr_of_categories).fill(false))
 
     const [cats, setCats] = useState([])
 
@@ -70,6 +86,8 @@ const NewQuiz1 = () => {
         var select1 = document.getElementById('categories')
         cat_name[id] = (select1.options[select1.selectedIndex].text)
         chosen[id] = true
+        catIds[id] = select1.options[select1.selectedIndex].value
+        checkValid(chosen)
         handleClose()
     }
 
@@ -79,8 +97,12 @@ const NewQuiz1 = () => {
 
     //check if user has chosen all categories
     const checkValid = (chosen) => {
-        setValid(chosen.every(element => element === true))
-        console.log("valid",valid)
+        // console.log(chosen)
+        // console.log("cats",nr_of_categories,"length", chosen.length)
+        if(chosen.length == nr_of_categories){
+            setValid(chosen.every((element) => element === true))
+        }
+        console.log("valid", valid)
     }
     const nextStep = () => {
         checkValid(chosen)
@@ -88,7 +110,8 @@ const NewQuiz1 = () => {
             navigate("/QuizCreator/Newquiz2", {
                 state: {
                     quiz_name: quiz_name, nr_of_rows: nr_of_rows,
-                    nr_of_categories: nr_of_categories, categories: cat_name
+                    nr_of_categories: nr_of_categories, categories: cat_name,
+                    quizId: quizId, catIds: catIds
                 }
             },)
         } else {
@@ -102,14 +125,14 @@ const NewQuiz1 = () => {
     useEffect(
         () => {
             getAllCats();
-        }, []
+        }, [valid]
     )
 
 
     return (
         <div className="container">
             <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
-                <h3 className="small-title"> {quiz_name} </h3>
+                <h3 className="small-title">{quiz_name} </h3>
             </div>
             <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
                 <h3 className="body-text">1. Choose your categories</h3>
@@ -136,7 +159,7 @@ const NewQuiz1 = () => {
                     <form >
                         <select className="form-control" id="categories" onChange={update}>
                             {cats.map((item) => (
-                                <option key={item.id}>
+                                <option key={item.id} value = {item.id}>
                                     {item.categorie_name}
                                 </option>
                             ))}
