@@ -63,7 +63,7 @@ const QuestionView = () => {
                 <div className="card-header d-flex justify-content-between">
                     <span className="small-title float-left">Questions</span>
 
-                    <Link to = "/QuestionCreator" ><button className='btn btn-primary'>  Create question</button></Link>
+                    <Link to = "/QuestionCreator/SC" ><button className='btn btn-primary'>  Create question</button></Link>
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">

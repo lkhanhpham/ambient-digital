@@ -12,18 +12,17 @@ const QuestionForm = () => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('false')
+    const [multiplayer, setMultiplayer] = useState('')
     const [questionType, setQuestionType] = useState('')
-
+    const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
+    const [questionAnswerOption2, setQuestionAnswerOption2] = useState('')
+    const [questionAnswerOption3, setQuestionAnswerOption3] = useState('')
     
     
     const $ = require( "jquery" );
     const navigate = useNavigate();
 
-    function createQuestionSC(event) {
-        if(dropdownV==="x"){
-            dropdownV="SC"
-        }
+    function createQuestioMC(event) {
         navigate("/QuestionCreator/NewQuestion", 
         {state: 
             {
@@ -34,7 +33,21 @@ const QuestionForm = () => {
                 },
                 multiplayer: multiplayer,
                 question_type: dropdownV,
-                author: 1
+                author: 1,
+                question_answer_option: 
+                [{
+                    text: questionAnswerOption1,
+                    is_correct: false
+                },
+                {
+                    text: questionAnswerOption2,
+                    is_correct: false
+                },
+                {
+                    text: questionAnswerOption3,
+                    is_correct: false
+                }]
+                
             }
         } 
         )
@@ -48,12 +61,25 @@ const QuestionForm = () => {
                 data: {
                     question_text: questionText,
                     author: 1,
-                    multiplayer: multiplayer,
+                    multiplayer: false,
                     question_type: dropdownV,
                     default_answer: {
                         text: defaultAnswer,
                         is_correct: true
-                    }                
+                    },
+                    question_answer_option: [{
+                        text: "questionAnswerOption1",
+                        is_correct: false
+                    },
+                    {
+                        text: "questionAnswerOption2",
+                        is_correct: false
+                    },
+                    {
+                        text: "questionAnswerOption3",
+                        is_correct: false
+                    }]
+                
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -62,11 +88,21 @@ const QuestionForm = () => {
         })
 
         event.preventDefault()
-
+        console.log(questionText)
+        console.log(defaultAnswer)
+        console.log(multiplayer+ "Multiplayer")
+        console.log(questionType + "QuestionType")
+        console.log(questionAnswerOption1 + "QuestionOption")
+        console.log(questionAnswerOption2 + "QuestionOption2")
+        console.log(questionAnswerOption3 + "QuestionOption3")
     }
+
     function changeQuestion(value){
-        if(value==="MC"){
-            navigate("/QuestionCreator/MC", 
+        console.log(value)
+        
+        if(value==="SC"||value==="EQ"){
+
+            navigate("/QuestionCreator/SC", 
                 {state: 
                     {
                         question_text: questionText,
@@ -79,11 +115,9 @@ const QuestionForm = () => {
                         author: 1
                     }
                 } 
-            )
-            
+            ) 
         }
         dropdownV=value
-       
     }
 
     return (
@@ -98,8 +132,8 @@ const QuestionForm = () => {
                     <form className="text-light" >
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
-                            <option id= "ScId"value="SC">Single Choice</option>
                             <option id="McId" value="MC">Multiple Choice</option>
+                            <option id= "ScId"value="SC">Single Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                         <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
@@ -124,6 +158,31 @@ const QuestionForm = () => {
                             onChange={(e) => setDefaultAnswer(e.target.value)}></input>
                             </div>
                         </div>
+                        <div id= "containerID2" className="container2"> 
+                            <label htmlFor="exampleFormControlInput2">Choice 2</label><div>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} 
+                            onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input><input className="right" type="checkbox"S></input> 
+                        <label htmlFor="exampleFormControlInput1">True</label></div></div>
+                        <div id= "containerID3" className="container3"> 
+                            <label htmlFor="exampleFormControlInput3">Choice 3</label>
+                            <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} 
+                                onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
+                                </input>
+                                <input className="right" type="checkbox" ></input> 
+                                <label htmlFor="exampleFormControlInput1">True</label>
+                            </div>
+                        </div>
+                        <div id= "containerID4" className="container4"> 
+                            <label htmlFor="exampleFormControlInput4">Choice 4</label>
+                            <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} 
+                                onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
+                                </input>
+                                <input className="right" type="checkbox" ></input> 
+                                <label htmlFor="exampleFormControlInput1">True</label>
+                            </div>
+                        </div>
                     </form>
 
                 <div className="d-flex justify-content-end p-3">
@@ -131,7 +190,7 @@ const QuestionForm = () => {
                     <button className="btn btn-secondary me-2" >Cancel</button>
                     </Link>
                     
-                    <button onClick={createQuestionSC} className="btn btn-primary">Create</button>
+                    <button onClick={createQuestioMC} className="btn btn-primary">Create</button>
                    
                 </div>
                 </div>
