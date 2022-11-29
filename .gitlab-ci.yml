@@ -63,5 +63,5 @@ test:
   artifacts:
         when: always
         paths:
+            - test-report/
             - playwright-report/
-            - test-results/
