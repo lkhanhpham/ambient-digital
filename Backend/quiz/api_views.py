@@ -1,7 +1,7 @@
-from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
+from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, UserSerializer, TeamSerializer
 from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer, GuestSerializer
 from rest_framework import viewsets, mixins      
-from .models import Quiz, Categorie, Question, Field, MyUser
+from .models import Quiz, Categorie, Question, Field, MyUser, Team
 from rest_framework.permissions import AllowAny    
 from rest_framework_simplejwt.views import TokenObtainPairView        
 
@@ -43,3 +43,12 @@ class RegisterGuestView(viewsets.GenericViewSet,mixins.CreateModelMixin):
     serializer_class = GuestSerializer
     queryset = MyUser.objects.all()
     permission_classes = (AllowAny,)
+
+class UserObtainView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
+    serializer_class=UserSerializer
+    queryset=MyUser.objects.all()
+    permission_classes = (AllowAny,)
+
+class TeamView(viewsets.ModelViewSet):
+    serializer_class=TeamSerializer
+    queryset=Team.objects.all()

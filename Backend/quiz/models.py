@@ -12,16 +12,36 @@ class MyUser(AbstractUser):
     def __str__(self):
         return self.username
 
-
 class Quiz(models.Model):
     quiz_name = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published',auto_now_add=True)
-    last_edit = models.DateTimeField('date published',auto_now=True)
+    last_edit = models.DateTimeField('date edited',auto_now=True)
     nr_of_rows = models.PositiveIntegerField(default=5,validators=[MinValueValidator(1), MaxValueValidator(10)])
     nr_of_categories = models.PositiveIntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
     author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='quiz_author')
+
     def __str__(self):
         return self.quiz_name
+
+class Team(models.Model):
+    team_name = models.CharField(max_length=200)
+    team_points = models.PositiveIntegerField(default=0)
+    pub_date = models.DateTimeField('date published',auto_now_add=True)
+    last_edit = models.DateTimeField('date edited',auto_now=True)
+    quiz=models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='team_quiz')
+
+    def __str__(self):
+        return self.team_name
+
+class TeamMember(models.Model):
+    team=models.ForeignKey(Team, on_delete=models.CASCADE,related_name='teamMember_team')
+    member=models.ForeignKey(MyUser, on_delete=models.CASCADE,related_name='teamMember_member')
+    quiz=models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='teamMember_quiz')
+    class Meta:
+            constraints = [
+                models.UniqueConstraint(fields=['quiz', 'member'], name='user_once_per_quiz'),
+                models.UniqueConstraint(fields=['team', 'member'], name='member_once_per_team')
+            ]
 
 class Categorie(models.Model):
     categorie_name=models.CharField(max_length=200)
@@ -41,7 +61,7 @@ class Question(models.Model):
     ESTIMATE = 'EQ'
     question_text=models.CharField(max_length=500)
     pub_date = models.DateTimeField('date published',auto_now_add=True)
-    last_edit = models.DateTimeField('date published',auto_now=True)
+    last_edit = models.DateTimeField('date edited',auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='question_author')
     default_answer=models.ForeignKey(DefaultAnswer,on_delete=models.CASCADE,related_name='question_default_answer')
     multiplayer= models.BooleanField(default=False)

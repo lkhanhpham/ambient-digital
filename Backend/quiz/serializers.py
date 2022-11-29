@@ -1,13 +1,19 @@
 from rest_framework import serializers
-from .models import Quiz, Categorie, Question, Field, FurtherAnswer, MyUser, DefaultAnswer
+from .models import Quiz, Categorie, Question, Field, FurtherAnswer, MyUser, DefaultAnswer, Team, TeamMember
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 
+class QuizTeamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Team
+        fields=('id','team_name','team_points')
+
 class QuizSerializer(serializers.ModelSerializer):
+    team_quiz=QuizTeamsSerializer(many=True,read_only=True)
     class Meta:
         model = Quiz
-        fields = ('quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author')
+        fields = ('id','quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author','team_quiz',)
 
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -183,6 +189,7 @@ class GuestSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ('username','is_guest')
+        read_only_fields=('is_guest',)
 
     def create(self, validated_data):
         user = MyUser.objects.create(
@@ -193,3 +200,60 @@ class GuestSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MyUser
+        fields=('id','username','is_guest','is_superuser','points','email')
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TeamMember
+        fields=('team','member','quiz')
+        read_only_fields=('team','quiz')
+
+class TeamSerializer(serializers.ModelSerializer):
+    teamMember_team= TeamMemberSerializer(many=True, required=False)
+
+    class Meta:
+        model=Team
+        fields=('id','team_name','team_points','quiz','teamMember_team')
+
+    def create(self, validated_data: dict):
+        team_member_list = []
+        if validated_data.get('teamMember_team'):
+            team_member_list = validated_data.pop('teamMember_team')
+
+        created_team = super().create(validated_data)
+
+        for teammember in team_member_list:
+            TeamMember.objects.create(
+                quiz=created_team.quiz,
+                member=teammember.get('member'),
+                team=created_team
+            )
+
+        return created_team
+
+    def update(self, instance, validated_data):
+
+        TeamMember.objects.filter(team=instance.id).delete()
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.quiz= validated_data.get('quiz',instance.quiz)
+        instance.team_name = validated_data.get('team_name', instance.team_name)
+        instance.team_points = validated_data.get('team_points', instance.team_points)
+
+        team_member_list = []
+        if validated_data.get('teamMember_team'):
+            team_member_list = validated_data.pop('teamMember_team')
+
+        for teammember in team_member_list:
+            TeamMember.objects.create(
+                quiz=instance.quiz,
+                member=teammember.get('member'),
+                team=instance
+            )
+
+        instance.save()
+        return instance
