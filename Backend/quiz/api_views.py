@@ -1,5 +1,5 @@
 from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
-from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer
+from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer, GuestSerializer
 from rest_framework import viewsets, mixins      
 from .models import Quiz, Categorie, Question, Field, MyUser
 from rest_framework.permissions import AllowAny    
@@ -37,3 +37,9 @@ class RegisterView(viewsets.GenericViewSet,mixins.CreateModelMixin):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class RegisterGuestView(viewsets.GenericViewSet,mixins.CreateModelMixin):
+    serializer_class = GuestSerializer
+    queryset = MyUser.objects.all()
+    permission_classes = (AllowAny,)

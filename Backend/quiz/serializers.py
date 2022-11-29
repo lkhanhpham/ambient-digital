@@ -23,6 +23,9 @@ class DefaultAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model=DefaultAnswer
         fields='__all__'
+    def create(self, validated_data: dict):
+        super.create(validated_data)
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     question_answer_option=AnswerSerializer(many=True, required=False)
@@ -172,6 +175,21 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'])
             
         user.set_password(validated_data['password'])
+        user.save()
+
+        return user
+
+class GuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ('username','is_guest')
+
+    def create(self, validated_data):
+        user = MyUser.objects.create(
+            username=validated_data['username'],
+            is_guest=True
+            )
+            
         user.save()
 
         return user

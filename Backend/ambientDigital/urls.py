@@ -29,6 +29,7 @@ router.register(r'field', api_views.FieldView, 'field')  # localhost:8000/api/fi
 router.register(r'wholequiz', api_views.WholeQuizView, 'wholequiz')  # localhost:8000/api/wholequiz/
 router.register(r'authorquiz',api_views.QuizAuthorView,'authorquiz')
 router.register(r'registration',api_views.RegisterView,'registration')
+router.register(r'guestregistration',api_views.RegisterGuestView,'guestregistration')
 
 urlpatterns = [
    # path('', home, name='home'),
