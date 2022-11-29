@@ -8,6 +8,7 @@ services:
 stages:
   - build
   - deploy
+  - test
 
 variables:
   DOCKER_HOST: tcp://docker:2375
@@ -50,3 +51,17 @@ deploy:
     - bash ./deploy.sh
   only:
     - main
+
+test:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.28.0-focal
+  script:
+    - npx playwright install --with-deps
+    - npx playwright test
+  only:
+    - feature/fragen-erstellen
+  artifacts:
+        when: always
+        paths:
+            - playwright-report/
+            - test-results/
