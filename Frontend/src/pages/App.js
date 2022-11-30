@@ -23,7 +23,6 @@ class App extends Component {
         <Route exact path="/" element={<Library/>} />
         <Route exact path="/Library" element={<Library/>} />
         <Route exact path="/QuizCreator/*" element={<QuizForm/>} />
-        {/* <Route path="/QuizCreator/EditQuiz" element={<QuizFormEdit/>}/> */}
         <Route exact path="/QuestionCreator/*" element={<QuestionForm/>} />
         <Route path="/QuestionCreator/NewQuestion" element={<NewQuestion/>} />
         <Route path="/QuizCreator/NewQuiz1" element={<NewQuiz1/>} />
