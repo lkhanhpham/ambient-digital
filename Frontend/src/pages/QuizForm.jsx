@@ -3,6 +3,7 @@ import axios from "axios"
 import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
+import ModalSuccess from "../components/ModalSuccess";
 const QuizForm = () => {
 
     const [quizName, setQuizName] = useState('')
@@ -129,7 +130,7 @@ const QuizForm = () => {
                         {/* </Link> */}
                     </div>
                     {/* modal show to announce that quiz is created successfully */}
-                    <Modal
+                    {/* <Modal
                         size="lg"
                         aria-labelledby="success"
                         centered
@@ -144,7 +145,9 @@ const QuizForm = () => {
                         <Modal.Footer>
                         <button className="btn btn-primary" onClick={createFrontendQuiz}>Continue</button>
                         </Modal.Footer>
-                    </Modal>
+                    </Modal> */}
+                    <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New quiz created!"} body = {"Quiz created with id: " + quizId} onclick = {createFrontendQuiz} />
+
                 </div>
             </div>
             <style jsx="true">{`

@@ -4,6 +4,7 @@ import CatField from "../components/CatField";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
+import ModalWarning from "../components/ModalWarning";
 const NewQuiz1 = () => {
     const location = useLocation();
     const quiz_name = location.state.quiz_name
@@ -187,21 +188,7 @@ const NewQuiz1 = () => {
                 <button onClick={nextStep} className="btn btn-primary">Next</button>
                 {/* </Link> */}
             </div>
-            <Modal
-                size="lg"
-                aria-labelledby="warning"
-                centered
-                show={showWarning} onHide={handleCloseWarning}>
-                <Modal.Header closeButton>
-                    <Modal.Title id="warning">Oops! You forgot something</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Please pick all categories to proceed</p>
-                </Modal.Body>
-                <Modal.Footer>
-
-                </Modal.Footer>
-            </Modal>
+            <ModalWarning showWarning = {showWarning} handleCloseWarning = {handleCloseWarning} title = {"Oops! You forgot something"} body = {"Please pick all categories to proceed"} />
 
         </div>
     )

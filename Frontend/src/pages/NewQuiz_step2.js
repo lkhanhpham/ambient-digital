@@ -4,6 +4,8 @@ import CatField from "../components/CatField";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
+import ModalWarning from "../components/ModalWarning";
+import ModalSuccess from "../components/ModalSuccess";
 const NewQuiz2 = () => {
     const location = useLocation();
     const quiz_name = location.state.quiz_name
@@ -11,15 +13,13 @@ const NewQuiz2 = () => {
     const nr_of_categories = location.state.nr_of_categories
     const categories = location.state.categories
     const catIds = location.state.catIds
-    const [position, setPosition] = useState({
-        row: 0, col: 0
-    })
+    const [position, setPosition] = useState(0)
     const [questions, setQuestions] = useState([])
-    //array that stores all the question texts
-    const [question_text] = useState(Array(2).fill(null).map(() => Array(1)))
+    //array that stores all the question texts (index = row_index + col_index*nr_of_row)
+    const [question_text] = useState([""])
     //array that stores the points of all the fields
-    const [fieldPoints] = useState(Array(2).fill(null).map(() => Array(1)))
-    const [chosen] = useState(Array(2).fill(false).map(() => Array(1)))
+    const [fieldPoints] = useState([100])
+    const [chosen] = useState([false])
 
     const [valid, setValid] = useState(false)
 
@@ -27,9 +27,9 @@ const NewQuiz2 = () => {
     //close the Question form
     const handleClose = () => setShow(false);
     //show the Question form
-    const handleShow = (x, y) => {
+    const handleShow = (x, y, length) => {
         setShow(true);
-        setPosition({ row: x, col: y })
+        setPosition(x+y*length)
     }
 
 
@@ -51,7 +51,7 @@ const NewQuiz2 = () => {
         var points = 100;
         const fields = []
         for (let k = 0; k < nr_of_rows; k++) {
-            fields.push(<Field key={k} points={fieldPoints[k][i]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k, i)} question_text={question_text[k][i]} chosen={chosen[k][i]} />)
+            fields.push(<Field key={k} points={fieldPoints[k+i*nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k, i, nr_of_rows)} question_text={question_text[k+i*nr_of_rows]} chosen={chosen[k+i*nr_of_rows]} />)
             points += 100;
         }
         //create an array that stores all the fields in a column
@@ -72,9 +72,9 @@ const NewQuiz2 = () => {
     function saveQuestion(position) {
         var select1 = document.getElementById('questions')
         var select2 = document.getElementById('points')
-        question_text[position.row][position.col] = select1.options[select1.selectedIndex].text
-        fieldPoints[position.row][position.col] = select2.options[select2.selectedIndex].value
-        chosen[position.row][position.col] = true
+        question_text[position] = select1.options[select1.selectedIndex].text
+        fieldPoints[position] = select2.options[select2.selectedIndex].value
+        chosen[position] = true
         checkValid(chosen)
         handleClose()
     }
@@ -83,10 +83,9 @@ const NewQuiz2 = () => {
     const checkValid = (chosen) => {
         console.log(chosen)
         // console.log("cats",nr_of_categories,"length", chosen.length)
-        console.log(chosen[0].length + chosen[1].length)
         console.log(nr_of_categories * nr_of_rows)
-        if (chosen[0].length + chosen[1].length == nr_of_categories * nr_of_rows) {
-            setValid(chosen.every((row) => row.every((col) => (col === true))))
+        if (chosen.length == nr_of_categories * nr_of_rows) {
+            setValid(chosen.every((element) => element === true))
         }
         console.log("valid", valid)
     }
@@ -185,50 +184,20 @@ const NewQuiz2 = () => {
                 <Modal.Footer>
                     <div className="d-flex justify-content-end p-3">
                         <button onClick={handleClose} className="btn btn-secondary me-2">Cancel</button>
-                        {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
+
                         <button onClick={() => saveQuestion(position)} className="btn btn-primary">Save</button>
-                        {/* </Link> */}
                     </div>
                 </Modal.Footer>
             </Modal>
-            <Modal
-                size="lg"
-                aria-labelledby="warning"
-                centered
-                show={showWarning} onHide={handleCloseWarning}>
-                <Modal.Header closeButton>
-                    <Modal.Title id="warning">Oops! You forgot something</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Please edit all fields to proceed</p>
-                </Modal.Body>
-                <Modal.Footer>
 
-                </Modal.Footer>
-            </Modal>
-            <Modal
-                size="lg"
-                aria-labelledby="success"
-                centered
-                show={showSuccess} >
-                <Modal.Header closeButton>
-                    <Modal.Title id="warning">Finished!</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Your quiz is finished and ready to be played!</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <button className="btn btn-primary" onClick={createBackendFields}>Continue</button>
-                </Modal.Footer>
-            </Modal>
+            <ModalWarning showWarning = {showWarning} handleCloseWarning = {handleCloseWarning} title = {"Oops! You forgot something"} body = {"Edit all fields to proceed"}/>
+
+            <ModalSuccess showSuccess = {showSuccess} title = {"Finished!"} body = {"Your quiz is finished and ready to be played!"} onclick = {createBackendFields} />
+            
             <div className="d-flex justify-content-end p-3">
-                {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
+
                 <button onClick={nextStep} className="btn btn-primary">Next</button>
-                {/* </Link> */}
+
             </div>
 
         </div>
