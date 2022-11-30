@@ -77,7 +77,17 @@ test:
   image: mcr.microsoft.com/playwright:v1.28.0-focal
   environment:
     name: test
-    url: http://localhost:3000/
+    url: https://prod.example.com
+  before_script:
+    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - export BACKEND_IMAGE=$IMAGE:backend
+    - export NGINX_IMAGE=$IMAGE:nginx
+    - apk add --no-cache openssh-client bash
+    - echo $SQL_HOST
+    - chmod +x ./setup_env.sh
+    - bash ./setup_env.sh
+    - ls -a
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - echo $CI_ENVIRONMENT_URL // for debugging
     - cd ./Frontend/
@@ -91,6 +101,6 @@ test:
     paths:
         - Frontend/test-results/
         - Frontend/playwright-report/
-        - results.xml
+        - Frontend/results.xml
     reports:
-        junit: results.xml
+        junit: Frontend/results.xml
