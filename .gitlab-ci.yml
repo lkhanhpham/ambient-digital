@@ -75,9 +75,13 @@ deploy:
 test:
   stage: test
   image: mcr.microsoft.com/playwright:v1.28.0-focal
+  environment:
+    name: test
+    url: http://localhost:3000/
   script:
+    - echo $CI_ENVIRONMENT_URL // for debugging
     - cd ./Frontend/
-    - npm install --dev
+    - npm install --include=dev
     - npx playwright install --with-deps
     - npx playwright test
   only:
@@ -85,5 +89,8 @@ test:
   artifacts:
     when: always
     paths:
-        - Frontend/test-report/
+        - Frontend/test-results/
         - Frontend/playwright-report/
+        - results.xml
+    reports:
+        junit: results.xml
