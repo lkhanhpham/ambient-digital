@@ -54,6 +54,13 @@ const NewQuiz1 = () => {
 
     const handleShowWarning = () => setShowWarning(true);
 
+    //a Warning if the category already exists in the quiz and user cannot proceed
+    const [showWarning1, setShowWarning1] = useState(false);
+
+    const handleCloseWarning1 = () => setShowWarning1(false);
+
+    const handleShowWarning1 = () => setShowWarning1(true);
+
     //fetch all created categories
     const getAllCats = async () => {
         const response = await fetch('http://127.0.0.1:8000/api/categorie/')
@@ -86,9 +93,16 @@ const NewQuiz1 = () => {
     //save the chosen category and show it on the field  
     function saveCat(position) {
         var select1 = document.getElementById('categories')
-        cat_name[position] = (select1.options[select1.selectedIndex].text)
-        chosen[position] = true
-        catIds[position] = select1.options[select1.selectedIndex].value
+        const text = (select1.options[select1.selectedIndex].text)
+        const id = select1.options[select1.selectedIndex].value
+        if(!catIds.includes(id)){
+            cat_name[position] = text
+            catIds[position] = id
+            chosen[position] = true
+        }
+        else{
+            showWarning1()
+        }
         checkValid(chosen)
         handleClose()
     }
@@ -189,7 +203,7 @@ const NewQuiz1 = () => {
                 {/* </Link> */}
             </div>
             <ModalWarning showWarning = {showWarning} handleCloseWarning = {handleCloseWarning} title = {"Oops! You forgot something"} body = {"Please pick all categories to proceed"} />
-
+            <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Category is not unique."} body={"Looks like this category exists in your quiz. Please choose another one."} />
         </div>
     )
 }

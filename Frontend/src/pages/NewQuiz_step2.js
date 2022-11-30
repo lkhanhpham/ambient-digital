@@ -87,13 +87,13 @@ const NewQuiz2 = () => {
         if (!question_text.includes(text)) {
             question_text[position] = text
             question_ids[position] = id
+            chosen[position] = true
         }
         else {
             handleShowWarning1()
         }
         // console.log(select1.options[select1.selectedIndex].value)
         fieldPoints[position] = select2.options[select2.selectedIndex].value
-        chosen[position] = true
         checkValid(chosen)
         handleClose()
     }
@@ -136,8 +136,9 @@ const NewQuiz2 = () => {
         }
         console.log(fields)
     }
-
+    const navigate = useNavigate();
     const createBackendFields = (event) => {
+        event.preventDefault()
         fillFields()
         for (let i = 0; i < question_text.length; i++) {
             axios(
@@ -156,7 +157,9 @@ const NewQuiz2 = () => {
                 console.log(response.data)
             })
         }
-        event.preventDefault()
+        // navigate back to library page
+        navigate("../../Library/")
+        
     }
 
     //fetch all created questions
