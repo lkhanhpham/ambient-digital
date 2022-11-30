@@ -131,7 +131,7 @@ const QuizForm = () => {
                     {/* modal show to announce that quiz is created successfully */}
                     <Modal
                         size="lg"
-                        aria-labelledby="warning"
+                        aria-labelledby="success"
                         centered
                         show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
@@ -139,10 +139,10 @@ const QuizForm = () => {
                         </Modal.Header>
                         <Modal.Body>
                             <p>Quiz created with id: {quizId}</p>
-                            <button className="btn btn-primary" onClick={createFrontendQuiz}>Continue</button>
+                           
                         </Modal.Body>
                         <Modal.Footer>
-
+                        <button className="btn btn-primary" onClick={createFrontendQuiz}>Continue</button>
                         </Modal.Footer>
                     </Modal>
                 </div>

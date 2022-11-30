@@ -6,13 +6,21 @@ const Field = (props) => {
                 <span>cat:{props.category}</span>
                 <span>point:{props.points}</span>
                 <span>position:{props.row},{props.col}</span>
+                {props.chosen? (
+                    <p className="align-self-center">
+                    {props.question_text}</p>
+                ):(
+                    <p className="align-self-center">
+                    Choose a question</p>
+                )}
+                
             </div>
             <style jsx="true">{
 
                 `
     .card{
             width: 160px;
-            height: 80px;
+            height: 200px;
     }
     .field:hover{
         background-color: blue;

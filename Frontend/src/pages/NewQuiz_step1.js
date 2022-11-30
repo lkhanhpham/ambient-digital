@@ -28,13 +28,13 @@ const NewQuiz1 = () => {
     const [cat_name] = useState([])
     const [catIds] = useState([])
 
-    const [chosen] = useState(Array(nr_of_categories).fill(false))
+    const [chosen] = useState([false])
 
     const [cats, setCats] = useState([])
 
     const [show, setShow] = useState(false);
 
-    const [id, setId] = useState(0)
+    const [position, setPosition] = useState(0)
 
     const [valid, setValid] = useState(false)
 
@@ -43,16 +43,17 @@ const NewQuiz1 = () => {
     //show the Category form
     const handleShow = (keyProp) => {
         setShow(true);
-        setId(keyProp)
+        setPosition(keyProp)
     }
 
-    //a Warning if the required data is missing and user cannot prceed
+    //a Warning if the required data is missing and user cannot proceed
     const [showWarning, setShowWarning] = useState(false);
-    //close the Category form
+
     const handleCloseWarning = () => setShowWarning(false);
-    //show the Category form
+
     const handleShowWarning = () => setShowWarning(true);
 
+    //fetch all created categories
     const getAllCats = async () => {
         const response = await fetch('http://127.0.0.1:8000/api/categorie/')
         const data = await response.json()
@@ -82,19 +83,18 @@ const NewQuiz1 = () => {
     }
 
     //save the chosen category and show it on the field  
-    function saveCat(id) {
+    function saveCat(position) {
         var select1 = document.getElementById('categories')
-        cat_name[id] = (select1.options[select1.selectedIndex].text)
-        chosen[id] = true
-        catIds[id] = select1.options[select1.selectedIndex].value
+        cat_name[position] = (select1.options[select1.selectedIndex].text)
+        chosen[position] = true
+        catIds[position] = select1.options[select1.selectedIndex].value
         checkValid(chosen)
         handleClose()
     }
 
 
     const navigate = useNavigate();
-    //after user chooses the categories, proceed to next step to add questions
-
+    
     //check if user has chosen all categories
     const checkValid = (chosen) => {
         // console.log(chosen)
@@ -104,6 +104,7 @@ const NewQuiz1 = () => {
         }
         console.log("valid", valid)
     }
+    //after user chooses the categories, proceed to next step to add questions
     const nextStep = () => {
         checkValid(chosen)
         if (valid == true) {
@@ -125,7 +126,7 @@ const NewQuiz1 = () => {
     useEffect(
         () => {
             getAllCats();
-        }, [valid]
+        }, []
     )
 
 
@@ -174,7 +175,7 @@ const NewQuiz1 = () => {
                         {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
                     state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
                     > */}
-                        <button onClick={() => saveCat(id)} className="btn btn-primary">Save</button>
+                        <button onClick={() => saveCat(position)} className="btn btn-primary">Save</button>
                         {/* </Link> */}
                     </div>
                 </Modal.Footer>
