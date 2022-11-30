@@ -8,6 +8,7 @@ import QuestionForm from "./QuestionForm";
 import QuestionFormMC from "./QuestionFormMC";
 import NewQuestion from "./NewQuestion";
 import QuestionFormEdit from "./QuestionFormEdit";
+import QuestionFormEditMC from "./QuestionFormEditMC";
 import {
   Route,
   Routes
@@ -29,6 +30,7 @@ class App extends Component {
         <Route exact path="/QuestionCreator/MC" element={<QuestionFormMC/>} />
         <Route path="/QuestionCreator/NewQuestion" element={<NewQuestion/>} />
         <Route path="/QuestionCreator/EditQuestion" element={<QuestionFormEdit/>} />
+        <Route path="/QuestionCreator/EditQuestionMC" element={<QuestionFormEditMC/>} />
         </Routes>
     </div>
     </>

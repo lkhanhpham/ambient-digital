@@ -20,8 +20,9 @@ const QuestionFormEdit = (id ) => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('false')
+    const [multiplayer, setMutliplayer] = useState('false')
     const [questiontype, setQuestionType] = useState('MC')
+    const [questionAnswerOption, setQuestionAnswerOption] = useState('')
 
     const $ = require( "jquery" );
     const navigate = useNavigate();
@@ -55,10 +56,11 @@ const QuestionFormEdit = (id ) => {
             console.log(data)
             setQuiz(data)
             setQuestionText(data.question_text)
-            setDefaultAnswer(data.defaultAnswer)
+            setDefaultAnswer(data.defaultAnswer.text)
             setAuthorId(1)
             setQuestionType(data.question_type)
-            setMultiplayer(data.multiplayer)
+            setMutliplayer(data.multiplayer)
+            setQuestionAnswerOption(data.question_answer_option)
             console.log(data.question_text)
             console.log(data.defaultAnswer)
             console.log(1)
@@ -86,13 +88,25 @@ const QuestionFormEdit = (id ) => {
                 url: url,
                 data: {
                     question_text: questionText,
-                    default_answer: {
-                        text: defaultAnswer,
-                        is_correct: true
-                    },
+                    default_answer: defaultAnswer,
                     multiplayer: multiplayer,
                     question_type: questiontype,
-                    author: 1
+                    author: 1,
+                    question_answer_option:[
+                        {
+                            text: "1",
+                            is_correct: false
+                        },
+                        {
+                            text: "2",
+                            is_correct: false
+                        },
+                        {
+                            text: "3",
+                            is_correct: false
+                        }
+
+                    ]
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -105,13 +119,25 @@ const QuestionFormEdit = (id ) => {
             {state: 
                 {
                     question_text: questionText,
-                    default_answer: {
-                        text: defaultAnswer,
-                        is_correct: true
+                default_answer: defaultAnswer,
+                multiplayer: multiplayer,
+                question_type: questiontype,
+                author: 1,
+                question_answer_option:[
+                    {
+                        text: "1",
+                        is_correct: false
                     },
-                    multiplayer: multiplayer,
-                    question_type: questiontype,
-                    author: 1
+                    {
+                        text: "2",
+                        is_correct: false
+                    },
+                    {
+                        text: "3",
+                        is_correct: false
+                    }
+
+                ]
                 }
             } 
         )
@@ -122,7 +148,23 @@ const QuestionFormEdit = (id ) => {
     function changeQuestion(value){
         console.log(value)
         
-        dropdownV=value
+        var mcString ='<div id= "containerID2" className="container2"> <label htmlFor="exampleFormControlInput2">Choice 2</label><div><input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
+        var mcString2='<div id= "containerID3" className="container3"> <label htmlFor="exampleFormControlInput3">Choice 3</label><div><input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
+        var mcString3='<div id= "containerID4" className="container4"> <label htmlFor="exampleFormControlInput4">Choice 4</label><div><input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
+        if(value==="MC"){
+            $(".container1").append(mcString+mcString2+mcString3)
+            dropdownV="McId"
+        }else{
+            if(dropdownV==="McId"){
+                const element2 = document.getElementById('containerID2');
+                const element3 = document.getElementById('containerID3');
+                const element4 = document.getElementById('containerID4');
+                element2.remove()
+                element3.remove()
+                element4.remove()
+                dropdownV=value
+            }
+        }
     }
     
     return (
@@ -137,10 +179,11 @@ const QuestionFormEdit = (id ) => {
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
                             <option id= "ScId"value="SC">Single Choice</option>
+                            <option id="McId" value="MC">Multiple Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                         <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)}/>
+                        <input type="checkbox"/>
                     </form>
 
                     <form className="text-light">
@@ -157,7 +200,7 @@ const QuestionFormEdit = (id ) => {
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer.text} text={defaultAnswer.text} 
+                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer} text={defaultAnswer} 
                             onChange={(e) => setDefaultAnswer(e.target.value)}></input>
                             </div>
                         </div>
