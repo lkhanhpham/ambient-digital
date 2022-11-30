@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import ModalSuccess from "../components/ModalSuccess";
+import axios from "axios"
+
 const NewQuiz2 = () => {
     const location = useLocation();
     const quiz_name = location.state.quiz_name
@@ -13,10 +15,12 @@ const NewQuiz2 = () => {
     const nr_of_categories = location.state.nr_of_categories
     const categories = location.state.categories
     const catIds = location.state.catIds
+    const quizId = location.state.quizId
     const [position, setPosition] = useState(0)
     const [questions, setQuestions] = useState([])
     //array that stores all the question texts (index = row_index + col_index*nr_of_row)
     const [question_text] = useState([""])
+    const [question_ids] = useState([0])
     //array that stores the points of all the fields
     const [fieldPoints] = useState([100])
     const [chosen] = useState([false])
@@ -29,7 +33,7 @@ const NewQuiz2 = () => {
     //show the Question form
     const handleShow = (x, y, length) => {
         setShow(true);
-        setPosition(x+y*length)
+        setPosition(x + y * length)
     }
 
 
@@ -44,6 +48,12 @@ const NewQuiz2 = () => {
 
     const handleShowWarning = () => setShowWarning(true);
 
+    //a Warning if the question already exists in the quiz and user cannot proceed
+    const [showWarning1, setShowWarning1] = useState(false);
+
+    const handleCloseWarning1 = () => setShowWarning1(false);
+
+    const handleShowWarning1 = () => setShowWarning1(true);
 
     //FRONTEND creates an array that stores all the fields in the quiz
     const rows = [];
@@ -51,7 +61,7 @@ const NewQuiz2 = () => {
         var points = 100;
         const fields = []
         for (let k = 0; k < nr_of_rows; k++) {
-            fields.push(<Field key={k} points={fieldPoints[k+i*nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k, i, nr_of_rows)} question_text={question_text[k+i*nr_of_rows]} chosen={chosen[k+i*nr_of_rows]} />)
+            fields.push(<Field key={k} points={fieldPoints[k + i * nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k, i, nr_of_rows)} question_text={question_text[k + i * nr_of_rows]} chosen={chosen[k + i * nr_of_rows]} />)
             points += 100;
         }
         //create an array that stores all the fields in a column
@@ -72,7 +82,16 @@ const NewQuiz2 = () => {
     function saveQuestion(position) {
         var select1 = document.getElementById('questions')
         var select2 = document.getElementById('points')
-        question_text[position] = select1.options[select1.selectedIndex].text
+        const text = select1.options[select1.selectedIndex].text
+        const id = select1.options[select1.selectedIndex].value
+        if (!question_text.includes(text)) {
+            question_text[position] = text
+            question_ids[position] = id
+        }
+        else {
+            handleShowWarning1()
+        }
+        // console.log(select1.options[select1.selectedIndex].value)
         fieldPoints[position] = select2.options[select2.selectedIndex].value
         chosen[position] = true
         checkValid(chosen)
@@ -100,8 +119,44 @@ const NewQuiz2 = () => {
         }
 
     }
-    function createBackendFields() {
 
+    // After user edits all fields, the data is saved into fields
+    const fillFields = () => {
+        var k = -1;
+        for (let i = 0; i < question_text.length; i++) {
+            if (i % nr_of_rows == 0) {
+                k += 1;
+            }
+            fields.push({
+                point: +fieldPoints[i],
+                question: +question_ids[i],
+                categorie: +catIds[k],
+                quiz: quizId
+            })
+        }
+        console.log(fields)
+    }
+
+    const createBackendFields = (event) => {
+        fillFields()
+        for (let i = 0; i < question_text.length; i++) {
+            axios(
+                {
+                    method: "POST",
+                    url: "http://localhost:8000/api/field/",
+                    data: {
+                        point: fields[i].point,
+                        question: fields[i].question,
+                        categorie: fields[i].categorie,
+                        quiz: fields[i].quiz
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then((response) => {
+                console.log(response.data)
+            })
+        }
+        event.preventDefault()
     }
 
     //fetch all created questions
@@ -190,10 +245,12 @@ const NewQuiz2 = () => {
                 </Modal.Footer>
             </Modal>
 
-            <ModalWarning showWarning = {showWarning} handleCloseWarning = {handleCloseWarning} title = {"Oops! You forgot something"} body = {"Edit all fields to proceed"}/>
+            <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! You forgot something"} body={"Edit all fields to proceed"} />
 
-            <ModalSuccess showSuccess = {showSuccess} title = {"Finished!"} body = {"Your quiz is finished and ready to be played!"} onclick = {createBackendFields} />
-            
+            <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
+
+            <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createBackendFields} />
+
             <div className="d-flex justify-content-end p-3">
 
                 <button onClick={nextStep} className="btn btn-primary">Next</button>

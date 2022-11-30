@@ -22,7 +22,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('question_text','pub_date','author','multiplayer','question_type','def_answer','answer_option')
+        fields = ('id','question_text','pub_date','author','multiplayer','question_type','def_answer','answer_option')
 
 #This class will lead to merge-conflicts, when merging the feature/backend-Fragen-erweitern branch into a branch containing this class
 #When this happens replace this classs with the FieldSerializer in the other branch, because the model has been updated
