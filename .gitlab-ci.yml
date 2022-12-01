@@ -94,7 +94,7 @@ test:
     - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; echo "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)"; done
 
     # Prepare and run backend
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker run
       --name Backend_Container
       --link Postgres_DB
@@ -103,7 +103,7 @@ test:
       -e DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
       -e DJANGO_CELERY_TASK_ALWAYS_EAGER=True
       -e DJANGO_SESSION_COOKIE_SECURE=False
-      -e DJANGO_DATABASE_URL=postgresql://root:$SQL_PASSWORD@Postgres_DB/$SQL_DATABASE
+      -e DJANGO_DATABASE_URL=postgresql://postgres:$SQL_PASSWORD@Postgres_DB/$SQL_DATABASE
       -e DJANGO_FRONTEND_URL=localhost:3000
       $IMAGE:backend
       #/src/scripts/run_backend_fixtures.sh
