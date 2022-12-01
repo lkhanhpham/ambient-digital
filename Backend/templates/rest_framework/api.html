@@ -6,7 +6,7 @@
         <ul id="explanationList" style="display: none; padding: 2rem;font-size:18px">
             <li>
                 Die <b>quiz</b> Schnittstelle ist dafür gedacht, die Daten des Quizzes abzurufen, diese zu ändern und löschen
-                zu können (beinhaltet keine Fragen, Felder, Kategorien oä.).
+                zu können (beinhaltet keine Fragen, Felder, Kategorien oä.). Die zurückgegebenen Teams können hier nicht angepasst werden.
             </li>
             <li>
                 Die <b>categorie</b> Schnittstelle ist dafür gedacht, die Daten der Kategorien abzurufen, diese zu ändern und löschen
@@ -45,6 +45,21 @@
             <li>
                 Die <b>token/verify</b> Schnittstelle ist nicht im Router registriert und muss über api/token/verify angesteuert werden.
                 Die Schnittstelle verifiziert einen ihr übergebenen access token.
+            </li>
+            <li>
+                Die <b>guestregistration</b> Schnittstelle ermöglicht das Erstellen eines Gasts, welcher kein Passwort, aber einen Nutzernamen 
+                und Punkte, besitzt.
+            </li>
+            <li>
+                Die <b>user</b> Schnittstelle ermöglicht das Abrufen von grundlegenden Nutzerdaten
+            </li>
+            <li>
+                Die <b>Teams</b> Schnittstelle ermöglicht das Erstellen, Anpassen und Löschen von Teams, sowie das zuweisen von Teammitgliedern
+                in diese Teams. Beim bearbeiten der Teams müssen aktuell immer alle Teammitglieder angegeben werden und nicht nur die zu bearbeitenden.
+            </li>
+            <li>
+                Die <b>Teammates</b> Schnittstelle zeigt die Verbindungen zwischen User, Team und Quiz an. Sie kann benutzt werden um ein Teammitglied
+                mit einem anderen Nutzer, welcher in keinem zu diesem Quiz zugehörigen Team ist, auszutauschen oder einzelne Teammitglieder aus einem Team zu entfernen.
             </li>
         </ul>
     </div>

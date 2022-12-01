@@ -209,8 +209,8 @@ class UserSerializer(serializers.ModelSerializer):
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model=TeamMember
-        fields=('team','member','quiz')
-        read_only_fields=('team','quiz')
+        fields=('id','team','member','quiz')
+        read_only_fields=('team','quiz','id')
 
 class TeamSerializer(serializers.ModelSerializer):
     teamMember_team= TeamMemberSerializer(many=True, required=False)
@@ -257,3 +257,9 @@ class TeamSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+class TeammateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TeamMember
+        fields=('id','team','member','quiz')
+        read_only_fields=('team','quiz','id')

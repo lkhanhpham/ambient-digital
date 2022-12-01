@@ -32,6 +32,7 @@ router.register(r'registration',api_views.RegisterView,'registration')
 router.register(r'guestregistration',api_views.RegisterGuestView,'guestregistration')
 router.register(r'user',api_views.UserObtainView,'user')
 router.register(r'Teams',api_views.TeamView,'Teams')
+router.register(r'Teammates',api_views.TeammateView,'Teammates')
 
 urlpatterns = [
    # path('', home, name='home'),

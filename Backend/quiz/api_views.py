@@ -1,7 +1,7 @@
-from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, UserSerializer, TeamSerializer
+from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, UserSerializer, TeamSerializer, TeammateSerializer
 from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer, GuestSerializer
 from rest_framework import viewsets, mixins      
-from .models import Quiz, Categorie, Question, Field, MyUser, Team
+from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember
 from rest_framework.permissions import AllowAny    
 from rest_framework_simplejwt.views import TokenObtainPairView        
 
@@ -52,3 +52,7 @@ class UserObtainView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retrie
 class TeamView(viewsets.ModelViewSet):
     serializer_class=TeamSerializer
     queryset=Team.objects.all()
+
+class TeammateView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
+    serializer_class= TeammateSerializer
+    queryset=TeamMember.objects.all()
