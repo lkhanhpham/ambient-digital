@@ -14,15 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.http import JsonResponse
 
+from django.urls import include, path
+from rest_framework import routers
+from quiz import api_views  
 
-def home(request):
-    return JsonResponse({'hello': 'world'})
-
+router = routers.DefaultRouter()                   
+router.register(r'quiz', api_views.QuizView, 'quiz') # localhost:8000/api/quiz/
+router.register(r'categorie', api_views.CategorieView, 'categorie') # localhost:8000/api/categorie/
+router.register(r'question', api_views.QuestionView, 'question') # localhost:8000/api/question/
+router.register(r'field', api_views.FieldView, 'field')  # localhost:8000/api/field/
+router.register(r'wholequiz', api_views.WholeQuizView, 'wholequiz')  # localhost:8000/api/wholequiz/
+router.register(r'answeroption',api_views.AnswerOptionView,'answeroption')# localhost:8000/api/answeroption/
 
 urlpatterns = [
-    path('', home, name='home'),
+   # path('', home, name='home'),
     path('admin/', admin.site.urls),
+    path('api/',  include(router.urls)),
+
 ]

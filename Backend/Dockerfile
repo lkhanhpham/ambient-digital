@@ -1,6 +1,5 @@
 # pull official base image
-FROM python:3.9.6-alpine
-
+FROM python:3.11.0-alpine
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -14,9 +13,9 @@ RUN apk update \
     && apk del build-deps
 
 # Use /src folder as a directory where the source code is stored.
-RUN mkdir /src
-WORKDIR /src
-ADD Pipfile Pipfile.lock /src/
+RUN mkdir /usr/src/backend
+WORKDIR /usr/src/backend
+ADD Pipfile Pipfile.lock /usr/src/backend/
 
 # Install dependencies
 RUN pip install --upgrade pip
@@ -25,12 +24,12 @@ RUN #pipenv install --deploy --verbose --ignore-pipfile
 RUN pipenv install --system --deploy
 
 # copy entrypoint.sh
-COPY ./entrypoint.sh /src/entrypoint.sh
+COPY ./entrypoint.sh /usr/src/backend/entrypoint.sh
 
 # Copy the source code of the project into the container.
-COPY . /src
+COPY . /usr/src/backend
 
 # run entrypoint.sh
-RUN ["chmod", "+x", "/src/entrypoint.sh"]
-ENTRYPOINT ["/src/entrypoint.sh"]
+RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
 

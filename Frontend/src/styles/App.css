@@ -1,0 +1,19 @@
+.big-title {
+  font-size: 1.5rem;
+}
+
+.small-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.body-text {
+  font-size: 1rem
+}
+
+.small-button {
+  background-color: black;
+  color:white;
+  border-radius: 0.5rem;
+  font-size: 12px;
+}
