@@ -74,22 +74,42 @@ deploy:
 
 test:
   stage: test
-  image: mcr.microsoft.com/playwright:v1.28.0-focal
-  environment:
-    name: test
-    url: https://prod.example.com
+  #image: mcr.microsoft.com/playwright:v1.28.0-focal
   before_script:
-    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-    - export BACKEND_IMAGE=$IMAGE:backend
-    - export NGINX_IMAGE=$IMAGE:nginx
-    - apk add --no-cache openssh-client bash
-    - echo $SQL_HOST
-    - chmod +x ./setup_env.sh
-    - bash ./setup_env.sh
-    - ls -a
+    # Prepare and run database
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker run
+      --name Postgres_DB
+      -d
+      -e SQL_DATABASE=$SQL_DATABASE
+      -e SQL_USER=$SQL_USER
+      -e SQL_PASSWORD=$SQL_PASSWORD
+      --health-cmd "pg_isready -U postgres || exit 1"
+      --health-interval 10s
+      --health-timeout 5s
+      --health-start-period 5s
+      --health-retries 10
+      
+    - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; done
+    - echo "Done with before script"
+    
+
+    # Prepare and run backend
+    #- docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    #- docker run
+    #  --name Backend_Container
+    #  --link Postgres_DB
+    #  -d
+    #  -p 8000:8000
+    #  -e DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
+    #  -e DJANGO_CELERY_TASK_ALWAYS_EAGER=True
+    #  -e DJANGO_SESSION_COOKIE_SECURE=False
+    #  -e DJANGO_DATABASE_URL=mysql://root:$SQL_ROOT_PASSWORD@Postgres_DB/$SQL_DATABASE
+    #  -e DJANGO_FRONTEND_URL=localhost:3000
+    #  $IMAGE_TAG_BACKEND
+    #  /src/scripts/run_backend_fixtures.sh
+
   script:
-    - echo $CI_ENVIRONMENT_URL // for debugging
     - cd ./Frontend/
     - npm install --include=dev
     - npx playwright install --with-deps
