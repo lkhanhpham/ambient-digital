@@ -91,7 +91,7 @@ test:
       --health-retries 10
       postgres:13-alpine
       
-    - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; echo "Postgres_DB not healthy"; done
+    - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; echo "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)"; done
     - echo "Done with before script"
     
 
