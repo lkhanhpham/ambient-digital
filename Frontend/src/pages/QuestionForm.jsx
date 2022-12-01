@@ -3,11 +3,11 @@ import axios from "axios"
 import React from "react";
 import { Link, useNavigate} from "react-router-dom";
 import $ from "jquery";
+import { useLocation } from "react-router-dom";
 
 var dropdownV="x";
 
-const QuestionForm = () => {
-    
+const QuestionForm = () => {    
    
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
@@ -23,6 +23,10 @@ const QuestionForm = () => {
     function createQuestionSC(event) {
         if(dropdownV==="x"){
             dropdownV="SC"
+        }else{
+            var e = document.getElementById("selectOpt");
+            var value = e.value;
+            dropdownV=value;
         }
         navigate("/QuestionCreator/NewQuestion", 
         {state: 
