@@ -74,7 +74,6 @@ deploy:
 
 test:
   stage: test
-  #image: mcr.microsoft.com/playwright:v1.28.0-focal
   before_script:
     # - bash ./setup_env.sh
 
@@ -116,22 +115,27 @@ test:
       -p 3000:3000
       -e REACT_APP_BACKEND_URL=http://localhost:8000
       -e REACT_APP_ENVIRONMENT=E2E
-      mcr.microsoft.com/playwright:v1.28.0-focal
+      nginx:1.21-alpine
     - echo "Backend is prepared and running"
 
+    # Create folders for playwright results
+    - mkdir -p ${PWD}/Frontend/test-results || true
+    - mkdir -p ${PWD}/Frontend/playwright-report|| true
 
   script:
-    - cd ./Frontend/
-    - npm install --include=dev
-    - npx playwright install --with-deps
-    - npx playwright test
+    - docker run --rm
+      --network="host"
+      --ipc="host"
+      --entrypoint=""
+      mcr.microsoft.com/playwright:v1.28.0-focal
+      /bin/bash -c "npm install --include=dev && npx playwright install --with-deps && npx playwright test"
   only:
     - feature/fragen-erstellen
-#  artifacts:
-#    when: always
-#    paths:
-#        - Frontend/test-results/
-#        - Frontend/playwright-report/
-#        - Frontend/results.xml
-#    reports:
-#        junit: Frontend/results.xml
+  artifacts:
+    when: always
+    paths:
+        - Frontend/test-results/
+        - Frontend/playwright-report/
+        - Frontend/results.xml
+    reports:
+        junit: Frontend/results.xml
