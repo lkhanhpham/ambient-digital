@@ -128,7 +128,7 @@ test:
       --ipc="host"
       --entrypoint=""
       mcr.microsoft.com/playwright:v1.28.0-focal
-      /bin/bash -c "npm install --include=dev && npx playwright install --with-deps && npx playwright test"
+      /bin/bash -c "cd ./Frontend && npm install --include=dev && npx playwright install --with-deps && npx playwright test"
   only:
     - feature/fragen-erstellen
   artifacts:
