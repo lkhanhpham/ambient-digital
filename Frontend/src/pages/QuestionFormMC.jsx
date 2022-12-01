@@ -12,7 +12,7 @@ const QuestionForm = () => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('false')
+    const [multiplayer, setMultiplayer] = useState('')
     const [questionType, setQuestionType] = useState('')
     const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
     const [questionAnswerOption2, setQuestionAnswerOption2] = useState('')
@@ -25,7 +25,7 @@ const QuestionForm = () => {
     const $ = require( "jquery" );
     const navigate = useNavigate();
 
-    function createQuestioMC(event) {
+    function createQuestionMC(event) {
         navigate("/QuestionCreator/NewQuestion", 
         {state: 
             {
@@ -64,7 +64,7 @@ const QuestionForm = () => {
                 data: {
                     question_text: questionText,
                     author: 1,
-                    multiplayer: false,
+                    multiplayer: multiplayer,
                     question_type: dropdownV,
                     default_answer: {
                         text: defaultAnswer,
@@ -241,7 +241,7 @@ const QuestionForm = () => {
                     <button className="btn btn-secondary me-2" >Cancel</button>
                     </Link>
                     
-                    <button onClick={createQuestioMC} className="btn btn-primary">Create</button>
+                    <button onClick={createQuestionMC} className="btn btn-primary">Create</button>
                    
                 </div>
                 </div>
