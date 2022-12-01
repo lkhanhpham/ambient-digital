@@ -98,14 +98,14 @@ test:
     - docker run
       --name Backend_Container
       --link Postgres_DB
-    #  -d
-    #  -p 8000:8000
-    #  -e DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
-    #  -e DJANGO_CELERY_TASK_ALWAYS_EAGER=True
-    #  -e DJANGO_SESSION_COOKIE_SECURE=False
-    #  -e DJANGO_DATABASE_URL=postgresql://postgres:$SQL_PASSWORD@Postgres_DB/$SQL_DATABASE
-    #  -e DJANGO_FRONTEND_URL=localhost:3000
       $IMAGE:backend
+#      -d
+#      -p 8000:8000
+#      -e DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
+#      -e DJANGO_CELERY_TASK_ALWAYS_EAGER=True
+#      -e DJANGO_SESSION_COOKIE_SECURE=False
+#      -e DJANGO_DATABASE_URL=postgresql://postgres:$SQL_PASSWORD@Postgres_DB/$SQL_DATABASE
+#      -e DJANGO_FRONTEND_URL=localhost:3000
       #/src/scripts/run_backend_fixtures.sh
     - echo "Done with before script"
 
