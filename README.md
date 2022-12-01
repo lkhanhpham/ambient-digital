@@ -12,6 +12,10 @@ You can download the current Python version from [here](https://www.python.org/d
 ## Installations
 We suggest you run the following project in a docker container.
 Get docker [here](https://docs.docker.com/).
+You need to type the following command only once after the installation of docker.
+```
+$ git config --global core.autocrlf input
+```
 
 To start the Project type the following command in your terminal in the same folder, where you cloned the git project, but make sure that docker is up and running.
 ```
@@ -56,10 +60,8 @@ It is possible to create questions and an whole quiz over the frontend, which is
 Moreover you can created questions individually and select them in the process of creating a quiz. It is also possible to navigate, through the navigation bar on the right, back to the "Home" site. The other options of the navigation bar are not used at the moment.
 The edit button of the questions is not used at the moment.
 
-
 ## Upcoming changes
 The next major changes are to include a possibility to build teams which can play the quiz against each other and to give the Quizmaster an own log in possibility so that he or she sees just their own quetsions and quizes.
-
 
 ## Testing
 We will test our project end to end with Playwright. So if you want to work with this project you will need playwright too. This will be installed automatically, when you followed the installation instructions.
