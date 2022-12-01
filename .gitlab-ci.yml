@@ -89,6 +89,7 @@ test:
       --health-timeout 5s
       --health-start-period 5s
       --health-retries 10
+      postgres:13-alpine
       
     - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; done
     - echo "Done with before script"
