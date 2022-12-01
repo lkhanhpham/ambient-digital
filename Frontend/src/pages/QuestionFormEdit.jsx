@@ -14,21 +14,21 @@ const QuestionFormEdit = (id ) => {
     const location = useLocation();
     const idQuestion= location.state.id
 
+
     const url= "http://localhost:8000/api/question/"+idQuestion+"/";
    
     const [questions, setQuiz] = useState([])
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('false')
-    const [questiontype, setQuestionType] = useState('MC')
+    const [multiplayer, setMultiplayer] = useState('')
+    const [questiontype, setQuestionType] = useState('')
 
     const $ = require( "jquery" );
     const navigate = useNavigate();
     
     function deleteItem(event){
         event.preventDefault()
-        console.log(idQuestion)
         if (window.confirm('Do you really want to delete this question?')){
             axios(
                 {
@@ -52,19 +52,14 @@ const QuestionFormEdit = (id ) => {
         const response = await fetch(url) 
         const data = await response.json()
         if (response.ok) {
-            console.log(data)
+            //console.log(data)
             setQuiz(data)
             setQuestionText(data.question_text)
-            setDefaultAnswer(data.defaultAnswer)
+            setDefaultAnswer(data.default_answer)
             setAuthorId(1)
             setQuestionType(data.question_type)
-            setMultiplayer(data.multiplayer)
-            console.log(data.question_text)
-            console.log(data.defaultAnswer)
-            console.log(1)
-            console.log(data.question_type)
-            console.log(data.multiplayer)
-            console.log(data.question_answer_option)
+            var mb=data.multiplayer
+            setMultiplayer(mb)
 
         }
         else {
@@ -78,8 +73,9 @@ const QuestionFormEdit = (id ) => {
             getAllQuestions();
         }, []
     )
+
     function editQuestion(event){
-        event.preventDefault()       
+        event.preventDefault()  
         axios(
             {
                 method: "PUT",
@@ -87,7 +83,7 @@ const QuestionFormEdit = (id ) => {
                 data: {
                     question_text: questionText,
                     default_answer: {
-                        text: defaultAnswer,
+                        text: defaultAnswer.text,
                         is_correct: true
                     },
                     multiplayer: multiplayer,
@@ -106,8 +102,8 @@ const QuestionFormEdit = (id ) => {
                 {
                     question_text: questionText,
                     default_answer: {
-                        text: defaultAnswer,
-                        is_correct: true
+                        text: defaultAnswer.text,
+                        is_correct: defaultAnswer.is_correct
                     },
                     multiplayer: multiplayer,
                     question_type: questiontype,
@@ -120,9 +116,34 @@ const QuestionFormEdit = (id ) => {
     }
 
     function changeQuestion(value){
-        console.log(value)
-        
+        if(value==="MC"){
+            navigate("/QuestionCreator/EditQuestionMC", 
+                {state: 
+                    {
+                        question_text: questionText,
+                        default_answer:{
+                            text: defaultAnswer.text,
+                            is_correct: defaultAnswer.is_correct
+                        },
+                        multiplayer: multiplayer,
+                        question_type: value,
+                        author: 1
+                    }
+                } 
+            )
+            
+        }else{
+            setQuestionType(value)
+        }
         dropdownV=value
+    }
+    function setdefAnswer(defAnswer, bDefAnswer){
+        
+        const data =  {
+            text: defAnswer,
+            is_correct: bDefAnswer
+        }
+        setDefaultAnswer(data)
     }
     
     return (
@@ -135,12 +156,15 @@ const QuestionFormEdit = (id ) => {
                 <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
                 <form className="text-light" >
                         <label for="type">Choose a Type: </label>
-                        <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
+                        <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}
+                             placeholder={questiontype}
+                             value={questiontype}>
                             <option id= "ScId"value="SC">Single Choice</option>
+                            <option id="McId" value="MC">Multiple Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                         <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)}/>
+                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)} checked={multiplayer}/>
                     </form>
 
                     <form className="text-light">
@@ -157,8 +181,9 @@ const QuestionFormEdit = (id ) => {
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer.text} text={defaultAnswer.text} 
-                            onChange={(e) => setDefaultAnswer(e.target.value)}></input>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" 
+                            placeholder={defaultAnswer.text} text={defaultAnswer.text} 
+                            onChange={(e) => setdefAnswer(e.target.value, true)}></input>
                             </div>
                         </div>
                     </form>

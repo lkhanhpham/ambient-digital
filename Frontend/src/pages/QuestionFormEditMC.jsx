@@ -20,16 +20,21 @@ const QuestionFormEdit = (id ) => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMutliplayer] = useState('false')
+    const [multiplayer, setMultiplayer] = useState('')
     const [questiontype, setQuestionType] = useState('MC')
-    const [questionAnswerOption, setQuestionAnswerOption] = useState('')
+    const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
+    const [questionAnswerOption2, setQuestionAnswerOption2] = useState('')
+    const [questionAnswerOption3, setQuestionAnswerOption3] = useState('')
+    const [questionAnswerOption1b, setQuestionAnswerOption1b] = useState('')
+    const [questionAnswerOption2b, setQuestionAnswerOption2b] = useState('')
+    const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState('')
+    
 
     const $ = require( "jquery" );
     const navigate = useNavigate();
     
     function deleteItem(event){
         event.preventDefault()
-        console.log(idQuestion)
         if (window.confirm('Do you really want to delete this question?')){
             axios(
                 {
@@ -53,20 +58,18 @@ const QuestionFormEdit = (id ) => {
         const response = await fetch(url) 
         const data = await response.json()
         if (response.ok) {
-            console.log(data)
             setQuiz(data)
             setQuestionText(data.question_text)
-            setDefaultAnswer(data.defaultAnswer.text)
+            setDefaultAnswer(data.default_answer)
             setAuthorId(1)
             setQuestionType(data.question_type)
-            setMutliplayer(data.multiplayer)
-            setQuestionAnswerOption(data.question_answer_option)
-            console.log(data.question_text)
-            console.log(data.defaultAnswer)
-            console.log(1)
-            console.log(data.question_type)
-            console.log(data.multiplayer)
-            console.log(data.question_answer_option)
+            setMultiplayer(data.multiplayer)
+            setQuestionAnswerOption1(data.question_answer_option[0].text)
+            setQuestionAnswerOption2(data.question_answer_option[1].text)
+            setQuestionAnswerOption3(data.question_answer_option[2].text)
+            setQuestionAnswerOption1b(data.question_answer_option[0].is_correct)
+            setQuestionAnswerOption2b(data.question_answer_option[1].is_correct)
+            setQuestionAnswerOption3b(data.question_answer_option[2].is_correct)
 
         }
         else {
@@ -94,16 +97,16 @@ const QuestionFormEdit = (id ) => {
                     author: 1,
                     question_answer_option:[
                         {
-                            text: "1",
-                            is_correct: false
+                            text: questionAnswerOption1,
+                            is_correct: questionAnswerOption1b
                         },
                         {
-                            text: "2",
-                            is_correct: false
+                            text: questionAnswerOption2,
+                            is_correct: questionAnswerOption2b
                         },
                         {
-                            text: "3",
-                            is_correct: false
+                            text: questionAnswerOption3,
+                            is_correct: questionAnswerOption3b
                         }
 
                     ]
@@ -117,7 +120,7 @@ const QuestionFormEdit = (id ) => {
         event.preventDefault()
         navigate("/QuestionCreator/NewQuestion", 
             {state: 
-                {
+                { 
                     question_text: questionText,
                 default_answer: defaultAnswer,
                 multiplayer: multiplayer,
@@ -125,16 +128,16 @@ const QuestionFormEdit = (id ) => {
                 author: 1,
                 question_answer_option:[
                     {
-                        text: "1",
-                        is_correct: false
+                        text: questionAnswerOption1,
+                        is_correct: questionAnswerOption1b
                     },
                     {
-                        text: "2",
-                        is_correct: false
+                        text: questionAnswerOption2,
+                        is_correct: questionAnswerOption2b
                     },
                     {
-                        text: "3",
-                        is_correct: false
+                        text: questionAnswerOption3,
+                        is_correct: questionAnswerOption3b
                     }
 
                 ]
@@ -146,25 +149,77 @@ const QuestionFormEdit = (id ) => {
     }
 
     function changeQuestion(value){
-        console.log(value)
         
-        var mcString ='<div id= "containerID2" className="container2"> <label htmlFor="exampleFormControlInput2">Choice 2</label><div><input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
-        var mcString2='<div id= "containerID3" className="container3"> <label htmlFor="exampleFormControlInput3">Choice 3</label><div><input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
-        var mcString3='<div id= "containerID4" className="container4"> <label htmlFor="exampleFormControlInput4">Choice 4</label><div><input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} ></input><input className="right" type="checkbox"></input> <label htmlFor="exampleFormControlInput1">True</label></div></div>'
-        if(value==="MC"){
-            $(".container1").append(mcString+mcString2+mcString3)
-            dropdownV="McId"
+        if(value==="SC"|| value==="EQ"){
+            navigate("/QuestionCreator/EditQuestion", 
+                {state: 
+                    {
+                        question_text: questionText,
+                        default_answer:{
+                            text: defaultAnswer.text,
+                            is_correct: defaultAnswer.is_correct
+                        },
+                        multiplayer: multiplayer,
+                        question_type: value,
+                        author: 1
+                    }
+                } 
+            )
         }else{
-            if(dropdownV==="McId"){
-                const element2 = document.getElementById('containerID2');
-                const element3 = document.getElementById('containerID3');
-                const element4 = document.getElementById('containerID4');
-                element2.remove()
-                element3.remove()
-                element4.remove()
-                dropdownV=value
-            }
+            setQuestionType(value)
         }
+        dropdownV=value
+    }
+
+    $('#checkbox-value1').text(questionAnswerOption1b);
+
+    $("#checkbox1").on('change', function() {
+      if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+        setQuestionAnswerOption1b(true);
+      } else {
+        $(this).attr('value', 'false');
+        setQuestionAnswerOption1b(false);
+      }
+      
+      $('#checkbox-value1').text($('#checkbox1').val());
+    });
+
+    $('#checkbox-value2').text(questionAnswerOption2b);
+
+    $("#checkbox2").on('change', function() {
+      if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+        setQuestionAnswerOption2b(true);
+      } else {
+        $(this).attr('value', 'false');
+        setQuestionAnswerOption2b(false);
+      }
+      
+      $('#checkbox-value2').text($('#checkbox2').val());
+    });
+
+    $('#checkbox-value3').text(questionAnswerOption3b);
+
+    $("#checkbox3").on('change', function() {
+      if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+        setQuestionAnswerOption3b(true);
+      } else {
+        $(this).attr('value', 'false');
+        setQuestionAnswerOption3b(false);
+      }
+      
+      $('#checkbox-value3').text($('#checkbox3').val());
+    });
+
+    function setdefAnswer(defAnswer, bDefAnswer){
+        
+        const data =  {
+            text: defAnswer,
+            is_correct: bDefAnswer
+        }
+        setDefaultAnswer(data)
     }
     
     return (
@@ -178,30 +233,61 @@ const QuestionFormEdit = (id ) => {
                 <form className="text-light" >
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
-                            <option id= "ScId"value="SC">Single Choice</option>
                             <option id="McId" value="MC">Multiple Choice</option>
+                            <option id= "ScId"value="SC">Single Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                         <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox"/>
+                        <input type="checkbox"  onChange={(e) => setMultiplayer(e.target.value)} checked={multiplayer}/>
                     </form>
 
                     <form className="text-light">
 
-                        <label className="mb-2"  htmlFor="exampleFormControlInput1">Question Text</label>
+                    <label className="mb-2"  htmlFor="exampleFormControlInput1">Question Text</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1"
-                            placeholder={questionText}
+                            placeholder="New Question"
                             text={questionText}
                             onChange={(e) => setQuestionText(e.target.value)}
                             ></input>
-
                         <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers </label> 
 
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer} text={defaultAnswer} 
-                            onChange={(e) => setDefaultAnswer(e.target.value)}></input>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer.text} text={defaultAnswer.text} 
+                            onChange={(e) => setdefAnswer(e.target.value, true)}></input>
+                            </div>
+                        </div>
+                        <div id= "containerID2" className="container2"> 
+                            <label htmlFor="exampleFormControlInput2">Choice 2</label>
+                            <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder={questionAnswerOption1} text={questionAnswerOption1} 
+                                onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input>
+                                <input className="right" id="checkbox1" type="checkbox" checked={questionAnswerOption1b}
+                                onChange={(e) => setQuestionAnswerOption1b(e.target.value)}></input> 
+                                <label id="checkbox-value1"></label>
+                            </div>
+                        </div>
+                        <div id= "containerID3" className="container3"> 
+                            <label htmlFor="exampleFormControlInput3">Choice 3</label>
+                            <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput3" placeholder={questionAnswerOption2} text={questionAnswerOption2} 
+                                onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
+                                </input>
+                                <input className="right" id="checkbox2" type="checkbox" checked={questionAnswerOption2b}
+                                onChange={(e) => setQuestionAnswerOption2b(e.target.value)}></input> 
+                                <label id="checkbox-value2"></label>
+                            </div>
+                        </div>
+                        <div id= "containerID4" className="container4"> 
+                            <label htmlFor="exampleFormControlInput4">Choice 4</label>
+                            <div>
+                                <input type="text" class="form-control" id="exampleFormControlInput4" placeholder={questionAnswerOption3} text={questionAnswerOption3} 
+                                onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
+                                </input>
+                                <input className="right" id="checkbox3" type="checkbox" checked={questionAnswerOption3b}
+                                onChange={(e) => setQuestionAnswerOption3b(e.target.value)}></input> 
+                                <label id="checkbox-value3"></label>
                             </div>
                         </div>
                     </form>
