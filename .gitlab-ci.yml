@@ -76,6 +76,8 @@ test:
   stage: test
   #image: mcr.microsoft.com/playwright:v1.28.0-focal
   before_script:
+    # - bash ./setup_env.sh
+
     # Prepare and run database
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker run
@@ -103,9 +105,18 @@ test:
       -e DJANGO_SESSION_COOKIE_SECURE=False
       -e DJANGO_DATABASE_URL=mysql://root:$SQL_ROOT_PASSWORD@Postgres_DB/$SQL_DATABASE
       -e DJANGO_FRONTEND_URL=localhost:3000
-      $IMAGE_TAG_BACKEND
-      /src/scripts/run_backend_fixtures.sh
+      $IMAGE:backend
+      #/src/scripts/run_backend_fixtures.sh
     - echo "Done with before script"
+
+    # Prepare and run frontend
+    #- docker run
+    #  --name Frontend_Container
+    #  -d
+    #  -p 3000:3000
+    #  -e REACT_APP_BACKEND_URL=http://localhost:8000
+    #  -e REACT_APP_ENVIRONMENT=E2E
+    #  mcr.microsoft.com/playwright:v1.28.0-focal
 
   script:
     - cd ./Frontend/
