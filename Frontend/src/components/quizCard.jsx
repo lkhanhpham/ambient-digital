@@ -9,8 +9,8 @@ const Quiz = (props) => {
         const response = await fetch("http://127.0.0.1:8000/api/wholequiz/" + props.id + "/")
         const data = await response.json()
         if (response.ok) {
-            console.log(data.quiz_field)
-            setFields(data.quiz_field)
+            console.log(data.field_quiz)
+            setFields(data.field_quiz)
         }
         else {
             console.log(response.status)

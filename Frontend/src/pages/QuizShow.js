@@ -179,7 +179,7 @@ const QuizShow = (props) => {
         let rows = []
         for (let k = 0; k < fields.length; k++){
                 if(fields[k].categorie_name == cols[i]){
-                    rows.push(<Field category = {fields[k].categorie_name} points = {fields[k].point} question ={fields[k].question_text} />)
+                    rows.push(<Field category = {fields[k].categorie_name} points = {fields[k].point}  chosen={true} question ={fields[k].question.question_text} />)
                 }
             }
             myFields.push(<div className='d-flex flex-column'>{rows}</div>)

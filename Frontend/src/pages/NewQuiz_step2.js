@@ -147,7 +147,7 @@ const NewQuiz2 = () => {
                     url: "http://localhost:8000/api/field/",
                     data: {
                         point: fields[i].point,
-                        question: fields[i].question,
+                        question_id: fields[i].question ,
                         categorie: fields[i].categorie,
                         quiz: fields[i].quiz
                     },
