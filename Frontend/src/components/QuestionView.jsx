@@ -26,7 +26,7 @@ const QuestionView = () => {
     )
 
     const deleteItem = async (questionId) => {
-        console.log(questionId)
+
         if (window.confirm('Do you really want to delete this question?'))
         {
             axios(
@@ -47,14 +47,31 @@ const QuestionView = () => {
     }
 
     const editItem = async (questionId) => {
-        console.log(questionId)
-        navigate("/QuestionCreator/EditQuestion", 
+        
+        const response = await fetch("http://localhost:8000/api/question/"+questionId+"/") 
+        const data = await response.json()
+        
+        if(data.question_type==="MC"){
+            navigate("/QuestionCreator/EditQuestionMC", 
             {state: 
             {   
                 id: questionId, 
             }
         } 
         )
+        }
+        else{
+            navigate("/QuestionCreator/EditQuestion", 
+            {state: 
+            {   
+                id: questionId, 
+            }
+        } 
+        )
+        }
+       
+       
+
     }
 
     return (
