@@ -8,24 +8,35 @@ services:
 stages:
   - build
   - deploy
+  - test
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
-before_script:
-  - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-  - export BACKEND_IMAGE=$IMAGE:backend
-  - export NGINX_IMAGE=$IMAGE:nginx
-  - apk add --no-cache openssh-client bash
-  - echo $SQL_HOST
-  - chmod +x ./setup_env.sh
-  - bash ./setup_env.sh
-  - ls -a
-  - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+#before_script:
+#  - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+#  - export BACKEND_IMAGE=$IMAGE:backend
+#  - export NGINX_IMAGE=$IMAGE:nginx
+#  - apk add --no-cache openssh-client bash
+#  - echo $SQL_HOST
+#  - chmod +x ./setup_env.sh
+#  - bash ./setup_env.sh
+#  - ls -a
+#  - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
 
 build:
   stage: build
+  before_script:
+    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - export BACKEND_IMAGE=$IMAGE:backend
+    - export NGINX_IMAGE=$IMAGE:nginx
+    - apk add --no-cache openssh-client bash
+    - echo $SQL_HOST
+    - chmod +x ./setup_env.sh
+    - bash ./setup_env.sh
+    - ls -a
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker pull $IMAGE:backend || true
     - docker pull $IMAGE:nginx || true
@@ -37,6 +48,16 @@ build:
 
 deploy:
   stage: deploy
+  before_script:
+    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - export BACKEND_IMAGE=$IMAGE:backend
+    - export NGINX_IMAGE=$IMAGE:nginx
+    - apk add --no-cache openssh-client bash
+    - echo $SQL_HOST
+    - chmod +x ./setup_env.sh
+    - bash ./setup_env.sh
+    - ls -a
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - mkdir -p ~/.ssh
     - echo "$PRIVATE_KEY" | tr -d '\r' > ./id_rsa
@@ -50,3 +71,67 @@ deploy:
     - bash ./deploy.sh
   only:
     - main
+
+test:
+  stage: test
+  #image: mcr.microsoft.com/playwright:v1.28.0-focal
+  before_script:
+    # - bash ./setup_env.sh
+
+    # Prepare and run database
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker run
+      --name Postgres_DB
+      -e POSTGRES_PASSWORD=$SQL_PASSWORD
+      -d
+      --health-cmd "pg_isready -U postgres"
+      --health-interval 10s
+      --health-timeout 5s
+      --health-start-period 5s
+      --health-retries 10
+      postgres:13-alpine
+    - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; echo "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)"; done
+    - echo "Database is prepared and running"
+
+    # Prepare and run backend
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker run
+      --name Backend_Container
+      --link Postgres_DB
+      -v "$PWD":/usr/src/app 
+      -w /usr/src/app
+      -p 8000:8000
+      -e DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
+      -e DJANGO_CELERY_TASK_ALWAYS_EAGER=True
+      -e DJANGO_SESSION_COOKIE_SECURE=False
+      -e DJANGO_DATABASE_URL=postgresql://postgres:$SQL_PASSWORD@Postgres_DB/$SQL_DATABASE
+      -e DJANGO_FRONTEND_URL=localhost:3000
+      -d django bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+    - echo "Backend is prepared and running"
+
+    # Prepare and run frontend
+    - docker run
+      --name Frontend_Container
+      -d
+      -p 3000:3000
+      -e REACT_APP_BACKEND_URL=http://localhost:8000
+      -e REACT_APP_ENVIRONMENT=E2E
+      mcr.microsoft.com/playwright:v1.28.0-focal
+    - echo "Backend is prepared and running"
+
+
+  script:
+    - cd ./Frontend/
+    - npm install --include=dev
+    - npx playwright install --with-deps
+    - npx playwright test
+  only:
+    - feature/fragen-erstellen
+#  artifacts:
+#    when: always
+#    paths:
+#        - Frontend/test-results/
+#        - Frontend/playwright-report/
+#        - Frontend/results.xml
+#    reports:
+#        junit: Frontend/results.xml

@@ -1,6 +1,7 @@
-from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, WholeQuizSerializer, AnswerSerializer
-from rest_framework import viewsets      
-from .models import Quiz, Categorie, Question, Field, FurtherAnswer                 
+from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
+from .serializers import WholeQuizSerializer,QuizAuthorSerializer
+from rest_framework import viewsets, mixins      
+from .models import Quiz, Categorie, Question, Field, User            
 
 class QuizView(viewsets.ModelViewSet):  
     serializer_class = QuizSerializer   
@@ -18,10 +19,11 @@ class FieldView(viewsets.ModelViewSet):
     serializer_class = FieldSerializer   
     queryset = Field.objects.all()  
 
-class WholeQuizView(viewsets.ModelViewSet):
+class WholeQuizView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class=WholeQuizSerializer
     queryset=Quiz.objects.all()
 
-class AnswerOptionView(viewsets.ModelViewSet):
-    serializer_class=AnswerSerializer
-    queryset=FurtherAnswer.objects.all()
+class QuizAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
+    serializer_class = QuizAuthorSerializer
+    queryset=User.objects.all()
+    lookup_field = 'id'

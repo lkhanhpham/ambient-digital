@@ -29,34 +29,31 @@ const QuizView = () => {
     const deleteItem = async (quizId) => {
         // delete function
         console.log(quizId)
-        if (window.confirm('Do you really want to delete this quiz?')){
-            axios(
-                {
-                    method: "DELETE",
-                    url: "http://localhost:8000/api/quiz/"+quizId+"/",
-                    headers: {'Content-Type': 'application/json'}
-                }
-            ).then((response) => {
-                console.log(response.data)
-            })
-
-            window.location.reload();
-        }else{
-            // They clicked no
-        }
+        
+        axios(
+            {
+                method: "DELETE",
+                url: "http://localhost:8000/api/quiz/"+quizId+"/",
+                headers: {'Content-Type': 'application/json'}
+            }
+        ).then((response) => {
+            console.log(response.data)
+        })
+        window.location.reload();
     }
 
     const editItem = async (quizId) => {
         // edit function
         //leads uder to the quizEditor page for the chosen quiz
         console.log(quizId)
-        navigate("/QuizCreator/"+quizId+"/", 
+        navigate("/QuizCreator/EditQuiz", 
             {state: 
             {   
                 id: quizId, 
             }
         } 
         )
+
     }
 
     return (

@@ -11,12 +11,7 @@ const NewQuestion = () => {
 
     return (
         <div className="container">
-            <p>Folgene Daten wurden gespeichert.</p>
-            <p>{question_text}</p>
-            <p>{answer_text}</p>
-            <p>{question_answer2}</p>
-            <p>{question_answer3}</p>
-            <p>{question_answer4}</p>
+            <p>Deine Frage wurde erfolgreich gespeichert</p>
             
         </div>
     )
