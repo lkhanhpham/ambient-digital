@@ -123,29 +123,10 @@ const QuizForm = () => {
                         <Link to="/Library">
                             <button className="btn btn-secondary me-2">Cancel</button>
                         </Link>
-                        {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
+
                         <button onClick={createQuiz} className="btn btn-primary">Create</button>
-                        {/* </Link> */}
                     </div>
                     {/* modal show to announce that quiz is created successfully */}
-                    {/* <Modal
-                        size="lg"
-                        aria-labelledby="success"
-                        centered
-                        show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title id="warning">New Quiz Created!</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Quiz created with id: {quizId}</p>
-                           
-                        </Modal.Body>
-                        <Modal.Footer>
-                        <button className="btn btn-primary" onClick={createFrontendQuiz}>Continue</button>
-                        </Modal.Footer>
-                    </Modal> */}
                     <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New quiz created!"} body = {"Quiz created with id: " + quizId} onclick = {createFrontendQuiz} />
 
                 </div>

@@ -1,8 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 
 // For each created quiz one quizcard is rendered
-const Quiz = ({ title, pub_date, nr_of_categories, deleteItem, editItem }) => {
+const Quiz = (props) => {
+    const navigate = useNavigate()
+    const [fields, setFields] = useState([])
+    const getAllFields = async () => {
+        const response = await fetch("http://127.0.0.1:8000/api/wholequiz/" + props.id + "/")
+        const data = await response.json()
+        if (response.ok) {
+            console.log(data.quiz_field)
+            setFields(data.quiz_field)
+        }
+        else {
+            console.log(response.status)
+            console.log("Failed Network request")
 
+        }
+        
+    }
+
+    const display = (event) => {
+        event.preventDefault()
+        navigate("/Quiz/" + props.id + "/", { state: { id: props.id, title: props.title, nr_of_categories: props.nr_of_categories, fields: fields } })
+    }
+        useEffect(
+        () => {
+            getAllFields()
+        }, []
+    )
     return (
         <div className='d-inline-block custom-card m-3'
             style={{
@@ -16,18 +42,18 @@ const Quiz = ({ title, pub_date, nr_of_categories, deleteItem, editItem }) => {
                 height: '287px'
             }}>
             <div className='d-flex justify-content-center p-3'>
-                <p className='quiz-title'> {title} </p>
+                <p className='quiz-title' onClick={display}> {props.title} </p>
             </div>
             <div className='d-flex justify-content-center p-3'>
-                <p className='body-text'> {nr_of_categories} categories</p>
+                <p className='body-text'> {props.nr_of_categories} categories</p>
             </div>
             <div className='d-flex justify-content-center p-3'>
-                <p className='body-text text-muted'> Created: {pub_date}</p>
+                <p className='body-text text-muted'> Created: {props.pub_date}</p>
             </div>
             <div className='d-flex justify-content-center p-3'>
                 <div className='row '>
-                    <button className="col me-3 my-btn " onClick={editItem}>Edit</button>
-                    <button className="col my-btn" onClick={deleteItem}>Delete</button>
+                    <button className="col me-3 my-btn " onClick={props.editItem}>Edit</button>
+                    <button className="col my-btn" onClick={props.deleteItem}>Delete</button>
                 </div>
             </div>
             <style jsx="true">
@@ -46,6 +72,11 @@ const Quiz = ({ title, pub_date, nr_of_categories, deleteItem, editItem }) => {
                 }
                 .quiz-title{
                     font-weight: 500;
+                }
+                .quiz-title:hover{
+                    font-size: 1.2rem;
+                    color:blue;
+                    cursor: pointer;
                 }
                   `
                 }

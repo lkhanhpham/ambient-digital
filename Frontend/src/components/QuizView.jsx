@@ -76,6 +76,7 @@ const QuizView = () => {
 
                                     <Quiz
                                         key={item.id}
+                                        id = {item.id}
                                         title={item.quiz_name}
                                         pub_date={item.pub_date.substring(0,10)}
                                         nr_of_categories={item.nr_of_categories}
