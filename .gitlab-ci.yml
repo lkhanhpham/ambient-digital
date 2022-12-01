@@ -90,8 +90,8 @@ test:
       --health-start-period 5s
       --health-retries 10
       postgres:13-alpine
-      
     - while [ "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)" != '"healthy"' ]; do sleep 10; echo "$(docker inspect --format='{{json .State.Health.Status}}' Postgres_DB)"; done
+    - echo "Database is prepared and running"
 
     # Prepare and run backend
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
@@ -107,18 +107,18 @@ test:
       -e DJANGO_DATABASE_URL=postgresql://postgres:$SQL_PASSWORD@Postgres_DB/$SQL_DATABASE
       -e DJANGO_FRONTEND_URL=localhost:3000
       -d django bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
-
-      #/src/scripts/run_backend_fixtures.sh
-    - echo "Done with before script"
+    - echo "Backend is prepared and running"
 
     # Prepare and run frontend
-    #- docker run
-    #  --name Frontend_Container
-    #  -d
-    #  -p 3000:3000
-    #  -e REACT_APP_BACKEND_URL=http://localhost:8000
-    #  -e REACT_APP_ENVIRONMENT=E2E
-    #  mcr.microsoft.com/playwright:v1.28.0-focal
+    - docker run
+      --name Frontend_Container
+      -d
+      -p 3000:3000
+      -e REACT_APP_BACKEND_URL=http://localhost:8000
+      -e REACT_APP_ENVIRONMENT=E2E
+      mcr.microsoft.com/playwright:v1.28.0-focal
+    - echo "Backend is prepared and running"
+
 
   script:
     - cd ./Frontend/
