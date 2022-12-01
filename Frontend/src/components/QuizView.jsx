@@ -29,7 +29,7 @@ const QuizView = () => {
     const deleteItem = async (quizId) => {
         // delete function
         console.log(quizId)
-        if (window.confirm('Do you really want to delete this question?')){
+        if (window.confirm('Do you really want to delete this quiz?')){
             axios(
                 {
                     method: "DELETE",

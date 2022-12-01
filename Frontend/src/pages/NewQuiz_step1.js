@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import Field from "../components/Field";
 import CatField from "../components/CatField";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -10,20 +9,6 @@ const NewQuiz1 = () => {
     const quiz_name = location.state.quiz_name
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
-
-    // const getQuizId = async () => {
-    //     const response = await fetch('http://127.0.0.1:8000/api/quiz/')
-    //     const data = await response.json()
-    //     if (response.ok) {
-    //         console.log(data)
-    //         setQuiz(data)
-    //     }
-    //     else {
-    //         console.log(response.status)
-    //         console.log("Failed Network request")
-
-    //     }
-    // }
 
     const quizId = location.state.quizId
     const [cat_name] = useState([])
@@ -101,7 +86,7 @@ const NewQuiz1 = () => {
             chosen[position] = true
         }
         else{
-            showWarning1()
+            handleShowWarning1()
         }
         checkValid(chosen)
         handleClose()
@@ -122,7 +107,7 @@ const NewQuiz1 = () => {
     //after user chooses the categories, proceed to next step to add questions
     const nextStep = () => {
         checkValid(chosen)
-        if (valid == true) {
+        if (valid === true) {
             navigate("/QuizCreator/Newquiz2", {
                 state: {
                     quiz_name: quiz_name, nr_of_rows: nr_of_rows,
@@ -182,7 +167,9 @@ const NewQuiz1 = () => {
                         </select>
 
                     </form>
-
+                    <Link to="CategoryCreator" target='_blank'>
+                        <button className="small-button mt-3">Create category</button>
+                    </Link>
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="d-flex justify-content-end p-3">
