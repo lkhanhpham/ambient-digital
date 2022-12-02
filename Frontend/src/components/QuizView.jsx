@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Quiz from './quizCard'
 import { Link, useNavigate} from "react-router-dom";
 import axios from "axios"
+import {API_BASE_URL} from "../constants.ts";
 //all created quizes are inserted into the quizview
 const QuizView = () => {
     const [quizzes, setQuizzes] = useState([])
     const navigate = useNavigate()
 
     const getAllQuizzes = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/wholequiz/')
+        const response = await fetch(`${API_BASE_URL}/api/wholequiz/`)
         const data = await response.json()
         if (response.ok) {
             console.log(data)
@@ -33,7 +34,7 @@ const QuizView = () => {
         axios(
             {
                 method: "DELETE",
-                url: "http://localhost:8000/api/quiz/"+quizId+"/",
+                url: `${API_BASE_URL}/api/quiz/`+quizId+"/",
                 headers: {'Content-Type': 'application/json'}
             }
         ).then((response) => {

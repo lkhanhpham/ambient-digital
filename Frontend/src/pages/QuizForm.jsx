@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import ModalSuccess from "../components/ModalSuccess";
+import {API_BASE_URL} from "../constants.ts";
 const QuizForm = () => {
 
     const [quizName, setQuizName] = useState('')
@@ -43,7 +44,7 @@ const QuizForm = () => {
         axios(
             {
                 method: "POST",
-                url: "http://localhost:8000/api/quiz/",
+                url: `${API_BASE_URL}/api/quiz/`,
                 data: {
                     quiz_name: quizName,
                     nr_of_rows: nrOfRows,

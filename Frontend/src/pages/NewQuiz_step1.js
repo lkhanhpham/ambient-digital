@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
+import {API_BASE_URL} from "../constants.ts";
 const NewQuiz1 = () => {
     const location = useLocation();
     const quiz_name = location.state.quiz_name
@@ -48,7 +49,7 @@ const NewQuiz1 = () => {
 
     //fetch all created categories
     const getAllCats = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/categorie/')
+        const response = await fetch(`${API_BASE_URL}/api/categorie/`)
         const data = await response.json()
         if (response.ok) {
             console.log(data)

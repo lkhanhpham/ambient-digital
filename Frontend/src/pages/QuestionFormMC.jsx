@@ -3,6 +3,7 @@ import axios from "axios"
 import React from "react";
 import { Link, useNavigate} from "react-router-dom";
 import $ from "jquery";
+import {API_BASE_URL} from "../constants.ts";
 
 var dropdownV="MC";
 
@@ -58,7 +59,7 @@ const QuestionForm = () => {
         axios(
             {
                 method: "POST",
-                url: "http://localhost:8000/api/question/",
+                url: `${API_BASE_URL}/api/question/`,
                 data: {
                     question_text: questionText,
                     author: 1,

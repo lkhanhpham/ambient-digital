@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import ModalSuccess from "../components/ModalSuccess";
 import axios from "axios"
+import {API_BASE_URL} from "../constants.ts";
 
 const NewQuiz2 = () => {
     const location = useLocation();
@@ -144,7 +145,7 @@ const NewQuiz2 = () => {
             axios(
                 {
                     method: "POST",
-                    url: "http://localhost:8000/api/field/",
+                    url: `${API_BASE_URL}/api/field/`,
                     data: {
                         point: fields[i].point,
                         question_id: fields[i].question ,
@@ -164,7 +165,7 @@ const NewQuiz2 = () => {
 
     //fetch all created questions
     const getAllQues = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/question/')
+        const response = await fetch(`${API_BASE_URL}/api/question/`)
         const data = await response.json()
         if (response.ok) {
             console.log(data)

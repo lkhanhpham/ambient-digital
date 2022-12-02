@@ -3,6 +3,7 @@ import axios from "axios"
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
+import {API_BASE_URL} from "../constants.ts";
 const CategoryCreator = () => {
 
     const [catName, setCatName] = useState('')
@@ -15,7 +16,7 @@ const CategoryCreator = () => {
         axios(
             {
                 method: "POST",
-                url: "http://localhost:8000/api/categorie/",
+                url: `${API_BASE_URL}/api/categorie/`,
                 data: {
                     categorie_name: catName,
                 },

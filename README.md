@@ -1,4 +1,5 @@
 # Ambient Digital
+
 ## Jeopardy Quiz
 
 ## Intro
@@ -51,6 +52,7 @@ In a seperate terminal navigate to the Backend folder to start the backend with 
 ```
 $ python ./manage.py runserver
 ```
+
 ## Current User Status
 Now you can see the current status of the frontend by visiting localhost:3000.
 
@@ -74,3 +76,15 @@ Currently our backend is faster than our frontend, so there are two branches, [f
 To see this you can checkout this branches clone them and go to localhost:8000/api to see all the devoloped APIs and their payload.
 
 Checkout this branch and follow the setup instructions there.
+
+## Links
+
+[Vercel](https://vercel.com/capstone-ambientdigital/quizai) - Frontend Deployment <br>
+[Heroku](https://dashboard.heroku.com/teams/capstone-ambientdigital-2022/apps) - Backend Deployment
+
+Test | Frontend (Link needs to be done. As of now, test deployments result in a dynamic URL)
+(The most recent Test URL can be retrieved [here](https://vercel.com/capstone-ambientdigital/quizai/deployments)) <br>
+[Test | Backend](https://quizai-test.herokuapp.com/admin/login)
+
+[Prod | Frontend](https://quizai.vercel.app/) <br>
+[Prod | Backend](https://quizai-prod.herokuapp.com/admin/login)

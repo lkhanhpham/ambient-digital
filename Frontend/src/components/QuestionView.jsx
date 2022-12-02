@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Question from './QuestionCard'
 import { Link, useNavigate} from "react-router-dom";
 import axios from "axios"
+import {API_BASE_URL} from "../constants.ts";
 
 const QuestionView = () => {
     const [questions, setQuiz] = useState([])
     const navigate = useNavigate();
 
     const getAllQuestions = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/question')
+        const response = await fetch(`${API_BASE_URL}/api/question`)
         const data = await response.json()
         if (response.ok) {
             setQuiz(data)
@@ -32,7 +33,7 @@ const QuestionView = () => {
             axios(
                 {
                     method: "DELETE",
-                    url: "http://localhost:8000/api/question/"+questionId+"/",
+                    url: `${API_BASE_URL}/api/question/`+questionId+"/",
                     headers: {'Content-Type': 'application/json'}
                 }
             ).then((response) => {
@@ -48,7 +49,7 @@ const QuestionView = () => {
 
     const editItem = async (questionId) => {
         
-        const response = await fetch("http://localhost:8000/api/question/"+questionId+"/") 
+        const response = await fetch(`${API_BASE_URL}/api/question/`+questionId+"/")
         const data = await response.json()
         
         if(data.question_type==="MC"){

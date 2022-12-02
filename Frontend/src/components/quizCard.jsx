@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import {API_BASE_URL} from "../constants.ts";
 
 // For each created quiz one quizcard is rendered
 const Quiz = (props) => {
     const navigate = useNavigate()
     const [fields, setFields] = useState([])
     const getAllFields = async () => {
-        const response = await fetch("http://127.0.0.1:8000/api/wholequiz/" + props.id + "/")
+        const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + props.id + "/")
         const data = await response.json()
         if (response.ok) {
             console.log(data.field_quiz)
