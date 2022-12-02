@@ -6,6 +6,6 @@ test('test', async ({ page }) => {
   await page.locator('.nav__menu-bar').click();
   await page.getByRole('link', { name: 'My Library' }).click();
 
-  await expect(page).toHaveURL('/Library/');
+  await expect(page).toHaveURL('/Library');
   
 });

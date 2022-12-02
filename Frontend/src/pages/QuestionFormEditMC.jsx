@@ -20,7 +20,7 @@ const QuestionFormEdit = (id ) => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('')
+
     const [questiontype, setQuestionType] = useState('MC')
     const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
     const [questionAnswerOption2, setQuestionAnswerOption2] = useState('')
@@ -63,7 +63,7 @@ const QuestionFormEdit = (id ) => {
             setDefaultAnswer(data.default_answer)
             setAuthorId(1)
             setQuestionType(data.question_type)
-            setMultiplayer(data.multiplayer)
+
             setQuestionAnswerOption1(data.question_answer_option[0].text)
             setQuestionAnswerOption2(data.question_answer_option[1].text)
             setQuestionAnswerOption3(data.question_answer_option[2].text)
@@ -92,7 +92,6 @@ const QuestionFormEdit = (id ) => {
                 data: {
                     question_text: questionText,
                     default_answer: defaultAnswer,
-                    multiplayer: multiplayer,
                     question_type: questiontype,
                     author: 1,
                     question_answer_option:[
@@ -123,7 +122,6 @@ const QuestionFormEdit = (id ) => {
                 { 
                     question_text: questionText,
                 default_answer: defaultAnswer,
-                multiplayer: multiplayer,
                 question_type: questiontype,
                 author: 1,
                 question_answer_option:[
@@ -159,7 +157,6 @@ const QuestionFormEdit = (id ) => {
                             text: defaultAnswer.text,
                             is_correct: defaultAnswer.is_correct
                         },
-                        multiplayer: multiplayer,
                         question_type: value,
                         author: 1
                     }
@@ -171,21 +168,22 @@ const QuestionFormEdit = (id ) => {
         dropdownV=value
     }
 
-    $('#checkbox-value1').text(questionAnswerOption1b);
+    $('#checkboxValue1').text($('#checkbox1').val());
 
     $("#checkbox1").on('change', function() {
       if ($(this).is(':checked')) {
         $(this).attr('value', 'true');
-        setQuestionAnswerOption1b(true);
+        //setQuestionAnswerOption1b(true);
       } else {
         $(this).attr('value', 'false');
-        setQuestionAnswerOption1b(false);
+        //setQuestionAnswerOption1b(false);
       }
       
-      $('#checkbox-value1').text($('#checkbox1').val());
+      $('#checkboxValue1').text($('#checkbox1').val());
     });
 
-    $('#checkbox-value2').text(questionAnswerOption2b);
+    //Checkbox Choice 3
+    $('#checkboxValue2').text($('#checkbox2').val());
 
     $("#checkbox2").on('change', function() {
       if ($(this).is(':checked')) {
@@ -196,10 +194,10 @@ const QuestionFormEdit = (id ) => {
         setQuestionAnswerOption2b(false);
       }
       
-      $('#checkbox-value2').text($('#checkbox2').val());
+      $('#checkboxValue2').text($('#checkbox2').val());
     });
-
-    $('#checkbox-value3').text(questionAnswerOption3b);
+//Checkbox Choice 4
+    $('#checkboxValue3').text(questionAnswerOption3b);
 
     $("#checkbox3").on('change', function() {
       if ($(this).is(':checked')) {
@@ -210,7 +208,7 @@ const QuestionFormEdit = (id ) => {
         setQuestionAnswerOption3b(false);
       }
       
-      $('#checkbox-value3').text($('#checkbox3').val());
+      $('#checkboxValue3').text($('#checkbox3').val());
     });
 
     function setdefAnswer(defAnswer, bDefAnswer){
@@ -237,8 +235,6 @@ const QuestionFormEdit = (id ) => {
                             <option id= "ScId"value="SC">Single Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
-                        <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox"  onChange={(e) => setMultiplayer(e.target.value)} checked={multiplayer}/>
                     </form>
 
                     <form className="text-light">
@@ -265,7 +261,7 @@ const QuestionFormEdit = (id ) => {
                                 onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input>
                                 <input className="right" id="checkbox1" type="checkbox" checked={questionAnswerOption1b}
                                 onChange={(e) => setQuestionAnswerOption1b(e.target.value)}></input> 
-                                <label id="checkbox-value1"></label>
+                                <label id="checkboxValue1"></label>
                             </div>
                         </div>
                         <div id= "containerID3" className="container3"> 
@@ -276,7 +272,7 @@ const QuestionFormEdit = (id ) => {
                                 </input>
                                 <input className="right" id="checkbox2" type="checkbox" checked={questionAnswerOption2b}
                                 onChange={(e) => setQuestionAnswerOption2b(e.target.value)}></input> 
-                                <label id="checkbox-value2"></label>
+                                <label id="checkboxValue2"></label>
                             </div>
                         </div>
                         <div id= "containerID4" className="container4"> 
@@ -285,9 +281,9 @@ const QuestionFormEdit = (id ) => {
                                 <input type="text" class="form-control" id="exampleFormControlInput4" placeholder={questionAnswerOption3} text={questionAnswerOption3} 
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox3" type="checkbox" checked={questionAnswerOption3b}
+                                <input className="right" id="checkbox3" type="checkbox" placeholder={questionAnswerOption3b}
                                 onChange={(e) => setQuestionAnswerOption3b(e.target.value)}></input> 
-                                <label id="checkbox-value3"></label>
+                                <label id="checkboxValue3"></label>
                             </div>
                         </div>
                     </form>

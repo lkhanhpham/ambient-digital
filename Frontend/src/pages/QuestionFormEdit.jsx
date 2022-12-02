@@ -21,7 +21,6 @@ const QuestionFormEdit = (id ) => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('')
     const [questiontype, setQuestionType] = useState('')
 
     const $ = require( "jquery" );
@@ -58,8 +57,6 @@ const QuestionFormEdit = (id ) => {
             setDefaultAnswer(data.default_answer)
             setAuthorId(1)
             setQuestionType(data.question_type)
-            var mb=data.multiplayer
-            setMultiplayer(mb)
 
         }
         else {
@@ -86,7 +83,6 @@ const QuestionFormEdit = (id ) => {
                         text: defaultAnswer.text,
                         is_correct: true
                     },
-                    multiplayer: multiplayer,
                     question_type: questiontype,
                     author: 1
                 },
@@ -105,7 +101,6 @@ const QuestionFormEdit = (id ) => {
                         text: defaultAnswer.text,
                         is_correct: defaultAnswer.is_correct
                     },
-                    multiplayer: multiplayer,
                     question_type: questiontype,
                     author: 1
                 }
@@ -125,7 +120,6 @@ const QuestionFormEdit = (id ) => {
                             text: defaultAnswer.text,
                             is_correct: defaultAnswer.is_correct
                         },
-                        multiplayer: multiplayer,
                         question_type: value,
                         author: 1
                     }
@@ -163,8 +157,6 @@ const QuestionFormEdit = (id ) => {
                             <option id="McId" value="MC">Multiple Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
-                        <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)} checked={multiplayer}/>
                     </form>
 
                     <form className="text-light">
