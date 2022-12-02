@@ -76,8 +76,8 @@ test:
   stage: test
   script:
     - docker-compose up -d
-    - npx playwright install --with-deps
-    - npx playwright test
+    - docker exec ambient_frontend npx playwright install --with-deps
+    - docker exec ambient_frontend npx playwright test
   only:
     - feature/fragen-erstellen
   artifacts:
