@@ -12,7 +12,6 @@ const QuestionForm = () => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('false')
     const [questionType, setQuestionType] = useState('')
 
     
@@ -36,7 +35,6 @@ const QuestionForm = () => {
                     text: defaultAnswer,
                     is_correct: true
                 },
-                multiplayer: multiplayer,
                 question_type: dropdownV,
                 author: 1
             }
@@ -52,7 +50,6 @@ const QuestionForm = () => {
                 data: {
                     question_text: questionText,
                     author: 1,
-                    multiplayer: multiplayer,
                     question_type: dropdownV,
                     default_answer: {
                         text: defaultAnswer,
@@ -78,7 +75,6 @@ const QuestionForm = () => {
                             text: defaultAnswer,
                             is_correct: true
                         },
-                        multiplayer: multiplayer,
                         question_type: value,
                         author: 1
                     }
@@ -106,8 +102,6 @@ const QuestionForm = () => {
                             <option id="McId" value="MC">Multiple Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
-                        <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)}/>
                     </form>
 
                     <form className="text-light">

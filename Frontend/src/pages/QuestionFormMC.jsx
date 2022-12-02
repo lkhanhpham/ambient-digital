@@ -12,7 +12,6 @@ const QuestionForm = () => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
-    const [multiplayer, setMultiplayer] = useState('')
     const [questionType, setQuestionType] = useState('')
     const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
     const [questionAnswerOption2, setQuestionAnswerOption2] = useState('')
@@ -34,7 +33,6 @@ const QuestionForm = () => {
                     text: defaultAnswer,
                     is_correct: true
                 },
-                multiplayer: multiplayer,
                 question_type: dropdownV,
                 author: 1,
                 question_answer_option: 
@@ -64,7 +62,6 @@ const QuestionForm = () => {
                 data: {
                     question_text: questionText,
                     author: 1,
-                    multiplayer: multiplayer,
                     question_type: dropdownV,
                     default_answer: {
                         text: defaultAnswer,
@@ -93,7 +90,6 @@ const QuestionForm = () => {
         event.preventDefault()
         console.log(questionText)
         console.log(defaultAnswer)
-        console.log(multiplayer+ "Multiplayer")
         console.log(dropdownV + "QuestionType")
         console.log(questionAnswerOption1 + "QuestionOption")
         console.log(questionAnswerOption2 + "QuestionOption2")
@@ -116,7 +112,6 @@ const QuestionForm = () => {
                             text: defaultAnswer,
                             is_correct: true
                         },
-                        multiplayer: multiplayer,
                         question_type: value,
                         author: 1
                     }
@@ -184,8 +179,6 @@ const QuestionForm = () => {
                             <option id= "ScId"value="SC">Single Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
-                        <label className="mb-2 rechts-oben"  htmlFor="exampleFormControlInput1">Multiplayer </label> 
-                        <input type="checkbox" onChange={(e) => setMultiplayer(e.target.value)}/>
                     </form>
 
                     <form className="text-light">
