@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import {React, useEffect } from 'react';
 import Question from '../components/QuestionCard';
 import $ from "jquery";
+import {API_BASE_URL} from "../constants.ts";
 
 
 
@@ -15,7 +16,7 @@ const QuestionFormEdit = (id ) => {
     const idQuestion= location.state.id
 
 
-    const url= "http://localhost:8000/api/question/"+idQuestion+"/";
+    const url= `${API_BASE_URL}/api/question/`+idQuestion+"/";
    
     const [questions, setQuiz] = useState([])
     const [questionText, setQuestionText] = useState('')

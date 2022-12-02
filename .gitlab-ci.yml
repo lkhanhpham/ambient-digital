@@ -7,23 +7,12 @@ services:
 
 stages:
   - build
-  - deploy
   - test
+  - deploy
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
-
-#before_script:
-#  - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-#  - export BACKEND_IMAGE=$IMAGE:backend
-#  - export NGINX_IMAGE=$IMAGE:nginx
-#  - apk add --no-cache openssh-client bash
-#  - echo $SQL_HOST
-#  - chmod +x ./setup_env.sh
-#  - bash ./setup_env.sh
-#  - ls -a
-#  - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
 
 build:
   stage: build
@@ -43,44 +32,13 @@ build:
     - docker-compose -f docker-compose.ci.yml build
     - docker push $IMAGE:backend
     - docker push $IMAGE:nginx
-  only:
-    - main
 
-deploy:
-  stage: deploy
-  before_script:
-    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-    - export BACKEND_IMAGE=$IMAGE:backend
-    - export NGINX_IMAGE=$IMAGE:nginx
-    - apk add --no-cache openssh-client bash
-    - echo $SQL_HOST
-    - chmod +x ./setup_env.sh
-    - bash ./setup_env.sh
-    - ls -a
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-  script:
-    - mkdir -p ~/.ssh
-    - echo "$PRIVATE_KEY" | tr -d '\r' > ./id_rsa
-    - cat ./id_rsa
-    - chmod 700 ./id_rsa
-    - eval "$(ssh-agent -s)"
-    - ssh-add ./id_rsa
-    - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
-    - chmod +x ./deploy.sh
-    - scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml ec2-user@$EC2_PUBLIC_IP_ADDRESS:/home/ec2-user/Backend
-    - bash ./deploy.sh
-  only:
-    - main
-
-test:
+e2e_test:
   stage: test
   script:
     - docker-compose up -d
     - docker exec ambient_frontend npx playwright install --with-deps
     - docker exec ambient_frontend npx playwright test
-  only:
-    - develop
-    - main
   artifacts:
     when: always
     paths:
@@ -88,3 +46,56 @@ test:
         - Frontend/results.xml
     reports:
         junit: Frontend/results.xml
+  needs: [build]
+
+backend_to_test:
+  image: ruby:latest
+  stage: deploy
+  needs: [e2e_test]
+  before_script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+  script:
+    - cd Backend
+    - dpl --provider=heroku --app=$HEROKU_APPNAME_TEST --api-key=$HEROKU_API_KEY
+  only:
+    - develop
+
+frontend_to_test:
+  image: node:16.16.0
+  stage: deploy
+  needs: [e2e_test]
+  script:
+    - npm install --global vercel
+    - vercel pull --yes --environment=development --token=$VERCEL_API_TOKEN
+    - vercel build --token=$VERCEL_API_TOKEN
+    - vercel deploy --prebuilt  --token=$VERCEL_API_TOKEN
+  only:
+    - develop
+
+backend_to_prod:
+  image: ruby:latest
+  stage: deploy
+  needs: [e2e_test]
+  before_script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+  script:
+    - cd Backend
+    - dpl --provider=heroku --app=$HEROKU_APPNAME_PROD --api-key=$HEROKU_API_KEY
+  only:
+    - main
+
+frontend_to_prod:
+  image: node:16.16.0
+  stage: deploy
+  needs: [e2e_test]
+  script:
+    - npm install --global vercel
+    - vercel pull --yes --environment=production --token=$VERCEL_API_TOKEN
+    - vercel build --prod --token=$VERCEL_API_TOKEN
+    - vercel deploy --prebuilt --prod --token=$VERCEL_API_TOKEN
+  only:
+    - main

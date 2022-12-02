@@ -8,10 +8,10 @@ class Library extends Component {
                 <div className="container">
                 <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
                 <h3 className="big-title">My Library</h3>
-                </div> 
+                </div>
                 <div>
-                <QuizView />     
-                </div> 
+                <QuizView />
+                </div>
                 <div>
                     <QuestionView />
                 </div>

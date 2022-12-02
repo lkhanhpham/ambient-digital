@@ -144,7 +144,7 @@ const QuizShow = (props) => {
     //         axios(
     //             {
     //                 method: "POST",
-    //                 url: "http://localhost:8000/api/field/",
+    //                 url: `${API_BASE_URL}/api/field/`,
     //                 data: {
     //                     point: fields[i].point,
     //                     question: fields[i].question,
@@ -188,7 +188,7 @@ const QuizShow = (props) => {
 
     //fetch all created fields in the quiz
     // const getAllFields = async () => {
-    //     const response = await fetch("http://127.0.0.1:8000/api/wholequiz/" + quizId + "/")
+    //     const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + quizId + "/")
     //     const data = await response.json()
     //     if (response.ok) {
     //         console.log(data.quiz_field)
