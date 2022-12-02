@@ -79,7 +79,8 @@ test:
     - docker exec ambient_frontend npx playwright install --with-deps
     - docker exec ambient_frontend npx playwright test
   only:
-    - feature/fragen-erstellen
+    - develop
+    - main
   artifacts:
     when: always
     paths:
