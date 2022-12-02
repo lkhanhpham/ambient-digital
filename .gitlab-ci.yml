@@ -83,8 +83,7 @@ test:
   artifacts:
     when: always
     paths:
-        - Frontend/test-results/
         - Frontend/playwright-report/
-#        - Frontend/results.xml
-#    reports:
-#        junit: Frontend/results.xml
+        - Frontend/results.xml
+    reports:
+        junit: Frontend/results.xml
