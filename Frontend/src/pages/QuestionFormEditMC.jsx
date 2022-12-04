@@ -235,8 +235,6 @@ const QuestionFormEdit = (id ) => {
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
                             <option id="McId" value="MC">Multiple Choice</option>
-                            <option id= "ScId"value="SC">Single Choice</option>
-                            <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                     </form>
 
