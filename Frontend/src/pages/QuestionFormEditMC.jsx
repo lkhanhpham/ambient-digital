@@ -261,7 +261,7 @@ const QuestionFormEdit = (id ) => {
                             <div>
                                 <input type="text" class="form-control" id="exampleFormControlInput2" placeholder={questionAnswerOption1} text={questionAnswerOption1} 
                                 onChange={(e) => setQuestionAnswerOption1(e.target.value)} ></input>
-                                <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} defaultChecked={questionAnswerOption1b}></input> 
+                                <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} checked={questionAnswerOption1b} onChange={(e)=> setQuestionAnswerOption1b(!questionAnswerOption1b)}></input> 
                                 <label id="checkbox-value1"></label>
                             </div>
                         </div>
@@ -271,7 +271,7 @@ const QuestionFormEdit = (id ) => {
                                 <input type="text" class="form-control" id="exampleFormControlInput3" placeholder={questionAnswerOption2} text={questionAnswerOption2} 
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} defaultChecked={questionAnswerOption2b}></input> 
+                                <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} checked={questionAnswerOption2b} onChange={(e)=> setQuestionAnswerOption2b(!questionAnswerOption2b)}></input> 
                                 <label id="checkbox-value2"></label>
                             </div>
                         </div>
@@ -281,7 +281,7 @@ const QuestionFormEdit = (id ) => {
                                 <input type="text" class="form-control" id="exampleFormControlInput4" placeholder={questionAnswerOption3} text={questionAnswerOption3} 
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox3" type="checkbox" value={questionAnswerOption3b} defaultChecked={questionAnswerOption3b}>{console.log(questionAnswerOption3b)}</input> 
+                                <input className="right" id="checkbox3" type="checkbox" value={questionAnswerOption3b} checked={questionAnswerOption3b} onChange={(e)=> setQuestionAnswerOption3b(!questionAnswerOption3b)}></input> 
                                 <label id="checkbox-value3"></label>
                             </div>
                         </div>
