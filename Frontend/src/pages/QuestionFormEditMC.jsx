@@ -153,6 +153,7 @@ const QuestionFormEdit = (id ) => {
             navigate("/QuestionCreator/EditQuestion", 
                 {state: 
                     {
+                        id: idQuestion,
                         question_text: questionText,
                         default_answer:{
                             text: defaultAnswer.text,

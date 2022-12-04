@@ -115,7 +115,8 @@ const QuestionFormEdit = (id ) => {
         if(value==="MC"){
             navigate("/QuestionCreator/EditQuestionMC", 
                 {state: 
-                    {
+                    {    
+                        id: idQuestion, 
                         question_text: questionText,
                         default_answer:{
                             text: defaultAnswer.text,
@@ -155,7 +156,6 @@ const QuestionFormEdit = (id ) => {
                              placeholder={questiontype}
                              value={questiontype}>
                             <option id= "ScId"value="SC">Single Choice</option>
-                            <option id="McId" value="MC">Multiple Choice</option>
                             <option id= "EqId" value="EQ">Estimate Question</option>
                         </select>
                     </form>
