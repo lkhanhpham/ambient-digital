@@ -169,22 +169,21 @@ const QuestionFormEdit = (id ) => {
         dropdownV=value
     }
 
-    $('#checkboxValue1').text($('#checkbox1').val());
+    $('#checkbox-value1').text($('#checkbox1').val());
 
     $("#checkbox1").on('change', function() {
       if ($(this).is(':checked')) {
         $(this).attr('value', 'true');
-        //setQuestionAnswerOption1b(true);
+        setQuestionAnswerOption1b(true);
       } else {
         $(this).attr('value', 'false');
-        //setQuestionAnswerOption1b(false);
+        setQuestionAnswerOption1b(false);
       }
       
-      $('#checkboxValue1').text($('#checkbox1').val());
+      $('#checkbox-value1').text($('#checkbox1').val());
     });
 
-    //Checkbox Choice 3
-    $('#checkboxValue2').text($('#checkbox2').val());
+    $('#checkbox-value2').text($('#checkbox2').val());
 
     $("#checkbox2").on('change', function() {
       if ($(this).is(':checked')) {
@@ -195,21 +194,23 @@ const QuestionFormEdit = (id ) => {
         setQuestionAnswerOption2b(false);
       }
       
-      $('#checkboxValue2').text($('#checkbox2').val());
+      $('#checkbox-value2').text($('#checkbox2').val());
     });
-//Checkbox Choice 4
-    $('#checkboxValue3').text(questionAnswerOption3b);
+
+    $('#checkbox-value3').text($('#checkbox3').val());
 
     $("#checkbox3").on('change', function() {
       if ($(this).is(':checked')) {
         $(this).attr('value', 'true');
+        $(this).attr('checked', 'true');
         setQuestionAnswerOption3b(true);
       } else {
         $(this).attr('value', 'false');
+        $(this).attr('checked', 'false');
         setQuestionAnswerOption3b(false);
       }
       
-      $('#checkboxValue3').text($('#checkbox3').val());
+      $('#checkbox-value3').text($('#checkbox3').val());
     });
 
     function setdefAnswer(defAnswer, bDefAnswer){
@@ -242,7 +243,7 @@ const QuestionFormEdit = (id ) => {
 
                     <label className="mb-2"  htmlFor="exampleFormControlInput1">Question Text</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1"
-                            placeholder="New Question"
+                            placeholder={questionText}
                             text={questionText}
                             onChange={(e) => setQuestionText(e.target.value)}
                             ></input>
@@ -259,10 +260,9 @@ const QuestionFormEdit = (id ) => {
                             <label htmlFor="exampleFormControlInput2">Choice 2</label>
                             <div>
                                 <input type="text" class="form-control" id="exampleFormControlInput2" placeholder={questionAnswerOption1} text={questionAnswerOption1} 
-                                onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input>
-                                <input className="right" id="checkbox1" type="checkbox" checked={questionAnswerOption1b}
-                                onChange={(e) => setQuestionAnswerOption1b(e.target.value)}></input> 
-                                <label id="checkboxValue1"></label>
+                                onChange={(e) => setQuestionAnswerOption1(e.target.value)} ></input>
+                                <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} defaultChecked={questionAnswerOption1b}></input> 
+                                <label id="checkbox-value1"></label>
                             </div>
                         </div>
                         <div id= "containerID3" className="container3"> 
@@ -271,9 +271,8 @@ const QuestionFormEdit = (id ) => {
                                 <input type="text" class="form-control" id="exampleFormControlInput3" placeholder={questionAnswerOption2} text={questionAnswerOption2} 
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox2" type="checkbox" checked={questionAnswerOption2b}
-                                onChange={(e) => setQuestionAnswerOption2b(e.target.value)}></input> 
-                                <label id="checkboxValue2"></label>
+                                <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} defaultChecked={questionAnswerOption2b}></input> 
+                                <label id="checkbox-value2"></label>
                             </div>
                         </div>
                         <div id= "containerID4" className="container4"> 
@@ -282,9 +281,8 @@ const QuestionFormEdit = (id ) => {
                                 <input type="text" class="form-control" id="exampleFormControlInput4" placeholder={questionAnswerOption3} text={questionAnswerOption3} 
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox3" type="checkbox" placeholder={questionAnswerOption3b}
-                                onChange={(e) => setQuestionAnswerOption3b(e.target.value)}></input> 
-                                <label id="checkboxValue3"></label>
+                                <input className="right" id="checkbox3" type="checkbox" value={questionAnswerOption3b} defaultChecked={questionAnswerOption3b}>{console.log(questionAnswerOption3b)}</input> 
+                                <label id="checkbox-value3"></label>
                             </div>
                         </div>
                     </form>
