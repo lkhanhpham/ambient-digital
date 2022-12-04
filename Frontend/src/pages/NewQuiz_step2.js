@@ -235,7 +235,7 @@ const NewQuiz2 = () => {
                             <option value={500}>500</option>
                         </select>
                     </form>
-                    <Link to="../../QuestionCreator/" target='_blank'>
+                    <Link to="../../QuestionCreator/SC" target='_blank'>
                         <button className="small-button mt-3">Create question</button>
                     </Link>
 
