@@ -101,13 +101,13 @@ const NewQuiz2 = () => {
 
     //check if user has chosen all fields
     const checkValid = (chosen) => {
-        console.log(chosen)
+        //console.log(chosen)
         // console.log("cats",nr_of_categories,"length", chosen.length)
-        console.log(nr_of_categories * nr_of_rows)
+        //console.log(nr_of_categories * nr_of_rows)
         if (chosen.length == nr_of_categories * nr_of_rows) {
             setValid(chosen.every((element) => element === true))
         }
-        console.log("valid", valid)
+        //console.log("valid", valid)
     }
 
 
@@ -135,7 +135,7 @@ const NewQuiz2 = () => {
                 quiz: quizId
             })
         }
-        console.log(fields)
+        //console.log(fields)
     }
     const navigate = useNavigate();
     const createBackendFields = (event) => {
@@ -155,7 +155,7 @@ const NewQuiz2 = () => {
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response) => {
-                console.log(response.data)
+                //console.log(response.data)
             })
         }
         // navigate back to library page
@@ -168,11 +168,11 @@ const NewQuiz2 = () => {
         const response = await fetch(`${API_BASE_URL}/api/question/`)
         const data = await response.json()
         if (response.ok) {
-            console.log(data)
+            //console.log(data)
             setQuestions(data)
         }
         else {
-            console.log(response.status)
+            //console.log(response.status)
             console.log("Failed Network request")
 
         }
@@ -180,7 +180,7 @@ const NewQuiz2 = () => {
 
     const update = () => {
         var select1 = document.getElementById('questions')
-        console.log(select1.options[select1.selectedIndex].value);
+        //console.log(select1.options[select1.selectedIndex].value);
     }
 
 

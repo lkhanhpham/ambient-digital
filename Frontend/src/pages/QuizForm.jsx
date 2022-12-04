@@ -17,10 +17,10 @@ const QuizForm = () => {
     function update() {
         var select1 = document.getElementById('NrOfRows')
         setNrOfRows(select1.options[select1.selectedIndex].value)
-        console.log(select1.options[select1.selectedIndex].value);
+        //console.log(select1.options[select1.selectedIndex].value);
         var select2 = document.getElementById('NrOfCols')
         setNrOfCols(select2.options[select2.selectedIndex].value)
-        console.log(select1.options[select2.selectedIndex].value);
+        //console.log(select1.options[select2.selectedIndex].value);
     }
     //Aanouncement that quiz is created
     const [show, setShow] = useState(false);
@@ -55,8 +55,8 @@ const QuizForm = () => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
-            console.log(response.data.id)
+            //console.log(response.data)
+            //console.log(response.data.id)
             setQuizId(response.data.id)
 
         })

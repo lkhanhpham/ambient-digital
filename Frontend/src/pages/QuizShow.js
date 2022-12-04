@@ -23,7 +23,7 @@ const QuizShow = (props) => {
     //array that stores all the question texts (index = row_index + col_index*nr_of_row)
     //array that stores the points of all the fields
     const fields = location.state.fields
-    console.log("my fields: ", fields)
+    //console.log("my fields: ", fields)
     // const [chosen] = useState([false])
 
     // const [valid, setValid] = useState(false)
@@ -167,12 +167,12 @@ const QuizShow = (props) => {
     for (let i = 0; i < fields.length; i++) {
         if (!cols.includes(fields[i].categorie_name)) {
 
-            console.log(fields[i].categorie_name)
+            //console.log(fields[i].categorie_name)
             cols.push(fields[i].categorie_name)
             cats.push(<CatField category_name = {fields[i].categorie_name}/>)
         }
     }
-    console.log("cols", cols)
+    //console.log("cols", cols)
 
     for(let i = 0; i<cols.length; i++){
         const cat = cols[i]
