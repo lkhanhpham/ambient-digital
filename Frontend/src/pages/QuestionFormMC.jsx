@@ -204,7 +204,7 @@ const QuestionForm = () => {
                             <div>
                                 <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} 
                                 onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input>
-                                <input className="right" id="checkbox1" type="checkbox"></input> 
+                                <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} ></input> 
                                 <label id="checkbox-value1"></label>
                             </div>
                         </div>
@@ -214,7 +214,7 @@ const QuestionForm = () => {
                                 <input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} 
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox2" type="checkbox"></input> 
+                                <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} ></input> 
                                 <label id="checkbox-value2"></label>
                             </div>
                         </div>
@@ -224,7 +224,7 @@ const QuestionForm = () => {
                                 <input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} 
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
-                                <input className="right" id="checkbox3" type="checkbox"></input> 
+                                <input className="right" id="checkbox3" type="checkbox"  value={questionAnswerOption3b} ></input> 
                                 <label id="checkbox-value3"></label>
                             </div>
                         </div>
