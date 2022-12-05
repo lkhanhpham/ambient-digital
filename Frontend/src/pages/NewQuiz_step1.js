@@ -52,11 +52,11 @@ const NewQuiz1 = () => {
         const response = await fetch(`${API_BASE_URL}/api/categorie/`)
         const data = await response.json()
         if (response.ok) {
-            console.log(data)
+            //console.log(data)
             setCats(data)
         }
         else {
-            console.log(response.status)
+            //console.log(response.status)
             console.log("Failed Network request")
 
         }
@@ -73,7 +73,7 @@ const NewQuiz1 = () => {
 
     const update = () => {
         var select1 = document.getElementById('categories')
-        console.log(select1.options[select1.selectedIndex].value);
+        //console.log(select1.options[select1.selectedIndex].value);
     }
 
     //save the chosen category and show it on the field  
@@ -103,7 +103,7 @@ const NewQuiz1 = () => {
         if(chosen.length == nr_of_categories){
             setValid(chosen.every((element) => element === true))
         }
-        console.log("valid", valid)
+        //console.log("valid", valid)
     }
     //after user chooses the categories, proceed to next step to add questions
     const nextStep = () => {

@@ -37,7 +37,7 @@ const QuestionFormEdit = (id ) => {
                     headers: {'Content-Type': 'application/json'}
                 }
             ).then((response) => {
-                console.log(response.data)
+                //console.log(response.data)
             })
 
             navigate("/Library", 
@@ -61,7 +61,7 @@ const QuestionFormEdit = (id ) => {
 
         }
         else {
-            console.log(response.status)
+            //console.log(response.status)
             console.log("Failed Network request")
         }
 
@@ -90,7 +90,7 @@ const QuestionFormEdit = (id ) => {
                 headers: {'Content-Type': 'application/json'}
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
         })
         setAuthorId(1)
         event.preventDefault()

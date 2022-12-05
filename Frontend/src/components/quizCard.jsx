@@ -10,11 +10,11 @@ const Quiz = (props) => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + props.id + "/")
         const data = await response.json()
         if (response.ok) {
-            console.log(data.field_quiz)
+            //console.log(data.field_quiz)
             setFields(data.field_quiz)
         }
         else {
-            console.log(response.status)
+            //console.log(response.status)
             console.log("Failed Network request")
 
         }
