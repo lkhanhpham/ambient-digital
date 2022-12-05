@@ -33,6 +33,8 @@ const Navbar = () => {
           <Link to ="/Library">My Library</Link>
           <Link to ="/">Quiz-Room</Link>
           <Link to ="/">Profile</Link>
+          <Link to ="/Login">Login</Link>
+          <Link to ="/Registration">Registration</Link>
         </div>
       <style jsx = "true">
       {`

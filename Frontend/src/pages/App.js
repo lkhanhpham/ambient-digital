@@ -12,6 +12,8 @@ import CategoryCreator from "./CategoryCreator";
 import QuizShow from "./QuizShow"
 import QuestionFormEdit from "./QuestionFormEdit";
 import QuestionFormEditMC from "./QuestionFormEditMC";
+import Login from "../containers/Login";
+import Registration from "../containers/NewUserCreation";
 import {
   Route,
   Routes
@@ -25,6 +27,8 @@ class App extends Component {
       {/* use Router to change URL inside a SPA, the components are rendered based on the URLs */}
       <div>
         <Routes>
+        <Route exact path="/login" element={<Login/>}/>
+        <Route exact path="/Registration" element={<Registration/>}/>
         <Route exact path="/" element={<Library/>} />
         <Route exact path="/Library" element={<Library/>} />
         <Route exact path="/QuizCreator/*" element={<QuizForm/>} />
