@@ -23,13 +23,19 @@ const Quiz = (props) => {
 
     const display = (event) => {
         event.preventDefault()
-        navigate("/Quiz/" + props.id + "/", { state: { id: props.id, title: props.title, nr_of_categories: props.nr_of_categories, fields: fields } })
+        navigate("/Quiz/" + props.id + "/", { state: { id: props.id, title: props.title, nr_of_categories: props.nr_of_categories,nr_of_rows: props.nr_of_rows, fields: fields } })
     }
         useEffect(
         () => {
             getAllFields()
         }, []
     )
+    const editItem = async (event) => {
+        event.preventDefault()
+        navigate("/EditQuiz1/" + props.id + "/", { state: { id: props.id, title: props.title, nr_of_categories: props.nr_of_categories, nr_of_rows: props.nr_of_rows, fields: fields } })
+
+    }
+
     return (
         <div className='d-inline-block custom-card m-3'
             style={{
@@ -53,7 +59,7 @@ const Quiz = (props) => {
             </div>
             <div className='d-flex justify-content-center p-3'>
                 <div className='row '>
-                    <button className="col me-3 my-btn " onClick={props.editItem}>Edit</button>
+                    <button className="col me-3 my-btn " onClick={editItem}>Edit</button>
                     <button className="col my-btn" onClick={props.deleteItem}>Delete</button>
                 </div>
             </div>

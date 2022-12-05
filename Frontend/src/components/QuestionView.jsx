@@ -79,7 +79,7 @@ const QuestionView = () => {
         <>
             <div className="card shadow-sm top">
                 <div className="card-header d-flex justify-content-between">
-                    <span className="small-title float-left">Questions</span>
+                    <span className="small-title float-left align-self-center">Questions</span>
 
                     <Link to = "/QuestionCreator/SC" ><button className='btn btn-primary'>  Create question</button></Link>
                 </div>

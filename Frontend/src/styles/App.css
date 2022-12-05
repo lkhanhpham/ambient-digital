@@ -1,5 +1,6 @@
 .big-title {
   font-size: 1.5rem;
+  font-weight: 500;
 }
 
 .small-title {
@@ -9,6 +10,11 @@
 
 .body-text {
   font-size: 1rem
+}
+
+.instruction{
+  font-size: 1.2rem;
+  color:steelblue;
 }
 
 .small-button {

@@ -43,19 +43,6 @@ const QuizView = () => {
         window.location.reload();
     }
 
-    const editItem = async (quizId) => {
-        // edit function
-        //leads uder to the quizEditor page for the chosen quiz
-        //console.log(quizId)
-        navigate("/QuizCreator/EditQuiz", 
-            {state: 
-            {   
-                id: quizId, 
-            }
-        } 
-        )
-
-    }
 
     return (
         <>
@@ -78,8 +65,8 @@ const QuizView = () => {
                                         title={item.quiz_name}
                                         pub_date={item.pub_date.substring(0,10)}
                                         nr_of_categories={item.nr_of_categories}
+                                        nr_of_rows = {item.nr_of_rows}
                                         deleteItem ={() => deleteItem(item.id)}
-                                        editItem ={() => editItem(item.id)}
                                     />
                                 )
                                 )
