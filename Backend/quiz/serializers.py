@@ -7,7 +7,7 @@ from rest_framework.validators import UniqueValidator
 class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
-        fields = ('quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author')
+        fields = ('id','quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author')
 
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:

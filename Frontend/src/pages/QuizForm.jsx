@@ -1,50 +1,73 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import React, { Component } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+import ModalSuccess from "../components/ModalSuccess";
+import {API_BASE_URL} from "../constants.ts";
 const QuizForm = () => {
 
-    const [quiz, setNewQuizs] = useState(null)
     const [quizName, setQuizName] = useState('')
     const [nrOfRows, setNrOfRows] = useState('')
     const [nrOfCols, setNrOfCols] = useState('')
+    const [author, setAuthor] = useState('')
+    const [quizId, setQuizId] = useState(0)
 
     const navigate = useNavigate();
-
-    function update(){
+    function update() {
         var select1 = document.getElementById('NrOfRows')
-        setNrOfRows(select1.options[select1.selectedIndex].value) 
+        setNrOfRows(select1.options[select1.selectedIndex].value)
         console.log(select1.options[select1.selectedIndex].value);
         var select2 = document.getElementById('NrOfCols')
         setNrOfCols(select2.options[select2.selectedIndex].value)
         console.log(select1.options[select2.selectedIndex].value);
     }
-    function createQuiz(event) {
-         
+    //Aanouncement that quiz is created
+    const [show, setShow] = useState(false);
+    //close the Category form
+    const handleClose = () => setShow(false);
+    //show the Category form
+    const handleShow = () => setShow(true);
+    const confirm = () => {
+        handleShow()
+    }
+    const createFrontendQuiz = async () => {
+        navigate("/QuizCreator/Newquiz1", { state: { quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols, quizId: quizId } })
+        setQuizName("")
+        setNrOfRows("")
+        setNrOfCols("")
+        setAuthor("")
+    }
+
+    const createQuiz = (event) => {
+
         axios(
             {
                 method: "POST",
-                url: "http://localhost:8000/api/wholequiz/",
+                url: `${API_BASE_URL}/api/quiz/`,
                 data: {
                     quiz_name: quizName,
                     nr_of_rows: nrOfRows,
                     nr_of_categories: nrOfCols,
+                    author: 1,
 
                 },
-                headers: {'Content-Type': 'application/json'}
+                headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
             console.log(response.data)
+            console.log(response.data.id)
+            setQuizId(response.data.id)
+
         })
-        setQuizName("")
-        setNrOfRows("")
-        setNrOfCols("")
+        confirm()
         event.preventDefault()
     }
-    function createFrontendQuiz(event){
-        navigate("/QuizCreator/Newquiz", {state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}} )
-        event.preventDefault()
-    }
+
+
+    useEffect(() => {
+        // action on update of quizId
+    }, [quizId]);
 
 
     return (
@@ -58,15 +81,15 @@ const QuizForm = () => {
                 <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
                     <form className="text-light">
                         <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlInput1">Quiz Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                            <label className="mb-2" htmlFor="exampleFormControlInput1">Quiz Name</label>
+                            <input type="text" className="form-control" id="exampleFormControlInput1"
                                 placeholder="New quiz"
                                 text={quizName}
                                 onChange={(e) => setQuizName(e.target.value)}></input>
                         </div>
                         <div className="form-group m-3">
                             <label className="mb-2" htmlFor="exampleFormControlSelect1">Number of Rows</label>
-                            <select  className="form-control" id="NrOfRows" onChange={update}>
+                            <select className="form-control" id="NrOfRows" onChange={update}>
                                 <option value={1}>1</option>
                                 <option value={2}>2</option>
                                 <option value={3}>3</option>
@@ -80,9 +103,9 @@ const QuizForm = () => {
                             </select>
                         </div>
                         <div className="form-group m-3">
-                            <label className="mb-2"  htmlFor="exampleFormControlSelect1">Number of Categories</label>
+                            <label className="mb-2" htmlFor="exampleFormControlSelect1">Number of Categories</label>
                             <select className="form-control" id="NrOfCols" onChange={update}>
-                            <option value={1}>1</option>
+                                <option value={1}>1</option>
                                 <option value={2}>2</option>
                                 <option value={3}>3</option>
                                 <option value={4}>4</option>
@@ -97,19 +120,19 @@ const QuizForm = () => {
 
                     </form>
 
-                <div className="d-flex justify-content-end p-3">
-                    <Link to ="/Library">
-                    <button className="btn btn-secondary me-2">Cancel</button>
-                    </Link>
-                    {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
-                    <button onClick={createFrontendQuiz} className="btn btn-primary">Create</button>
-                    {/* </Link> */}
-                </div>
+                    <div className="d-flex justify-content-end p-3">
+                        <Link to="/Library">
+                            <button className="btn btn-secondary me-2">Cancel</button>
+                        </Link>
+
+                        <button onClick={createQuiz} className="btn btn-primary">Create</button>
+                    </div>
+                    {/* modal show to announce that quiz is created successfully */}
+                    <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New quiz created!"} body = {"Quiz created with id: " + quizId} onclick = {createFrontendQuiz} />
+
                 </div>
             </div>
-            <style jsx='true'>{`
+            <style jsx="true">{`
         label{
           font-size: 18px;
         }
