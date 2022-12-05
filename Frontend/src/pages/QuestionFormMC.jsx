@@ -85,23 +85,14 @@ const QuestionForm = () => {
                 headers: {'Content-Type': 'application/json'}
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
         })
 
         event.preventDefault()
-        console.log(questionText)
-        console.log(defaultAnswer)
-        console.log(dropdownV + "QuestionType")
-        console.log(questionAnswerOption1 + "QuestionOption")
-        console.log(questionAnswerOption2 + "QuestionOption2")
-        console.log(questionAnswerOption3 + "QuestionOption3")
-        console.log(questionAnswerOption1b + "QuestionOption")
-        console.log(questionAnswerOption2b + "QuestionOption2")
-        console.log(questionAnswerOption3b + "QuestionOption3")
     }
 
     function changeQuestion(value){
-        console.log(value)
+        //console.log(value)
         
         if(value==="SC"||value==="EQ"){
 

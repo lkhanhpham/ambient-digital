@@ -12,11 +12,11 @@ const QuizView = () => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/`)
         const data = await response.json()
         if (response.ok) {
-            console.log(data)
+            //console.log(data)
             setQuizzes(data)
         }
         else {
-            console.log(response.status)
+            //console.log(response.status)
             console.log("Failed Network request")
 
         }
@@ -29,7 +29,7 @@ const QuizView = () => {
 
     const deleteItem = async (quizId) => {
         // delete function
-        console.log(quizId)
+        //console.log(quizId)
         
         axios(
             {
@@ -38,7 +38,7 @@ const QuizView = () => {
                 headers: {'Content-Type': 'application/json'}
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
         })
         window.location.reload();
     }
@@ -46,7 +46,7 @@ const QuizView = () => {
     const editItem = async (quizId) => {
         // edit function
         //leads uder to the quizEditor page for the chosen quiz
-        console.log(quizId)
+        //console.log(quizId)
         navigate("/QuizCreator/EditQuiz", 
             {state: 
             {   

@@ -13,10 +13,10 @@ const QuestionView = () => {
         const data = await response.json()
         if (response.ok) {
             setQuiz(data)
-            console.log(questions)
+            //console.log(questions)
         }
         else {
-            console.log(response.status)
+            //console.log(response.status)
             console.log("Failed Network request")
         }
     }
@@ -37,7 +37,7 @@ const QuestionView = () => {
                     headers: {'Content-Type': 'application/json'}
                 }
             ).then((response) => {
-                console.log(response.data)
+                //console.log(response.data)
             })
             window.location.reload();
         }
