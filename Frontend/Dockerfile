@@ -15,5 +15,7 @@ RUN npm install
 # Copy all frontend stuff to new "app" folder
 COPY ./src /app/
 
+RUN chown -R node:node /app/node_modules
+
 EXPOSE 3000
 

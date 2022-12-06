@@ -26,7 +26,7 @@ const Question = ({  question_text, pub_date, deleteItem, editItem  }) => {
             </div>
             <div className='d-flex justify-content-center p-3'>
                 <div className='row '>
-                    <button className="col me-3 my-btn " onClick={editItem}>Edit</button>
+                    <button className="col me-3 my-btn " onClick={editItem} >Edit</button>
                     <button className="col my-btn" onClick={deleteItem}>Delete </button>
                 </div>
             </div>
