@@ -94,7 +94,7 @@ class FieldSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Field
-        fields = ('point','categorie','categorie_name','quiz','question_id','question')
+        fields = ('id','point','categorie','categorie_name','quiz','question_id','question')
     
     def create(self, validated_data: dict):
         question_instance = validated_data.get('question')

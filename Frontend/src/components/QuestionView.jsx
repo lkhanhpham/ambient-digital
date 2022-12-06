@@ -109,7 +109,7 @@ const QuestionView = () => {
                              ) : (
                                 <div>
                                     <p>There are no questions yet.</p>
-                                    <p>Create a new question or quiz to get startet!</p>
+                                    <p>Create a new question or quiz to get started!</p>
                                 </div>
                             ) 
 
