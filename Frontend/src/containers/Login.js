@@ -3,7 +3,7 @@ import React, { useState , useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {API_BASE_URL} from "../constants.ts";
-import {simplejwt} from 'djangorestframework-simplejwt'
+// import {simplejwt} from 'djangorestframework-simplejwt'
 
 
 export default function Login() {
