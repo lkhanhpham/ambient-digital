@@ -19,9 +19,6 @@ const QuizEdit1 = (props) => {
     const [catIds] = useState([])
     const [questions, setQuestions] = useState([])
 
-    //array that stores  all the fields
-    // var fields = location.state.fields
-
     const [quizName, setQuizName] = useState('')
     const [change, setChange] = useState(false)
     const [newcats, setNewcats] = useState([])
@@ -98,7 +95,7 @@ const QuizEdit1 = (props) => {
 
                 for (let k = 0; k < fields.length; k++) {
                     if (fields[k].categorie_name == categorie_name) {
-                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question={fields[k].question.question_text} handleShow={() => handleShow(fields[k].id)} />)
+                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={fields[k].question.question_text} handleShow={() => handleShow(fields[k].id)} />)
                     }
                 }
                 cats.push(<div className='d-flex flex-column'>{tempfields}</div>)
@@ -246,10 +243,7 @@ const QuizEdit1 = (props) => {
                     <p className='instruction ps-3'> 1. Add/Remove rows</p>
                 </div>
                 <div className='col-8 d-flex flex-column justify-content-start align-self-start'>
-                    {/* <div className='d-flex justify-content-start p-3'>
-                        <button className='small-button me-3' onClick={addCat}>Add category</button>
-                        <button className='small-button' onClick={removeCat}>Remove category</button>
-                    </div> */}
+
                     <div className='d-flex justify-content-start'>
                         {cats.length === 0 ? (
                             <div className='divholder'></div>

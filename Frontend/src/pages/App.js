@@ -47,6 +47,7 @@ class App extends Component {
             <Route path="/QuestionCreator/EditQuestionMC" element={<QuestionFormEditMC />} />
             <Route exact path="/EditQuiz1/*" element={<QuizEdit1 />} />
             <Route exact path="/EditQuiz2/*" element={<QuizEdit2 />} />
+            <Route path="/EditQuiz2/CategoryCreator" element={<CategoryCreator />} />
           </Routes>
         </div>
       </>

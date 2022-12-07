@@ -7,6 +7,7 @@ import { API_BASE_URL } from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import ModalSuccess from '../components/ModalSuccess';
+import ModalWarning from '../components/ModalWarning';
 
 // For each created quiz one quizcard is rendered
 const QuizEdit2 = (props) => {
@@ -17,33 +18,52 @@ const QuizEdit2 = (props) => {
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
 
-    const [catIds] = useState([])
-    const [questions, setQuestions] = useState([])
-
-    //array that stores  all the fields
-    // var fields = location.state.fields
-
     const [quizName, setQuizName] = useState('')
     const [change, setChange] = useState(false)
-    const [newcats, setNewcats] = useState([])
+    //store all categories of quiz (from BACKEND)
     var [cats, setCats] = useState([])
     var [cols, setCols] = useState([])
     const [value, setValue] = useState(0);
 
-    const [fields, setFields] = useState([])
-
+    //-------------------------------------
     //all variables related to editing field
     const [fieldId, setFieldId] = useState(0)
-    var [ques, setQues] = useState(0)
-    var [point, setPoint] = useState(0)
+    const [chosen1] = useState([false])
+    const [question_text] = useState([""])
+    const [question_ids] = useState([0])
+    const [positionField, setPositionField] = useState(0)
+    //array that stores the points of all the fields
+    const [fieldPoints] = useState([100])
+    // var [ques, setQues] = useState(0)
+    // var [point, setPoint] = useState(0)
     const [show, setShow] = useState(false);
     //close the Question form
     const handleClose = () => setShow(false);
     //show the Question form
     const handleShow = (id) => {
         setShow(true);
-        setFieldId(id)
+        setPositionField(id)
     }
+    function saveQuestion(positionField) {
+        var select1 = document.getElementById('questions')
+        var select2 = document.getElementById('points')
+        const text = select1.options[select1.selectedIndex].text
+        const id = select1.options[select1.selectedIndex].value
+        if (!question_text.includes(text)) {
+            question_text[positionField] = text
+            question_ids[positionField] = id
+            chosen1[positionField] = true
+        }
+        else {
+            // handleShowWarning1()
+        }
+        // console.log(select1.options[select1.selectedIndex].value)
+        fieldPoints[positionField] = select2.options[select2.selectedIndex].value
+        showNewCat(cat_name)
+        // checkValid(chosen)
+        handleClose()
+    }
+
 
     const [showRemove, setShowRemove] = useState(false);
     //close the remove form
@@ -56,6 +76,9 @@ const QuizEdit2 = (props) => {
     const [confirmName, setConfirmName] = useState("")
     var [removedfields] = useState([])
 
+    //-------------------------------------
+    const [fields, setFields] = useState([])
+    //fetch all created fields of quiz
     const getAllFields = async () => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + quizId + "/")
         const data = await response.json()
@@ -66,10 +89,13 @@ const QuizEdit2 = (props) => {
         else {
             //console.log(response.status)
             console.log("Failed Network request")
-
         }
 
     }
+
+    //----------------------------------------
+    //variables related to choosing questions
+    const [questions, setQuestions] = useState([])
     //fetch all created questions
     const getAllQues = async () => {
         const response = await fetch(`${API_BASE_URL}/api/question/`)
@@ -84,20 +110,84 @@ const QuizEdit2 = (props) => {
 
         }
     }
+    //--------------------------------------
+    //variables related to choosing categories
+    //store all newly created columns (FRONTEND)
+    var [newcats, setNewcats] = useState([])
+    const [nr_of_newcats, setNrOfNewcats] = useState(0)
+    var [cats1, setCats1] = useState([])
+    const [cat_name, setCatName] = useState([])
+    const [catIds] = useState([])
+    const [chosen] = useState([false])
+    //fetch all created categories
+    const getAllCats = async () => {
+        const response = await fetch(`${API_BASE_URL}/api/categorie/`)
+        const data = await response.json()
+        if (response.ok) {
+            //console.log(data)
+            setCats1(data)
+        }
+        else {
+            //console.log(response.status)
+            console.log("Failed Network request")
 
+        }
+    }
+
+    const [showCat, setShowCat] = useState(false);
+    //close the Category form
+    const handleCloseCat = () => setShowCat(false);
+    //show the Category form
+    const handleShowCat = (keyProp) => {
+        setShowCat(true);
+        setPosition(keyProp)
+    }
+
+    //a Warning if the category already exists in the quiz and user cannot proceed
+    const [showWarning1, setShowWarning1] = useState(false);
+    const handleCloseWarning1 = () => setShowWarning1(false);
+    const handleShowWarning1 = () => setShowWarning1(true);
+
+    const [position, setPosition] = useState(0)
+
+    //save the chosen category and show it on the field  
+    function saveCat(position) {
+        console.log('position', position)
+        var select1 = document.getElementById('categories')
+        const text = (select1.options[select1.selectedIndex].text)
+        const id = select1.options[select1.selectedIndex].value
+        console.log("cat name: ", text)
+        if (!catIds.includes(id) && !cols.includes(text)) {
+            cat_name[position] = text
+            catIds[position] = id
+            chosen[position] = true
+        }
+        else {
+            handleShowWarning1()
+        }
+        // checkValid(chosen)
+        showNewCat(cat_name)
+        refresh()
+        handleCloseCat()
+    }
+
+
+    // this function re-renders the component
     const refresh = () => {
-        // it re-renders the component
         setValue(value + 1);
-        // createdGrid()
     }
 
     const removeCat = (name) => {
-        //newlz created column can be removed immediatelz
-        if (name === "dummy") {
-            newcats.pop()
-            setCols([])
-            setCats([])
-            refresh()
+        //newly created columns can be removed immediately
+        console.log(name)
+        if (cat_name.includes(name)) {
+            console.log("can delete", name.includes("Dummy"))
+            setNrOfNewcats(nr_of_newcats=>nr_of_newcats - 1)
+            console.log("nr of new cats: ", nr_of_newcats)
+            cat_name[cat_name.findIndex(catname => catname === name)]= null
+            console.log("cat names after delete", cat_name)
+            showNewCat(cat_name)
+            // refresh()
         }
         else {
             //check if user confirms to delete
@@ -112,20 +202,20 @@ const QuizEdit2 = (props) => {
                 putQuiz()
                 refresh()
             }
-            //otherwise show a warning
+            //otherwise (user canceled) show a warning
             else {
                 setConfirmName(name)
                 handleShow1()
             }
 
         }
-        // refresh()
+
     }
 
     const confirmRemove = (event) => {
         event.preventDefault()
         confirm = true
-        // refresh()
+
         removeCat(confirmName)
         handleClose1()
     }
@@ -146,7 +236,7 @@ const QuizEdit2 = (props) => {
         ).then((response) => {
             console.log(response.data)
         })
-        console.log("these will be removed", removedfields)
+        // console.log("these will be removed", removedfields)
         for (let i = 0; i < removedfields.length; i++) {
             axios(
                 {
@@ -162,16 +252,40 @@ const QuizEdit2 = (props) => {
     }
 
     const addCat = () => {
-        let tempfields = []
-        tempfields.push(<button className='small-button' onClick={() => removeCat("dummy")}>Remove category</button>)
-        tempfields.push(<CatField category_name={"dummy"} />)
-        for (let i = 0; i < nr_of_rows; i++) {
-            tempfields.push(<Field category={"dummy"} points={100} chosen={false} />)
-        }
-        newcats.push(<div className='d-flex flex-column'>{tempfields}</div>)
-        refresh()
-        // console.log("added")
+        //remove all current columns in newcats
+        setNrOfNewcats(nr_of_newcats=>nr_of_newcats + 1)
+        console.log("nr of new cats: ", nr_of_newcats)
+        cat_name[nr_of_newcats] = "Dummy" + (nr_of_newcats + 1).toString()
+        // const test = cat_name
+        console.log("cat_name after: ", cat_name)
+        showNewCat(cat_name)
+        // refresh()
     }
+
+    function showNewCat(arr) {
+        while (newcats.length) { newcats.pop(); }
+        for (let i = 0; i < arr.length; i++) {
+            console.log("arr[i]", arr[i])
+            if (arr[i] === null) {
+                continue
+            }
+            let tempfields = []
+            tempfields.push(<button className='small-button' onClick={() => removeCat(cat_name[i])}>Remove category</button>)
+            tempfields.push(<CatField key={i} category_name={cat_name[i]} cat_name={cat_name[i]} handleShow={() => handleShowCat(i)}
+                chosen={chosen[i]} keyProp={i} />)
+            if (chosen[i]) {
+                for (let k = 0; k < nr_of_rows; k++) {
+                    // var points = 100;
+                    console.log("index",k + i * nr_of_rows )
+                    tempfields.push(<Field key={k} points={fieldPoints[k + i * nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k + i * nr_of_rows)} question_text={question_text[k + i * nr_of_rows]} chosen={chosen1[k + i * nr_of_rows]} />)
+                }
+
+            }
+            newcats.push(<div className='d-flex flex-column'>{tempfields}</div>)
+        }
+        refresh()
+    }
+    // showNewCat()
 
     function createGrid() {
         for (let i = 0; i < fields.length; i++) {
@@ -180,14 +294,13 @@ const QuizEdit2 = (props) => {
                 console.log("push categorie", fields[i].categorie_name)
                 const categorie_name = fields[i].categorie_name
                 cols.push(categorie_name)
-                catIds.push(fields[i].categorie)
                 const tempfields = []
                 tempfields.push(<button className='small-button' onClick={() => removeCat(categorie_name)}>Remove category</button>)
                 tempfields.push(<CatField category_name={fields[i].categorie_name} />)
 
                 for (let k = 0; k < fields.length; k++) {
                     if (fields[k].categorie_name == categorie_name) {
-                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question={fields[k].question.question_text} />)
+                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={fields[k].question.question_text} />)
                     }
                 }
                 cats.push(<div className='d-flex flex-column'>{tempfields}</div>)
@@ -238,59 +351,59 @@ const QuizEdit2 = (props) => {
 
     const fieldUrl = `${API_BASE_URL}/api/field/` + fieldId + "/";
     //save the changed data of the edited field
-    const saveField = () => {
-        var select1 = document.getElementById('questions')
-        var select2 = document.getElementById('points')
-        const text = select1.options[select1.selectedIndex].text
-        const id = select1.options[select1.selectedIndex].value
-        ques = id
-        point = select2.options[select2.selectedIndex].value
+    // const saveField = () => {
+    //     var select1 = document.getElementById('questions')
+    //     var select2 = document.getElementById('points')
+    //     const text = select1.options[select1.selectedIndex].text
+    //     const id = select1.options[select1.selectedIndex].value
+    //     ques = id
+    //     point = select2.options[select2.selectedIndex].value
 
-    }
+    // }
     //PUT field to backend
-    const putField = (event) => {
-        saveField()
-        axios(
-            {
-                method: "PUT",
-                url: fieldUrl,
-                data: {
-                    point: +point,
-                    question_id: +ques,
-                    categorie: +(fields.find(({ id }) => id === fieldId).categorie),
-                    quiz: quizId
-                },
-                headers: { 'Content-Type': 'application/json' }
-            }
-        ).then((response) => {
-            console.log(response.data)
+    // const putField = (event) => {
+    //     saveField()
+    //     axios(
+    //         {
+    //             method: "PUT",
+    //             url: fieldUrl,
+    //             data: {
+    //                 point: +point,
+    //                 question_id: +ques,
+    //                 categorie: +(fields.find(({ id }) => id === fieldId).categorie),
+    //                 quiz: quizId
+    //             },
+    //             headers: { 'Content-Type': 'application/json' }
+    //         }
+    //     ).then((response) => {
+    //         console.log(response.data)
 
-            // const test = fields.map(field => {
-            //     if (field.id === response.data.id) {
-            //         return response.data
-            //     }
-            //     return field
-            // })
-            console.log("test", test)
-            setCols([])
-            setCats([])
-            // setFields(test)
-            // window.location.reload()
-            // getAllFields()
-            // createdGrid()
-            // fields = allfields
-            refresh()
-        })
-        handleClose()
-        event.preventDefault()
-    }
+    //         // const test = fields.map(field => {
+    //         //     if (field.id === response.data.id) {
+    //         //         return response.data
+    //         //     }
+    //         //     return field
+    //         // })
+    //         console.log("test", test)
+    //         setCols([])
+    //         setCats([])
+    //         // setFields(test)
+    //         // window.location.reload()
+    //         // getAllFields()
+    //         // createdGrid()
+    //         // fields = allfields
+    //         refresh()
+    //     })
+    //     handleClose()
+    //     event.preventDefault()
+    // }
 
 
     useEffect(
         () => {
             getAllFields()
             getAllQues()
-
+            getAllCats()
         }, []
     )
 
@@ -307,12 +420,9 @@ const QuizEdit2 = (props) => {
     return (
         <div className="container">
             <div className=' d-flex justify-content-center pt-3'>
-                {change ? (
-                    <h1 className='big-title me-3'>{quizName}</h1>
-                ) : (
-                    <h1 className='big-title me-3'>{title}</h1>
-                )}
-                {/* <button onClick={changeTitle} className="icon align-self-start"><img src='editbutton.png' alt='icon' width='20' height='20'></img></button> */}
+
+                <h1 className='big-title me-3'>{title}</h1>
+
             </div>
             <div className='row justify-content-between'>
                 <div className=' col-4 d-flex flex-column justify-content-center align-self-start'>
@@ -322,7 +432,7 @@ const QuizEdit2 = (props) => {
                 </div>
                 <div className='col-8 d-flex flex-column justify-content-start align-self-start'>
                     <div className='d-flex justify-content-start p-3'>
-                        <button className='small-button me-3' onClick={addCat}>Add category</button>
+                        <button className='small-button me-3' onClick={() => addCat()}>Add category</button>
                     </div>
                     <div className='d-flex justify-content-start'>
 
@@ -376,12 +486,45 @@ const QuizEdit2 = (props) => {
                     <div className="d-flex justify-content-end p-3">
                         <button onClick={handleClose} className="btn btn-secondary me-2">Cancel</button>
 
-                        <button onClick={putField} className="btn btn-primary">Save</button>
+                        <button onClick={() => saveQuestion(positionField)} className="btn btn-primary">Save</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
+            <Modal
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                show={showCat} onHide={handleCloseCat}>
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">Choose a category</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form >
+                        <select className="form-control" id="categories">
+                            {cats1.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {item.categorie_name}
+                                </option>
+                            ))}
+                        </select>
+
+                    </form>
+                    <Link to="CategoryCreator" target='_blank'>
+                        <button className="small-button mt-3">Create category</button>
+                    </Link>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="d-flex justify-content-end p-3">
+                        <button onClick={handleCloseCat} className="btn btn-secondary me-2">Cancel</button>
+
+                        <button onClick={() => saveCat(position)} className="btn btn-primary">Save</button>
+
                     </div>
                 </Modal.Footer>
             </Modal>
             <ModalSuccess showSuccess={showRemove} title={"Are you sure you want to remove this category?"} body={"All the fields belong to this category will also be deleted."}
                 handleCloseSuccess={handleClose1} onclick={confirmRemove} />
+            <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Category is not unique."} body={"Looks like this category exists in your quiz. Please choose another one."} />
         </div>
     )
 }
