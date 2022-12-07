@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {Link, Router, useNavigate, withRouter, } from "react-router-dom";
+import AuthContext from "../context/AuthContext"
 
 //building the navbar for the webiste, which includes links for the home, projekt, statistics, about us and impressum site,
 // to navigate through the webiste  
@@ -7,7 +8,7 @@ import {Link, Router, useNavigate, withRouter, } from "react-router-dom";
 
 const MENU_LIST = [
   { text: "Home", href: "/" },
-  {text: "My Library", href: "/Library"},
+  { text: "My Library", href: "/Library"},
   { text: "Quiz-Room", href: "/" },
   { text: "Profile", href: "/" },
 
@@ -15,6 +16,7 @@ const MENU_LIST = [
 const Navbar = () => {
   const [navActive, setNavActive] = useState(null);
   const [activeIdx, setActiveIdx] = useState(-1);
+  const { user, logoutUser } = useContext(AuthContext);
 
   return (
     <>
@@ -33,8 +35,17 @@ const Navbar = () => {
           <Link to ="/Library">My Library</Link>
           <Link to ="/">Quiz-Room</Link>
           <Link to ="/">Profile</Link>
-          <Link to ="/Login">Login</Link>
-          <Link to ="/Registration">Registration</Link>
+          {user ? (
+            <>
+            <Link to ="/" onClick={logoutUser}>Logout</Link>
+            </>
+          ) : (
+            <>
+            <Link to ="/Login">Login</Link>
+            <Link to ="/Registration">Registration</Link>
+            </>
+          )}
+          
         </div>
       <style jsx = "true">
       {`
