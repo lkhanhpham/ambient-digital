@@ -185,6 +185,7 @@ const QuestionFormEdit = (id ) => {
                         <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder={questionText}
                             text={questionText}
+                            value={questionText}
                             onChange={(e) => setQuestionText(e.target.value)}
                             ></input>
 
@@ -194,7 +195,7 @@ const QuestionFormEdit = (id ) => {
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
                             <input type="text" class="form-control" id="exampleFormControlInput1" 
-                            placeholder={defaultAnswer.text} text={defaultAnswer.text} 
+                            placeholder={defaultAnswer.text} text={defaultAnswer.text}  value={defaultAnswer.text}
                             onChange={(e) => setdefAnswer(e.target.value, true)}></input>
                             </div>
                         </div>
