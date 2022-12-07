@@ -6,7 +6,8 @@ import {React, useEffect } from 'react';
 import Question from '../components/QuestionCard';
 import $ from "jquery";
 import {API_BASE_URL} from "../constants.ts";
-
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 
 const QuestionFormEdit = (id ) => {
@@ -29,6 +30,23 @@ const QuestionFormEdit = (id ) => {
     const [questionAnswerOption1b, setQuestionAnswerOption1b] = useState('')
     const [questionAnswerOption2b, setQuestionAnswerOption2b] = useState('')
     const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState('')
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
+        setShow(true)
+    };
+    const handleClose2 = () => setShow2(false);
+    const handleShow2 = (event) => {
+        if(questionText.length!==0 && defaultAnswer.length!==0&& questionAnswerOption1.length!==0&&
+            questionAnswerOption2.length!==0&&questionAnswerOption3.length!==0&&questionAnswerOption1.length!==0){
+            editQuestion(event)
+        }else{
+            setShow2(true)
+        }
+    };
+
+    const [show2, setShow2] = useState(false);
     
 
     const $ = require( "jquery" );
@@ -36,7 +54,6 @@ const QuestionFormEdit = (id ) => {
     
     function deleteItem(event){
         event.preventDefault()
-        if (window.confirm('Do you really want to delete this question?')){
             axios(
                 {
                     method: "DELETE",
@@ -49,9 +66,6 @@ const QuestionFormEdit = (id ) => {
 
             navigate("/Library", 
             )
-        }else{
-            // They clicked no
-        }
         
     }
 
@@ -118,30 +132,8 @@ const QuestionFormEdit = (id ) => {
         })
         setAuthorId(1)
         event.preventDefault()
-        navigate("/QuestionCreator/NewQuestion", 
-            {state: 
-                { 
-                    question_text: questionText,
-                default_answer: defaultAnswer,
-                question_type: questiontype,
-                author: 1,
-                question_answer_option:[
-                    {
-                        text: questionAnswerOption1,
-                        is_correct: questionAnswerOption1b
-                    },
-                    {
-                        text: questionAnswerOption2,
-                        is_correct: questionAnswerOption2b
-                    },
-                    {
-                        text: questionAnswerOption3,
-                        is_correct: questionAnswerOption3b
-                    }
-
-                ]
-                }
-            } 
+        navigate("/Library", 
+        // Update erfolgreich meldung einfügen
         )
         
     
@@ -288,14 +280,31 @@ const QuestionFormEdit = (id ) => {
                     </form>
 
                 <div className="d-flex justify-content-end p-3">
-                    <Link to ="/Library">
-                    <button  className="btn btn-secondary me-2" onClick={deleteItem} >Delete</button> 
-                    </Link>
+
+                    <button  className="btn btn-secondary me-2" onClick={handleShow} >Delete</button> 
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    <button id="submitButton" className="btn btn-primary" onClick={editQuestion}>Update</button>
-                    
+                    <button id="submitButton" className="btn btn-primary" onClick={handleShow2}>Update</button>
+                    <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Do you really want to delete this question?</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={deleteItem}>
+                        Yes!
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        No!
+                    </Button>
+                    </Modal.Footer>
+                    </Modal>
+                    {/* You forgot something */}
+                    <Modal show={show2} onHide={handleClose2}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>You forgot something. Please fill in every field.</Modal.Body>
+                    </Modal>
                 </div>
                 </div>
             </div>

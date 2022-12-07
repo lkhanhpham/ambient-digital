@@ -6,6 +6,9 @@ import {React, useEffect } from 'react';
 import Question from '../components/QuestionCard';
 import $ from "jquery";
 import {API_BASE_URL} from "../constants.ts";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
 
 
 
@@ -23,13 +26,30 @@ const QuestionFormEdit = (id ) => {
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
     const [questiontype, setQuestionType] = useState('')
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const [show2, setShow2] = useState(false);
+    const handleShow = () => {
+        setShow(true)
+    };
+    const handleClose2 = () => setShow2(false);
+    
+    const handleShow2 = (event) => {
+        if(questionText.length>=1 && defaultAnswer.length>=1){
+            console.log("show2")
+            editQuestion(event)
+        }else{
+            setShow2(true)
+        }
+    };
 
     const $ = require( "jquery" );
     const navigate = useNavigate();
     
     function deleteItem(event){
         event.preventDefault()
-        if (window.confirm('Do you really want to delete this question?')){
+        
             axios(
                 {
                     method: "DELETE",
@@ -42,10 +62,7 @@ const QuestionFormEdit = (id ) => {
 
             navigate("/Library", 
             )
-        }else{
-            // They clicked no
-        }
-        
+
     }
 
     const getAllQuestions = async () => {
@@ -94,20 +111,6 @@ const QuestionFormEdit = (id ) => {
         })
         setAuthorId(1)
         event.preventDefault()
-        navigate("/QuestionCreator/NewQuestion", 
-            {state: 
-                {
-                    question_text: questionText,
-                    default_answer: {
-                        text: defaultAnswer.text,
-                        is_correct: defaultAnswer.is_correct
-                    },
-                    question_type: questiontype,
-                    author: 1
-                }
-            } 
-        )
-        
     
     }
 
@@ -202,13 +205,33 @@ const QuestionFormEdit = (id ) => {
                     </form>
 
                 <div className="d-flex justify-content-end p-3">
-                    <Link to ="/Library">
-                    <button  className="btn btn-secondary me-2" onClick={deleteItem} >Delete</button> 
-                    </Link>
+
+                    <button  className="btn btn-secondary me-2" onClick={handleShow} >Delete</button> 
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    <button  id="submitButton" className="btn btn-primary" onClick={editQuestion}>Update</button>
+                    <button  id="submitButton" className="btn btn-primary" onClick={handleShow2}>Update</button>
+
+                    <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Do you really want to delete this question?</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={deleteItem}>
+                        Yes!
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        No!
+                    </Button>
+                    </Modal.Footer>
+                    </Modal>
+
+                    {/* You forgot something. Wird nie geöffnet TODO*/}
+                    <Modal show={show2} onHide={handleClose2}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>You forgot something. Please fill in every field.</Modal.Body>
+                    </Modal>
                     
                 </div>
                 </div>
