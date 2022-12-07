@@ -170,48 +170,29 @@ const QuestionFormEdit = (id ) => {
         dropdownV=value
     }
 
-    $('#checkbox-value1').text($('#checkbox1').val());
 
     $("#checkbox1").on('change', function() {
       if ($(this).is(':checked')) {
-        $(this).attr('value', 'true');
         setQuestionAnswerOption1b(true);
       } else {
-        $(this).attr('value', 'false');
         setQuestionAnswerOption1b(false);
       }
-      
-      $('#checkbox-value1').text($('#checkbox1').val());
     });
-
-    $('#checkbox-value2').text($('#checkbox2').val());
 
     $("#checkbox2").on('change', function() {
       if ($(this).is(':checked')) {
-        $(this).attr('value', 'true');
         setQuestionAnswerOption2b(true);
       } else {
-        $(this).attr('value', 'false');
         setQuestionAnswerOption2b(false);
       }
-      
-      $('#checkbox-value2').text($('#checkbox2').val());
     });
-
-    $('#checkbox-value3').text($('#checkbox3').val());
 
     $("#checkbox3").on('change', function() {
       if ($(this).is(':checked')) {
-        $(this).attr('value', 'true');
-        $(this).attr('checked', 'true');
         setQuestionAnswerOption3b(true);
       } else {
-        $(this).attr('value', 'false');
-        $(this).attr('checked', 'false');
         setQuestionAnswerOption3b(false);
       }
-      
-      $('#checkbox-value3').text($('#checkbox3').val());
     });
 
     function setdefAnswer(defAnswer, bDefAnswer){
@@ -222,6 +203,23 @@ const QuestionFormEdit = (id ) => {
         }
         setDefaultAnswer(data)
     }
+
+    const eventListener = async () => {
+
+        var input = document.getElementById("formidCustom");
+        input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#submitButton").click()
+            //console.log("asyncFunktiom")
+        }
+        });
+    }
+    useEffect(
+        () => {
+            eventListener();
+        }, []
+    )
     
     return (
         <>
@@ -230,8 +228,8 @@ const QuestionFormEdit = (id ) => {
             </div>
             <div className="row justify-content-center">
 
-                <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
-                <form className="text-light" >
+                <div id= "formidCustom" className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+                    <form className="text-light" >
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
                             <option id="McId" value="MC">Multiple Choice</option>
@@ -261,7 +259,7 @@ const QuestionFormEdit = (id ) => {
                                 <input type="text" class="form-control" id="exampleFormControlInput2" placeholder={questionAnswerOption1} text={questionAnswerOption1} 
                                 onChange={(e) => setQuestionAnswerOption1(e.target.value)} ></input>
                                 <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} checked={questionAnswerOption1b} onChange={(e)=> setQuestionAnswerOption1b(!questionAnswerOption1b)}></input> 
-                                <label id="checkbox-value1"></label>
+                                <label id="checkbox-value1">true</label>
                             </div>
                         </div>
                         <div id= "containerID3" className="container3"> 
@@ -271,7 +269,7 @@ const QuestionFormEdit = (id ) => {
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
                                 <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} checked={questionAnswerOption2b} onChange={(e)=> setQuestionAnswerOption2b(!questionAnswerOption2b)}></input> 
-                                <label id="checkbox-value2"></label>
+                                <label id="checkbox-value2">true</label>
                             </div>
                         </div>
                         <div id= "containerID4" className="container4"> 
@@ -281,7 +279,7 @@ const QuestionFormEdit = (id ) => {
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
                                 <input className="right" id="checkbox3" type="checkbox" value={questionAnswerOption3b} checked={questionAnswerOption3b} onChange={(e)=> setQuestionAnswerOption3b(!questionAnswerOption3b)}></input> 
-                                <label id="checkbox-value3"></label>
+                                <label id="checkbox-value3">true</label>
                             </div>
                         </div>
                     </form>
@@ -293,7 +291,7 @@ const QuestionFormEdit = (id ) => {
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    <button  className="btn btn-primary" onClick={editQuestion}>Update</button>
+                    <button id="submitButton" className="btn btn-primary" onClick={editQuestion}>Update</button>
                     
                 </div>
                 </div>

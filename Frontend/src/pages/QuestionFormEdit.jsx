@@ -141,6 +141,25 @@ const QuestionFormEdit = (id ) => {
         }
         setDefaultAnswer(data)
     }
+
+    const eventListener = async () => {
+
+        var input = document.getElementById("formidCustom");
+        input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#submitButton").click()
+            //console.log("asyncFunktiom")
+        }
+        });
+    }
+    useEffect(
+        () => {
+            eventListener();
+        }, []
+    )
+
+    
     
     return (
         <>
@@ -149,8 +168,8 @@ const QuestionFormEdit = (id ) => {
             </div>
             <div className="row justify-content-center">
 
-                <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
-                <form className="text-light" >
+                <div id= "formidCustom" className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+                    <form className="text-light" >
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}
                              placeholder={questiontype}
@@ -188,7 +207,7 @@ const QuestionFormEdit = (id ) => {
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    <button  className="btn btn-primary" onClick={editQuestion}>Update</button>
+                    <button  id="submitButton" className="btn btn-primary" onClick={editQuestion}>Update</button>
                     
                 </div>
                 </div>
