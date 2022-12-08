@@ -19,7 +19,7 @@ import {
 } from 'react-router-dom'
 import QuizEdit1 from "./QuizEdit_step1";
 import QuizEdit2 from "./QuizEdit_step2";
-
+import QuizEdit3 from "./QuizEdit_step3";
 //the Library, which contains all quizes from one author, and the header are put together
 class App extends Component {
   render() {
@@ -47,6 +47,7 @@ class App extends Component {
             <Route path="/QuestionCreator/EditQuestionMC" element={<QuestionFormEditMC />} />
             <Route exact path="/EditQuiz1/*" element={<QuizEdit1 />} />
             <Route exact path="/EditQuiz2/*" element={<QuizEdit2 />} />
+            <Route exact path="/EditQuiz3/*" element={<QuizEdit3 />} />
             <Route path="/EditQuiz2/CategoryCreator" element={<CategoryCreator />} />
           </Routes>
         </div>

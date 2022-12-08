@@ -39,3 +39,8 @@
   width: 50px;
   height: 500px;
 }
+
+.margin-large{
+  margin-top: 100px;
+  margin-bottom: 100px;
+}

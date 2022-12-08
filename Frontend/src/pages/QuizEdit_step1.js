@@ -105,32 +105,6 @@ const QuizEdit1 = (props) => {
     }
     createGrid()
 
-    const addCat = () => {
-        let tempfields = []
-        tempfields.push(<CatField category_name={"dummy"} />)
-        for (let i = 0; i < nr_of_rows; i++) {
-            tempfields.push(<Field category={"dummy"} points={100} chosen={false} />)
-        }
-        newcats.push(<div className='d-flex flex-column'>{tempfields}</div>)
-        refresh()
-        // console.log("added")
-    }
-
-    const removeCat = () => {
-        if (newcats.length !== 0) {
-            newcats.pop()
-        }
-        else {
-
-        }
-        refresh()
-    }
-
-
-    const nextStep = () => {
-        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows, fields: fields } })
-    }
-
     const url = `${API_BASE_URL}/api/quiz/` + quizId + "/";
 
     //PUT new quiz name to backend
@@ -207,7 +181,10 @@ const QuizEdit1 = (props) => {
         handleClose()
         event.preventDefault()
     }
-
+    
+    const nextStep = () => {
+        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: change?(quizName):(title), nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows} })
+    }
 
     useEffect(
         () => {

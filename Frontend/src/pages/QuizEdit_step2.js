@@ -17,7 +17,6 @@ const QuizEdit2 = (props) => {
     const quizId = location.state.id
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
-
     const [quizName, setQuizName] = useState('')
     const [change, setChange] = useState(false)
     //store all categories of quiz (from BACKEND)
@@ -27,15 +26,15 @@ const QuizEdit2 = (props) => {
 
     //-------------------------------------
     //all variables related to editing field
-    const [fieldId, setFieldId] = useState(0)
+
     const [chosen1] = useState([false])
     const [question_text] = useState([""])
+    //array that stores the question_id of all the fields
     const [question_ids] = useState([0])
     const [positionField, setPositionField] = useState(0)
     //array that stores the points of all the fields
     const [fieldPoints] = useState([100])
-    // var [ques, setQues] = useState(0)
-    // var [point, setPoint] = useState(0)
+    const [newfields] = useState([])
     const [show, setShow] = useState(false);
     //close the Question form
     const handleClose = () => setShow(false);
@@ -44,18 +43,37 @@ const QuizEdit2 = (props) => {
         setShow(true);
         setPositionField(id)
     }
+    //a Warning if the question already exists in the quiz and user cannot proceed
+    const [showWarningQues, setShowWarningQues] = useState(false);
+
+    const handleCloseWarningQues = () => setShowWarningQues(false);
+
+    const handleShowWarningQues = () => setShowWarningQues(true);
+
     function saveQuestion(positionField) {
         var select1 = document.getElementById('questions')
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
+        //check if question exits in new created columns
         if (!question_text.includes(text)) {
-            question_text[positionField] = text
-            question_ids[positionField] = id
-            chosen1[positionField] = true
+            var exist = false
+            for (let i = 0; i < fields.length; i++) {
+                //check if question exits in old columns
+                if (fields[i].question_id == id) {
+                    handleShowWarningQues()
+                    exist = true
+                    break
+                }
+            }
+            if (exist === false) {
+                question_text[positionField] = text
+                question_ids[positionField] = id
+                chosen1[positionField] = true
+            }
         }
         else {
-            // handleShowWarning1()
+            handleShowWarningQues()
         }
         // console.log(select1.options[select1.selectedIndex].value)
         fieldPoints[positionField] = select2.options[select2.selectedIndex].value
@@ -65,17 +83,6 @@ const QuizEdit2 = (props) => {
     }
 
 
-    const [showRemove, setShowRemove] = useState(false);
-    //close the remove form
-    const handleClose1 = () => setShowRemove(false);
-    //show the remove form
-    const handleShow1 = () => setShowRemove(true);
-    //boolean indicates whether user want to remove a category
-    var [confirm, setConfirm] = useState(false)
-    //name of the to-be-removed category
-    const [confirmName, setConfirmName] = useState("")
-    var [removedfields] = useState([])
-
     //-------------------------------------
     const [fields, setFields] = useState([])
     //fetch all created fields of quiz
@@ -83,7 +90,7 @@ const QuizEdit2 = (props) => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + quizId + "/")
         const data = await response.json()
         if (response.ok) {
-            console.log(data.field_quiz)
+            // console.log(data.field_quiz)
             setFields(data.field_quiz)
         }
         else {
@@ -152,11 +159,11 @@ const QuizEdit2 = (props) => {
 
     //save the chosen category and show it on the field  
     function saveCat(position) {
-        console.log('position', position)
+        // console.log('position', position)
         var select1 = document.getElementById('categories')
         const text = (select1.options[select1.selectedIndex].text)
         const id = select1.options[select1.selectedIndex].value
-        console.log("cat name: ", text)
+        // console.log("cat name: ", text)
         if (!catIds.includes(id) && !cols.includes(text)) {
             cat_name[position] = text
             catIds[position] = id
@@ -177,15 +184,29 @@ const QuizEdit2 = (props) => {
         setValue(value + 1);
     }
 
+    //-----------------------------------
+    //variables related to removing columns
+    const [showRemove, setShowRemove] = useState(false);
+    //close the remove form
+    const handleClose1 = () => setShowRemove(false);
+    //show the remove form
+    const handleShow1 = () => setShowRemove(true);
+     
+    //boolean indicates whether user want to remove a category
+    var [confirm, setConfirm] = useState(false)
+    //name of the to-be-removed category
+    const [confirmName, setConfirmName] = useState("")
+    var [removedfields] = useState([])
+
     const removeCat = (name) => {
         //newly created columns can be removed immediately
-        console.log(name)
+        // console.log(name)
         if (cat_name.includes(name)) {
-            console.log("can delete", name.includes("Dummy"))
-            setNrOfNewcats(nr_of_newcats=>nr_of_newcats - 1)
-            console.log("nr of new cats: ", nr_of_newcats)
-            cat_name[cat_name.findIndex(catname => catname === name)]= null
-            console.log("cat names after delete", cat_name)
+            // console.log("can delete", name.includes("Dummy"))
+            setNrOfNewcats(nr_of_newcats => nr_of_newcats - 1)
+            // console.log("nr of new cats: ", nr_of_newcats)
+            cat_name[cat_name.findIndex(catname => catname === name)] = null
+            // console.log("cat names after delete", cat_name)
             showNewCat(cat_name)
             // refresh()
         }
@@ -195,7 +216,7 @@ const QuizEdit2 = (props) => {
             if (confirm) {
                 removedfields = fields.filter(field => field.categorie_name === name)
                 const test = fields.filter(field => field.categorie_name !== name)
-                console.log(test)
+                // console.log(test)
                 setCols([])
                 setCats([])
                 setFields(test)
@@ -253,11 +274,11 @@ const QuizEdit2 = (props) => {
 
     const addCat = () => {
         //remove all current columns in newcats
-        setNrOfNewcats(nr_of_newcats=>nr_of_newcats + 1)
-        console.log("nr of new cats: ", nr_of_newcats)
+        setNrOfNewcats(nr_of_newcats => nr_of_newcats + 1)
+        // console.log("nr of new cats: ", nr_of_newcats)
         cat_name[nr_of_newcats] = "Dummy" + (nr_of_newcats + 1).toString()
         // const test = cat_name
-        console.log("cat_name after: ", cat_name)
+        // console.log("cat_name after: ", cat_name)
         showNewCat(cat_name)
         // refresh()
     }
@@ -265,7 +286,7 @@ const QuizEdit2 = (props) => {
     function showNewCat(arr) {
         while (newcats.length) { newcats.pop(); }
         for (let i = 0; i < arr.length; i++) {
-            console.log("arr[i]", arr[i])
+            // console.log("arr[i]", arr[i])
             if (arr[i] === null) {
                 continue
             }
@@ -276,7 +297,7 @@ const QuizEdit2 = (props) => {
             if (chosen[i]) {
                 for (let k = 0; k < nr_of_rows; k++) {
                     // var points = 100;
-                    console.log("index",k + i * nr_of_rows )
+                    // console.log("index", k + i * nr_of_rows)
                     tempfields.push(<Field key={k} points={fieldPoints[k + i * nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k + i * nr_of_rows)} question_text={question_text[k + i * nr_of_rows]} chosen={chosen1[k + i * nr_of_rows]} />)
                 }
 
@@ -291,7 +312,7 @@ const QuizEdit2 = (props) => {
         for (let i = 0; i < fields.length; i++) {
             // console.log("vor if")
             if (!cols.includes(fields[i].categorie_name)) {
-                console.log("push categorie", fields[i].categorie_name)
+                // console.log("push categorie", fields[i].categorie_name)
                 const categorie_name = fields[i].categorie_name
                 cols.push(categorie_name)
                 const tempfields = []
@@ -310,18 +331,78 @@ const QuizEdit2 = (props) => {
     }
     createGrid()
 
+    // After user edits all fields, the data is saved into fields
+    const fillFields = () => {
+        var k = -1;
+        for (let i = 0; i < question_text.length; i++) {
+            if (i % nr_of_rows == 0) {
+                k += 1;
+            }
+            newfields.push({
+                point: +fieldPoints[i],
+                question: +question_ids[i],
+                categorie: +catIds[k],
+                quiz: quizId
+            })
+        }
+        //console.log(fields)
+    }
 
+    const [showSuccess, setShowSuccess] = useState(false);
+    //close the remove form
+    const handleCloseSuccess = () => setShowSuccess(false);
+    //show the remove form
+    const handleShowSuccess = () => setShowSuccess(true);
+
+    //post new fields in new columns to BACKEND
+    const saveStep2 = (event) => {
+        event.preventDefault()
+        fillFields()
+        for (let i = 0; i < question_text.length; i++) {
+            axios(
+                {
+                    method: "POST",
+                    url: `${API_BASE_URL}/api/field/`,
+                    data: {
+                        point: newfields[i].point,
+                        question_id: newfields[i].question,
+                        categorie: newfields[i].categorie,
+                        quiz: newfields[i].quiz
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then((response) => {
+                console.log(response.data)
+            })
+        }
+        axios(
+            {
+                method: "PUT",
+                url: url,
+                data: {
+                    quiz_name: title,
+                    nr_of_rows: nr_of_rows,
+                    nr_of_categories: cols.length + nr_of_newcats,
+                    author: 1,
+                },
+                headers: { 'Content-Type': 'application/json' }
+            }
+        ).then((response) => {
+            console.log(response.data)
+            refresh()
+        }
+        )
+        handleShowSuccess()
+    }
 
 
     const nextStep = () => {
-
+        navigate("/EditQuiz3/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories+nr_of_newcats, nr_of_rows: nr_of_rows, fields: fields } })
     }
     const prevStep = () => {
-        navigate("/EditQuiz1/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows, fields: fields } })
+        navigate("/EditQuiz1/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows } })
     }
-    const save = () => {
-        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows, fields: fields } })
-    }
+
 
     //PUT new quiz name to backend
     // const saveQuizname = (event) => {
@@ -348,8 +429,6 @@ const QuizEdit2 = (props) => {
     // const changeTitle = () => {
     //     handleShow1()
     // }
-
-    const fieldUrl = `${API_BASE_URL}/api/field/` + fieldId + "/";
     //save the changed data of the edited field
     // const saveField = () => {
     //     var select1 = document.getElementById('questions')
@@ -428,7 +507,7 @@ const QuizEdit2 = (props) => {
                 <div className=' col-4 d-flex flex-column justify-content-center align-self-start'>
                     <p className='instruction ps-3'> 1. Edit quiz name and fields</p>
                     <p className='instruction bold p-3'> 2. Add/Remove categories</p>
-                    <p className='instruction ps-3'> 1. Add/Remove rows</p>
+                    <p className='instruction ps-3'> 3. Add/Remove rows</p>
                 </div>
                 <div className='col-8 d-flex flex-column justify-content-start align-self-start'>
                     <div className='d-flex justify-content-start p-3'>
@@ -446,7 +525,10 @@ const QuizEdit2 = (props) => {
                     </div>
                     <div className="d-flex justify-content-between p-3">
                         <button onClick={prevStep} className="btn btn-primary">Back</button>
-                        <button onClick={nextStep} className="btn btn-primary">Next</button>
+                        <div className='d-flex align-self-end'>
+                            <button onClick={saveStep2} className="btn btn-warning me-3">Save</button>
+                            <button onClick={nextStep} className="btn btn-primary">Next</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -525,6 +607,10 @@ const QuizEdit2 = (props) => {
             <ModalSuccess showSuccess={showRemove} title={"Are you sure you want to remove this category?"} body={"All the fields belong to this category will also be deleted."}
                 handleCloseSuccess={handleClose1} onclick={confirmRemove} />
             <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Category is not unique."} body={"Looks like this category exists in your quiz. Please choose another one."} />
+
+            <ModalWarning showWarning={showWarningQues} handleCloseWarning={handleCloseWarningQues} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
+            <ModalSuccess showSuccess={showSuccess} title={"Quiz saved"} body={"You can proceed to next step"}
+                handleCloseSuccess={handleCloseSuccess} onclick={handleCloseSuccess} />
         </div>
     )
 }

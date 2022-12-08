@@ -33,7 +33,6 @@ const QuizShow = (props) => {
     //console.log("cols", cols)
 
     for (let i = 0; i < cols.length; i++) {
-        const cat = cols[i]
         let rows = []
         for (let k = 0; k < fields.length; k++) {
             if (fields[k].categorie_name == cols[i]) {
