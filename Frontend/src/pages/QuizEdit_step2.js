@@ -348,10 +348,11 @@ const QuizEdit2 = (props) => {
         //console.log(fields)
     }
 
+    //notify user that quiz is saved
     const [showSuccess, setShowSuccess] = useState(false);
-    //close the remove form
+    
     const handleCloseSuccess = () => setShowSuccess(false);
-    //show the remove form
+    
     const handleShowSuccess = () => setShowSuccess(true);
 
     //post new fields in new columns to BACKEND
@@ -404,80 +405,6 @@ const QuizEdit2 = (props) => {
     }
 
 
-    //PUT new quiz name to backend
-    // const saveQuizname = (event) => {
-    //     event.preventDefault()
-    //     axios(
-    //         {
-    //             method: "PUT",
-    //             url: url,
-    //             data: {
-    //                 quiz_name: quizName,
-    //                 nr_of_rows: nr_of_rows,
-    //                 nr_of_categories: nr_of_categories,
-    //                 author: 1,
-    //             },
-    //             headers: { 'Content-Type': 'application/json' }
-    //         }
-    //     ).then((response) => {
-    //         console.log(response.data)
-    //     })
-    //     setChange(true)
-    //     handleClose1()
-    // }
-    //show the form to change quiz name
-    // const changeTitle = () => {
-    //     handleShow1()
-    // }
-    //save the changed data of the edited field
-    // const saveField = () => {
-    //     var select1 = document.getElementById('questions')
-    //     var select2 = document.getElementById('points')
-    //     const text = select1.options[select1.selectedIndex].text
-    //     const id = select1.options[select1.selectedIndex].value
-    //     ques = id
-    //     point = select2.options[select2.selectedIndex].value
-
-    // }
-    //PUT field to backend
-    // const putField = (event) => {
-    //     saveField()
-    //     axios(
-    //         {
-    //             method: "PUT",
-    //             url: fieldUrl,
-    //             data: {
-    //                 point: +point,
-    //                 question_id: +ques,
-    //                 categorie: +(fields.find(({ id }) => id === fieldId).categorie),
-    //                 quiz: quizId
-    //             },
-    //             headers: { 'Content-Type': 'application/json' }
-    //         }
-    //     ).then((response) => {
-    //         console.log(response.data)
-
-    //         // const test = fields.map(field => {
-    //         //     if (field.id === response.data.id) {
-    //         //         return response.data
-    //         //     }
-    //         //     return field
-    //         // })
-    //         console.log("test", test)
-    //         setCols([])
-    //         setCats([])
-    //         // setFields(test)
-    //         // window.location.reload()
-    //         // getAllFields()
-    //         // createdGrid()
-    //         // fields = allfields
-    //         refresh()
-    //     })
-    //     handleClose()
-    //     event.preventDefault()
-    // }
-
-
     useEffect(
         () => {
             getAllFields()
@@ -485,15 +412,6 @@ const QuizEdit2 = (props) => {
             getAllCats()
         }, []
     )
-
-    // useEffect(
-    //     () => {
-    //         console.log("render", fields)
-    //         if (fields.length !== 0) {
-    //             createdGrid()
-    //         }
-    //     }, [fields]
-    // )
 
 
     return (
