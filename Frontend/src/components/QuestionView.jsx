@@ -99,6 +99,7 @@ const QuestionView = () => {
                                 {arr.map((item) => (
                                     
                                     <Question
+                                    key = {item.id}
                                     question_text={item.question_text}
                                     pub_date={item.pub_date.substring(0,10)}
                                     
