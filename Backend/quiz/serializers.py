@@ -263,3 +263,19 @@ class TeammateSerializer(serializers.ModelSerializer):
         model=TeamMember
         fields=('id','team','member','quiz')
         read_only_fields=('team','quiz','id')
+
+class AddTeammateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TeamMember
+        fields=('id','team','member','quiz')
+        read_only_fields=('id','quiz')
+
+    def create(self, validated_data: dict):
+        team_instance = validated_data.get('team')
+
+        created_member = TeamMember.objects.create(
+                team=team_instance,
+                member=validated_data.get('member'),
+                quiz=team_instance.quiz,
+            )
+        return created_member

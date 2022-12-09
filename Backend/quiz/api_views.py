@@ -1,5 +1,5 @@
 from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, UserSerializer, TeamSerializer, TeammateSerializer
-from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer, GuestSerializer
+from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer, GuestSerializer, AddTeammateSerializer
 from rest_framework import viewsets, mixins      
 from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember
 from rest_framework.permissions import AllowAny    
@@ -56,3 +56,7 @@ class TeamView(viewsets.ModelViewSet):
 class TeammateView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
     serializer_class= TeammateSerializer
     queryset=TeamMember.objects.all()
+
+class AddTeammateView(viewsets.GenericViewSet,mixins.CreateModelMixin):
+    serializer_class = AddTeammateSerializer
+    queryset = TeamMember.objects.all()
