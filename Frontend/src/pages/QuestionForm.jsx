@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 import React from "react";
 import { Link, useNavigate} from "react-router-dom";
@@ -7,10 +7,12 @@ import { useLocation } from "react-router-dom";
 import {API_BASE_URL} from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import AuthContext from "../context/AuthContext";
 
 var dropdownV="x";
 
 const QuestionForm = () => {    
+    const { user } = useContext(AuthContext);
    
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
@@ -44,7 +46,7 @@ const QuestionForm = () => {
             dropdownV=value;
         }
         event.preventDefault()
-       
+        setAuthorId(user.user_id)
 
         axios(
             {
@@ -52,7 +54,7 @@ const QuestionForm = () => {
                 url: `${API_BASE_URL}/api/question/`,
                 data: {
                     question_text: questionText,
-                    author: 1,
+                    author: user.user_id,
                     question_type: dropdownV,
                     default_answer: {
                         text: defaultAnswer,
@@ -79,7 +81,7 @@ const QuestionForm = () => {
                             is_correct: true
                         },
                         question_type: value,
-                        author: 1
+                        author: user.user_id,
                     }
                 } 
             )

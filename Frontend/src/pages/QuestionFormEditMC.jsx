@@ -2,12 +2,13 @@ import { useState } from "react"
 import axios from "axios"
 import { Link, useNavigate} from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import {React, useEffect } from 'react';
+import {React, useEffect, useContext } from 'react';
 import Question from '../components/QuestionCard';
 import $ from "jquery";
 import {API_BASE_URL} from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import AuthContext from "../context/AuthContext";
 
 
 const QuestionFormEdit = (id ) => {
@@ -22,6 +23,7 @@ const QuestionFormEdit = (id ) => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
+    const { user } = useContext(AuthContext);
 
     const [questiontype, setQuestionType] = useState('MC')
     const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
@@ -76,7 +78,7 @@ const QuestionFormEdit = (id ) => {
             setQuiz(data)
             setQuestionText(data.question_text)
             setDefaultAnswer(data.default_answer)
-            setAuthorId(1)
+            setAuthorId(user.user_id)
             setQuestionType(data.question_type)
 
             setQuestionAnswerOption1(data.question_answer_option[0].text)
@@ -108,7 +110,7 @@ const QuestionFormEdit = (id ) => {
                     question_text: questionText,
                     default_answer: defaultAnswer,
                     question_type: questiontype,
-                    author: 1,
+                    author: user.user_id,
                     question_answer_option:[
                         {
                             text: questionAnswerOption1,
@@ -152,7 +154,7 @@ const QuestionFormEdit = (id ) => {
                             is_correct: defaultAnswer.is_correct
                         },
                         question_type: value,
-                        author: 1
+                        author: user.user_id
                     }
                 } 
             )
