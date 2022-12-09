@@ -1,7 +1,7 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
 
 const AuthContext = createContext();
 
@@ -26,12 +26,12 @@ export const AuthProvider = ({ children }) => {
     const response = await fetch(`${API_BASE_URL}/api/token/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         username,
-        password
-      })
+        password,
+      }),
     });
     const data = await response.json();
 
@@ -44,22 +44,22 @@ export const AuthProvider = ({ children }) => {
       alert("Something went wrong!");
     }
   };
-  
+
   const registerUser = async (username, email, password, password2) => {
     const response = await fetch(`${API_BASE_URL}/api/registration/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         username,
         email,
         password,
-        password2
-      })
+        password2,
+      }),
     });
     if (response.status === 201) {
-        navigate("/login");
+      navigate("/login");
     } else {
       alert("Something went wrong!");
     }
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
     setAuthTokens,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
   };
 
   useEffect(() => {
@@ -94,4 +94,8 @@ export const AuthProvider = ({ children }) => {
       {loading ? null : children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  return useContext(AuthContext);
 };
