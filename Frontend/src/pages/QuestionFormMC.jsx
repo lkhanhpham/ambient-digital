@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 import React from "react";
 import { Link, useNavigate} from "react-router-dom";
@@ -6,6 +6,8 @@ import $ from "jquery";
 import {API_BASE_URL} from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import AuthContext from "../context/AuthContext";
+
 var dropdownV="MC";
 
 const QuestionForm = () => {
@@ -21,6 +23,7 @@ const QuestionForm = () => {
     const [questionAnswerOption1b, setQuestionAnswerOption1b] = useState('false')
     const [questionAnswerOption2b, setQuestionAnswerOption2b] = useState('false')
     const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState('false')
+    const { user } = useContext(AuthContext);
 
     
     const [show, setShow] = useState(false);
@@ -38,12 +41,14 @@ const QuestionForm = () => {
     const handleClose2 = () => setShow2(false);
     
     
+    
     const $ = require( "jquery" );
     const navigate = useNavigate();
 
     function createQuestionMC(event) {
         event.preventDefault()
        
+        setAuthorId(user.user_id)
 
         axios(
             {
@@ -51,7 +56,7 @@ const QuestionForm = () => {
                 url: `${API_BASE_URL}/api/question/`,
                 data: {
                     question_text: questionText,
-                    author: 1,
+                    author: user.user_id,
                     question_type: dropdownV,
                     default_answer: {
                         text: defaultAnswer,
@@ -94,7 +99,7 @@ const QuestionForm = () => {
                             is_correct: true
                         },
                         question_type: value,
-                        author: 1
+                        author: user.user_id
                     }
                 } 
             ) 

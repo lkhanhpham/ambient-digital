@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Question from './QuestionCard'
 import { Link, useNavigate} from "react-router-dom";
 import axios from "axios"
 import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 
 const QuestionView = () => {
     const [questions, setQuiz] = useState([])
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
 
     const getAllQuestions = async () => {
         const response = await fetch(`${API_BASE_URL}/api/question`)
@@ -66,6 +68,20 @@ const QuestionView = () => {
        
 
     }
+    var arr=[]
+    function functionOwn(){
+        questions.forEach(element => {
+            if(element.author===user.user_id && questions.length > 0){
+                arr.push(element)
+            }else{
+            }
+        });
+        if(arr.length>0){
+            return true
+        }else{
+            return false
+        }
+    }
 
     return (
         <>
@@ -77,23 +93,22 @@ const QuestionView = () => {
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">
-                        {questions.length > 0 ?
+                        { functionOwn() ?
                             (<div className='mx-auto align-items-center justify-content-center'>
                             <div className='d-block'>
-                                {questions.map((item) => (
-
-                                    <Question
-                                        question_text={item.question_text}
-                                        pub_date={item.pub_date.substring(0,10)}
-                                        
-                                        deleteItem ={() => deleteItem(item.id)}
-                                        
-                                        editItem ={() => editItem(item.id)} 
-                                    />
+                                {arr.map((item) => (
                                     
-                                )
-                                )
-                                }
+                                    <Question
+                                    key = {item.id}
+                                    question_text={item.question_text}
+                                    pub_date={item.pub_date.substring(0,10)}
+                                    
+                                    deleteItem ={() => deleteItem(item.id)}
+                                    
+                                    editItem ={() => editItem(item.id)} 
+                                />
+                                    
+                                ))}
                             </div>
 
                             </div>

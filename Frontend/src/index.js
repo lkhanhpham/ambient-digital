@@ -7,14 +7,20 @@ import './styles/quizView.css'
 import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
+
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={ <App /> }>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
-  </BrowserRouter>
+
 
 );
 

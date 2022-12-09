@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import axios from "axios"
 import { Link, useNavigate} from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -8,8 +8,7 @@ import $ from "jquery";
 import {API_BASE_URL} from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
-
+import AuthContext from "../context/AuthContext";
 
 
 const QuestionFormEdit = (id ) => {
@@ -34,10 +33,11 @@ const QuestionFormEdit = (id ) => {
         setShow(true)
     };
     const handleClose2 = () => setShow2(false);
+    const { user } = useContext(AuthContext);
     
     const handleShow2 = (event) => {
-        if(questionText.length>=1 && defaultAnswer.length>=1){
-            console.log("show2")
+        if(questionText.length!==0 && defaultAnswer.length!==0){
+            //console.log("show2")
             editQuestion(event)
         }else{
             setShow2(true)
@@ -73,8 +73,8 @@ const QuestionFormEdit = (id ) => {
             setQuiz(data)
             setQuestionText(data.question_text)
             setDefaultAnswer(data.default_answer)
-            setAuthorId(1)
             setQuestionType(data.question_type)
+            setAuthorId(user.user_id)
 
         }
         else {
@@ -102,14 +102,13 @@ const QuestionFormEdit = (id ) => {
                         is_correct: true
                     },
                     question_type: questiontype,
-                    author: 1
+                    author: user.user_id
                 },
                 headers: {'Content-Type': 'application/json'}
             }
         ).then((response) => {
             //console.log(response.data)
         })
-        setAuthorId(1)
         event.preventDefault()
     
     }
@@ -126,7 +125,8 @@ const QuestionFormEdit = (id ) => {
                             is_correct: defaultAnswer.is_correct
                         },
                         question_type: value,
-                        author: 1
+                        author: user.user_id
+                        
                     }
                 } 
             )
