@@ -111,15 +111,15 @@ const NewQuiz2 = () => {
     }
 
 
-    const nextStep = () => {
-        checkValid(chosen)
-        if (valid == true) {
-            handleShowSuccess()
-        } else {
-            handleShowWarning()
-        }
+    // const nextStep = () => {
+    //     checkValid(chosen)
+    //     if (valid == true) {
+    //         handleShowSuccess()
+    //     } else {
+    //         handleShowWarning()
+    //     }
 
-    }
+    // }
 
     // After user edits all fields, the data is saved into fields
     const fillFields = () => {
@@ -181,6 +181,23 @@ const NewQuiz2 = () => {
     const update = () => {
         var select1 = document.getElementById('questions')
         //console.log(select1.options[select1.selectedIndex].value);
+    }
+
+    const nextStep = () => {
+        checkValid(chosen)
+        if (valid === true) {
+            navigate("/QuizCreator/AddTeams", {
+                state: {
+                   // quiz_name: quiz_name, nr_of_rows: nr_of_rows,
+                   // nr_of_categories: nr_of_categories, categories: cat_name,
+                    quizId: quizId
+                }
+            },)
+        } else {
+            handleShowWarning()
+
+        }
+
     }
 
 
