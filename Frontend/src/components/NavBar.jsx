@@ -27,7 +27,6 @@ const Navbar = () => {
           <>
             <Link to="/Library">My Library</Link>
             <Link to="/">Quiz-Room</Link>
-            <Link to="/">Profile</Link>
             <Link to="/" onClick={logoutUser}>
               Logout
             </Link>
