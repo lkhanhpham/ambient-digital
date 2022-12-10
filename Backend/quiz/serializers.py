@@ -140,6 +140,12 @@ class QuizAuthorSerializer(serializers.ModelSerializer):
         model = User
         fields =  ('id','username','quiz_author')
 
+class QuestionAuthorSerializer(serializers.ModelSerializer):
+    question_author=QuestionSerializer(read_only=True, many=True)
+    class Meta:
+        model = User
+        fields =  ('id','username','question_author')
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
