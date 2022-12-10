@@ -16,6 +16,7 @@ const QuestionView = () => {
         if (response.ok) {
             setQuiz(data)
             //console.log(questions)
+            
         }
         else {
             //console.log(response.status)
@@ -80,6 +81,12 @@ const QuestionView = () => {
             return true
         }else{
             return false
+        }
+    }
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
         }
     }
 
