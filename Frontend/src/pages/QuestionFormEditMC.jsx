@@ -42,13 +42,16 @@ const QuestionFormEdit = (id ) => {
     const handleShow2 = (event) => {
         if(questionText.length!==0 && defaultAnswer.length!==0&& questionAnswerOption1.length!==0&&
             questionAnswerOption2.length!==0&&questionAnswerOption3.length!==0&&questionAnswerOption1.length!==0){
-            editQuestion(event)
+            setShow3(true)
+            
         }else{
             setShow2(true)
         }
     };
 
     const [show2, setShow2] = useState(false);
+    const [show3, setShow3] = useState(false);
+    const handleClose3 = () => setShow3(false);
     
 
     const $ = require( "jquery" );
@@ -306,6 +309,17 @@ const QuestionFormEdit = (id ) => {
                     <Modal.Header closeButton>
                     </Modal.Header>
                     <Modal.Body>You forgot something. Please fill in every field.</Modal.Body>
+                    </Modal>
+                    {/* Update Sucess */}
+                    <Modal show={show3} onHide={handleClose3}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Your Update was sucessfull.</Modal.Body>
+                    <Modal.Footer>
+                    <Link>
+                        <Button variant="primary" onClick={editQuestion}> Back to Libary</Button>
+                    </Link>
+                    </Modal.Footer>
                     </Modal>
                 </div>
                 </div>

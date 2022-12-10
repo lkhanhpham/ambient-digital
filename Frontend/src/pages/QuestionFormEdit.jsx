@@ -38,11 +38,14 @@ const QuestionFormEdit = (id ) => {
     const handleShow2 = (event) => {
         if(questionText.length!==0 && defaultAnswer.length!==0){
             //console.log("show2")
-            editQuestion(event)
+            setShow3(true)
         }else{
             setShow2(true)
         }
     };
+
+    const [show3, setShow3] = useState(false);
+    const handleClose3 = () => setShow3(false);
 
     const $ = require( "jquery" );
     const navigate = useNavigate();
@@ -110,6 +113,9 @@ const QuestionFormEdit = (id ) => {
             //console.log(response.data)
         })
         event.preventDefault()
+        navigate("/Library", 
+        // Update erfolgreich meldung einfügen
+        )
     
     }
 
@@ -231,6 +237,17 @@ const QuestionFormEdit = (id ) => {
                     <Modal.Header closeButton>
                     </Modal.Header>
                     <Modal.Body>You forgot something. Please fill in every field.</Modal.Body>
+                    </Modal>
+                    {/* Update Sucess */}
+                    <Modal show={show3} onHide={handleClose3}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Your Update was sucessfull.</Modal.Body>
+                    <Modal.Footer>
+                    <Link>
+                        <Button variant="primary" onClick={editQuestion}> Back to Libary</Button>
+                    </Link>
+                    </Modal.Footer>
                     </Modal>
                     
                 </div>
