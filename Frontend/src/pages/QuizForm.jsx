@@ -9,8 +9,8 @@ import AuthContext from "../context/AuthContext";
 const QuizForm = () => {
 
     const [quizName, setQuizName] = useState('')
-    const [nrOfRows, setNrOfRows] = useState('')
-    const [nrOfCols, setNrOfCols] = useState('')
+    const [nrOfRows, setNrOfRows] = useState(1)
+    const [nrOfCols, setNrOfCols] = useState(1)
     const [author, setAuthor] = useState('')
     const [quizId, setQuizId] = useState(0)
     const { user } = useContext(AuthContext);

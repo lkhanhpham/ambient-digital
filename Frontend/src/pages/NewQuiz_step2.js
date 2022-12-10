@@ -2,14 +2,16 @@ import { useLocation } from "react-router-dom";
 import Field from "../components/Field";
 import CatField from "../components/CatField";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import ModalSuccess from "../components/ModalSuccess";
 import axios from "axios"
 import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 
 const NewQuiz2 = () => {
+    const { user } = useContext(AuthContext);
     const location = useLocation();
     const quiz_name = location.state.quiz_name
     const nr_of_rows = location.state.nr_of_rows
@@ -165,11 +167,11 @@ const NewQuiz2 = () => {
 
     //fetch all created questions
     const getAllQues = async () => {
-        const response = await fetch(`${API_BASE_URL}/api/question/`)
+        const response = await fetch(`${API_BASE_URL}/api/authorquestion/${user.user_id}`)
         const data = await response.json()
         if (response.ok) {
             //console.log(data)
-            setQuestions(data)
+            setQuestions(data.question_author)
         }
         else {
             //console.log(response.status)

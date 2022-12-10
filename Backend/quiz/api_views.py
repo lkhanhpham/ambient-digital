@@ -1,5 +1,6 @@
 from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
 from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer
+from .serializers import QuestionAuthorSerializer
 from rest_framework import viewsets, mixins      
 from .models import Quiz, Categorie, Question, Field, User
 from rest_framework.permissions import AllowAny    
@@ -27,6 +28,11 @@ class WholeQuizView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retriev
 
 class QuizAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = QuizAuthorSerializer
+    queryset=User.objects.all()
+    lookup_field = 'id'
+
+class QuestionAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
+    serializer_class = QuestionAuthorSerializer
     queryset=User.objects.all()
     lookup_field = 'id'
 
