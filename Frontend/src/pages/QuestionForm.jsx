@@ -145,6 +145,7 @@ const QuestionForm = () => {
                         <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder="New Question"
                             text={questionText}
+                            maxLength="500"
                             onChange={(e) => setQuestionText(e.target.value)}
                             required="required"></input>
 
@@ -153,7 +154,10 @@ const QuestionForm = () => {
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={defaultAnswer} 
+                            <input type="text" class="form-control" id="exampleFormControlInput1" 
+                            placeholder="New Answer" 
+                            text={defaultAnswer} 
+                            maxLength="500"
                             onChange={(e) => setDefaultAnswer(e.target.value)} required="required"></input>
                             </div>
                         </div>
