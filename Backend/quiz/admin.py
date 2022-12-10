@@ -14,6 +14,10 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['pub_date']
     search_fields = ['question_text'] 
 
+class TeamInLine(admin.TabularInline):
+    model= Team
+    extra=0
+
 class FieldInline(admin.TabularInline):
     model = Field
     extra = 0
@@ -23,7 +27,7 @@ class QuizAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['quiz_name','author','nr_of_rows','nr_of_categories']}),
     ]
-    inlines = [FieldInline]
+    inlines = [FieldInline,TeamInLine]
     list_display = ('quiz_name',)
     list_filter = ['pub_date']
     search_fields = ['quiz_name'] 

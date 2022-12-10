@@ -57,6 +57,6 @@ class TeammateView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retrieve
     serializer_class= TeammateSerializer
     queryset=TeamMember.objects.all()
 
-class AddTeammateView(viewsets.GenericViewSet,mixins.CreateModelMixin):
+class AddTeammateView(viewsets.GenericViewSet,mixins.CreateModelMixin,mixins.DestroyModelMixin):
     serializer_class = AddTeammateSerializer
     queryset = TeamMember.objects.all()
