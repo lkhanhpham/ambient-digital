@@ -41,7 +41,7 @@ function App() {
           <Route path="/QuestionCreator/NewQuestion" element={<ProtectedRoute><NewQuestion /></ProtectedRoute>} />
           <Route path="/QuizCreator/NewQuiz1" element={<ProtectedRoute><NewQuiz1 /></ProtectedRoute>} />
           <Route path="/QuizCreator/NewQuiz2" element={<ProtectedRoute><NewQuiz2 /></ProtectedRoute>} />
-          <Route path="/QuizCreator/NewQuiz1/CategoryCreator" element={<ProtectedRoute><CategoryCreator /></ProtectedRoute>} />
+          <Route path="/CategoryCreator" element={<ProtectedRoute><CategoryCreator /></ProtectedRoute>} />
           <Route exact path="/Quiz/*" element={<ProtectedRoute><QuizShow /></ProtectedRoute>} />
           <Route path="/QuestionCreator/EditQuestion" element={<ProtectedRoute><QuestionFormEdit /></ProtectedRoute>} />
           <Route path="/QuestionCreator/EditQuestionMC" element={<ProtectedRoute><QuestionFormEditMC /></ProtectedRoute>} />
