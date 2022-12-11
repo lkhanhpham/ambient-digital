@@ -2,6 +2,9 @@ import { createContext, useState, useEffect, useContext } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
+import axios from "axios";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 const AuthContext = createContext();
 
@@ -22,47 +25,88 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  const loginUser = async (username, password) => {
-    const response = await fetch(`${API_BASE_URL}/api/token/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-    const data = await response.json();
+  const loginUser = async (userName, passWord) => {
+    
+    axios(
+      {
+        method:"POST",
+        url:`${API_BASE_URL}/api/token/`,
+        data: {
+          username: userName,
+          password: passWord,
+        },
+        headers:{"Content-Type": "application/json"}
+      }
+    ).then((response) => {
+      
+      if (response.status === 200) {
+        setAuthTokens(response.data);
+        setUser(jwt_decode(response.data.access));
+        localStorage.setItem("authTokens", JSON.stringify(response.data));
+        navigate("/Library");
+      }
+    }).catch(function (error) {
+      var stringLogin = "Please check your Login info! \n";
+      if (error.response.data.detail) {
+          stringLogin = stringLogin + error.response.data.detail; 
+      }
+      alert(stringLogin);
+    })
 
-    if (response.status === 200) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate("/Library");
-    } else {
-      alert("Something went wrong!");
-    }
+
   };
 
-  const registerUser = async (username, email, password, password2) => {
-    const response = await fetch(`${API_BASE_URL}/api/registration/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        password2,
-      }),
-    });
-    if (response.status === 201) {
-      navigate("/login");
-    } else {
-      alert("Something went wrong!");
-    }
+  const registerUser = async (userName, eMail, passWord, passWord2) => {
+
+    axios(
+      {
+        method:"POST",
+        url:`${API_BASE_URL}/api/registration/`,
+        data: {
+          username: userName,
+          email: eMail,
+          password: passWord,
+          password2: passWord2
+        },
+        headers:{"Content-Type": "application/json"}
+      }
+    ).then((response) => {
+      if (response.status === 201) {
+        navigate("/login");
+      }
+    }).catch(function (error) {
+      var string = "Something went wrong! \n";
+      if (error.response.data.email) {
+        for (let i = 0; i < error.response.data.email.length; i++) {
+          string = string + error.response.data.email[i] + "\n"; 
+        }
+      }
+      if (error.response.data.password) {
+        for (let i = 0; i < error.response.data.password.length; i++) {
+          string = string + error.response.data.password[i] + "\n"; 
+        }
+      }
+      if (error.response.data.username) {
+        for (let i = 0; i < error.response.data.username.length; i++) {
+          string = string + error.response.data.username[i] + "\n"; 
+        }
+      }      
+
+      alert(string);
+    })
+    // const response = await fetch(`${API_BASE_URL}/api/registration/`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     username,
+    //     email,
+    //     password,
+    //     password2,
+    //   }),
+    // });
+    
   };
 
   const logoutUser = () => {

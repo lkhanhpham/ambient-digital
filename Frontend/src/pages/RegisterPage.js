@@ -9,11 +9,26 @@ function Register() {
   const [password2, setPassword2] = useState("");
   const [email, setEmail] = useState("");
   const { registerUser } = useContext(AuthContext);
+  var submitDisabled = true;
+
 
   const handleSubmit = async e => {
     e.preventDefault();
     registerUser(username, email, password, password2);
   };
+
+  function checkIfEnabled() {
+    if (username.length > 0 && password.length > 0 && password2.length > 0 && email.length > 0 && password === password2) {
+      submitDisabled = false;
+
+    } else {
+      submitDisabled = true;
+    }
+
+    return submitDisabled;
+  }
+
+  
 
   return (
     <>
@@ -63,10 +78,10 @@ function Register() {
                         onChange={e => setPassword2(e.target.value)}
                         placeholder="Confirm Password"
                         required/>
-                    <p>{(password2 !== password) ? "Passwords do not match" : ""}</p>
+                    <p>{(password2 !== password) ? ("Passwords do not match") : ("")}</p>
                     </div>
                     <div className="d-flex align-item-start p-3 divButton">
-                        <button className="btn btn-secondary me-3" type="submit">Submit</button>
+                        <button className="btn btn-secondary me-3" type="submit" disabled={checkIfEnabled()}>Submit</button>
                         <label className="me-3 colorLink"><Link to ="/Login"> Login here</Link></ label>
                     </div>
                 </form>

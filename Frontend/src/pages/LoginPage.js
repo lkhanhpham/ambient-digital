@@ -16,23 +16,23 @@ const LoginPage = () => {
       <section>
         <div id="wrapper" className="container login-wrapper row justify-content-center" >
           <div className="card">
-          <form class="loginForm" onSubmit={handleSubmit}>
+          <form className="loginForm" onSubmit={handleSubmit}>
             <h1>Sign In</h1>
             <hr />
-            <div class="col-md-12">
+            <div className="col-md-12">
               <label htmlFor="exampleFormControlInput1"></label>
               <input
-                class="form-control"
+                className="form-control"
                 type="text"
                 id="username"
                 placeholder="Enter Username"
                 required
               />
             </div>
-            <div class="col-md-12">
+            <div className="col-md-12">
               <label htmlFor="password"></label>
               <input
-                class="form-control"
+                className="form-control"
                 type="password"
                 id="password"
                 placeholder="Enter Password"
