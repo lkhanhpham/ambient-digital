@@ -1,10 +1,16 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom";
 import axios from "axios"
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
 const CategoryCreator = () => {
+    const location = useLocation();
+    const quiz_name = location.state.quiz_name
+    const nr_of_rows = location.state.nr_of_rows
+    const nr_of_categories = location.state.nr_of_categories
+    const quizId = location.state.quizId
 
     const [catName, setCatName] = useState('')
     const [showSuccess, setShowSuccess] = useState(false);
@@ -24,16 +30,23 @@ const CategoryCreator = () => {
             }
         ).then((response) => {
             //console.log(response.data)
-            navigateBack()
+            handleShowSuccess()
             setCatName("")
         })
 
         event.preventDefault()
     }
+    const navigate = useNavigate()
     function navigateBack(event) {
-        handleShowSuccess()
         event.preventDefault()
-
+        navigate("../QuizCreator/NewQuiz1",
+        {
+            state: {
+                quiz_name: quiz_name, nr_of_rows: nr_of_rows,
+                nr_of_categories: nr_of_categories,
+                quizId: quizId
+            }
+        })
     }
 
 
@@ -61,11 +74,15 @@ const CategoryCreator = () => {
                         <Link to="/Library">
                             <button className="btn btn-secondary me-2" >Cancel</button>
                         </Link>
-
                         <button onClick={createCat} className="btn btn-primary">Create</button>
 
                     </div>
                 </div>
+            </div>
+            <div className="row justify-content-center">
+            <div className="col-lg-6 col-md-8 d-flex justify-content-start pt-3">
+                <button onClick={navigateBack} className="btn btn-primary">Back</button>
+            </div>
             </div>
             <ModalSuccess showSuccess={showSuccess} handleCloseSuccess={handleCloseSuccess} title={"Category created"} body={"You can now close this tab and continue or create some more categories."} onclick={handleCloseSuccess} />
             <style jsx='true'>{`

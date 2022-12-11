@@ -7,6 +7,7 @@ import { API_BASE_URL } from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import ModalWarning from '../components/ModalWarning';
+import editButton from "../icons/editbutton.png"
 
 // For each created quiz one quizcard is rendered
 const QuizEdit1 = () => {
@@ -231,7 +232,7 @@ const QuizEdit1 = () => {
                 ) : (
                     <h1 className='big-title me-3'>{title}</h1>
                 )}
-                <button onClick={changeTitle} className="icon align-self-start"><img src='editbutton.png' alt='icon' width='20' height='20'></img></button>
+                <button onClick={changeTitle} className="icon align-self-start"><img src={editButton} alt='icon' width='20' height='20'></img></button>
             </div>
             <div className='row justify-content-between'>
                 <div className=' col-4 d-flex flex-column justify-content-center align-self-start'>
