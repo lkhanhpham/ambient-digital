@@ -9,11 +9,26 @@ function Register() {
   const [password2, setPassword2] = useState("");
   const [email, setEmail] = useState("");
   const { registerUser } = useContext(AuthContext);
+  var submitDisabled = true;
+
 
   const handleSubmit = async e => {
     e.preventDefault();
     registerUser(username, email, password, password2);
   };
+
+  function checkIfEnabled() {
+    if (username.length > 0 && password.length > 0 && password2.length > 0 && email.length > 0 && password === password2) {
+      submitDisabled = false;
+
+    } else {
+      submitDisabled = true;
+    }
+
+    return submitDisabled;
+  }
+
+  
 
   return (
     <>
@@ -21,10 +36,10 @@ function Register() {
         <div id="wrapper" className="container login-wrapper row justify-content-center" >
             <div className="card">
 
-                <form  class="loginForm" onSubmit={handleSubmit}>
+                <form  className="loginForm" onSubmit={handleSubmit}>
                     <h1>Create a new Account</h1>
                     <hr />
-                    <div class="col-md-12">
+                    <div className="col-md-12">
                         <label htmlFor="exampleFormControlInput1"></label>
                         <input
                             className="form-control"
@@ -34,7 +49,7 @@ function Register() {
                             placeholder="Username"
                             required/>
                     </div>
-                    <div classnName="col-md-12">
+                    <div className="col-md-12">
                         <label htmlFor="email"></label>
                         <input 
                             className="form-control"
@@ -44,7 +59,7 @@ function Register() {
                             placeholder="E-Mail" 
                             required/>
                     </div>
-                    <div classnName="col-md-12">
+                    <div className="col-md-12">
                         <label htmlFor="password"></label>
                         <input
                             className="form-control"
@@ -54,7 +69,7 @@ function Register() {
                             placeholder="Password"
                             required/>
                     </div>
-                    <div classnName="col-md-12"> 
+                    <div className="col-md-12"> 
                         <label htmlFor="confirm-password"></label>
                         <input
                         className="form-control"
@@ -63,10 +78,10 @@ function Register() {
                         onChange={e => setPassword2(e.target.value)}
                         placeholder="Confirm Password"
                         required/>
-                    <p>{password2 !== password ? "Passwords do not match" : ""}</p>
+                    <p>{(password2 !== password) ? ("Passwords do not match") : ("")}</p>
                     </div>
                     <div className="d-flex align-item-start p-3 divButton">
-                        <button className="btn btn-secondary me-3" type="submit">Submit</button>
+                        <button className="btn btn-secondary me-3" type="submit" disabled={checkIfEnabled()}>Submit</button>
                         <label className="me-3 colorLink"><Link to ="/Login"> Login here</Link></ label>
                     </div>
                 </form>
