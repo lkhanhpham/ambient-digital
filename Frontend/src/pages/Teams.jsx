@@ -16,15 +16,23 @@ const Teams = () => {
     const [teamName, setTeamName] = useState('')
     const [teamPoints, setTeamPoints] = useState('')
     const [quizId, setQuizId] = useState('')
-    const[members, setMembers] = useState('')
     const[User, setUser] = useState([])
+    const[UserId, setUserId] = useState([])
+    const [userName, setUserName] = useState([])
+    const [teamId, setTeamId] = useState('')
 
+
+    const [chosen] = useState([false])
+    const [showSuccess, setShowSuccess] = useState(false);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const confirm = () => {
         handleShow()
     }
+    const [showWarning, setShowWarning] = useState(false);
+    const handleShowWarning = () => setShowWarning(true);
+   
 
     const getAllUser = async () => {
         const response = await fetch(`${API_BASE_URL}/api/user/`)
@@ -32,6 +40,8 @@ const Teams = () => {
         if (response.ok) {
             //console.log(data)
             setUser(data)
+            
+            
         }
         else {
             //console.log(response.status)
@@ -39,18 +49,15 @@ const Teams = () => {
 
         }
     }
+    
     const update = () => {
         var select1 = document.getElementById('user')
+        //const id = select1.options[select1.selectedIndex].value
+        
+        
         //console.log(select1.options[select1.selectedIndex].value);
     }
 
-    const TeamMembers = [];
-    const addFirstMember = () => {
-        TeamMembers.push("{"+ members+ "}");
-    }
-    const addMember = () => {
-        TeamMembers.push(",{"+ members+ "}");
-    }
     
 
     
@@ -68,18 +75,57 @@ const Teams = () => {
 
                     team_name: teamName,
                     team_points: 0,
-                    quiz: 1,
-                     teamMember_team: [TeamMembers  ]          
-                                    
+                    quiz: 1,                
                 },
                 headers: {'Content-Type': 'application/json'}
             }
         ).then((response) => {
             console.log(response.data)
+            setTeamId(response.data.id)
         })
         confirm()
         event.preventDefault()
     }
+
+
+    function saveMember(position) {
+        var select1 = document.getElementById('user')
+        //const text = (select1.options[select1.selectedIndex].text)
+        const id = select1.options[select1.selectedIndex].value
+        if(!UserId.includes(id)){
+           // userName[position] = text
+            UserId[position] = id
+            
+        }
+        else{
+            handleShowWarning()
+        }
+        
+        //handleClose()
+    }
+
+
+    function createMember(event) {
+        //setTeamPoints(100)
+        for (let i = 0; i < userName.length; i++) {
+            axios(
+                {
+                    method: "POST",
+                    url: `${API_BASE_URL}/api/AddTeammates/`,
+                    data: {
+                    team: teamId,
+                    member: UserId[i]
+                                     
+                    },
+                    headers: {'Content-Type': 'application/json'}
+                }
+            ).then((response) => {
+                console.log(response.data)
+            })
+        }
+            confirm()
+            event.preventDefault()
+        }
 
     useEffect(
         () => {
@@ -105,24 +151,22 @@ const Teams = () => {
                             text={teamName}
                             onChange={(e) => setTeamName(e.target.value)}
                         ></input>
-                        {/* <label className="mb-2"  htmlFor="exampleFormControlInput1">QuizId</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1"
-                            placeholder="Quiz id"
-                            text={quizId}
-                            onChange={(e) => setQuizId(e.target.value)}
-                        ></input> */}
+                        <button onClick={createTeam} className="btn btn-primary">Set Teamname</button>
+                        <div></div>
                        
                         <label className="mb-2"  htmlFor="exampleFormControlInput1">Team Members</label>
                         <select className="form-control mb-4" id="User" onChange={update}>
                             {User.map((item) => (
                                 <option key={item.id} value={item.id}>
                                     {item.username}
+                                    
                                 </option>
                             ))}
+                            
                            
                          </select> 
-                         <button onClick={addFirstMember} className="btn btn-primary">Add First</button>
-                         <button onClick={addMember} className="btn btn-primary">Add Teammember</button>
+                         {/* <button onClick={addFirstMember} className="btn btn-primary">Add First</button> */}
+                         <button onClick={saveMember} className="btn btn-primary">Add Teammember</button>
 
 
                     </form>
@@ -130,10 +174,11 @@ const Teams = () => {
                 <div className="d-flex justify-content-end p-3">
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2" >Cancel</button>
-                    </Link>   
-                    <button onClick={createTeam} className="btn btn-primary">Create</button>                
+                    </Link>       
+                    <button onClick={createMember} className="btn btn-primary">Create</button>              
                 </div>
                 <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New team created!"} body = {"Team created with name: " + teamName}  />
+                {/* <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createMember} /> */}
                 </div>
             </div>
             <style jsx='true'>{`
