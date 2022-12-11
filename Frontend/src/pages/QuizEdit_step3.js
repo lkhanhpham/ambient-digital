@@ -273,6 +273,9 @@ const QuizEdit3 = () => {
 
     const [fieldIds] = useState([])
     const [Ids] = useState([])
+
+    const [old_question_text, setquestiontext] = useState([])
+
     function createGrid() {
         for (let i = 0; i < fields.length; i++) {
             // console.log("vor if")
@@ -295,8 +298,14 @@ const QuizEdit3 = () => {
                             fieldIds.push(object)
                             rowId = rowId + 1
                         }
+                        if ((fields[k].question) == null || fields[k].question == undefined) {
+                            old_question_text[k] = "Please choose a question"
+                        }
+                        else {
+                            old_question_text[k] = (fields[k].question.question_text)
+                        }
 
-                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={fields[k].question.question_text} />)
+                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={old_question_text[k]} />)
                     }
                 }
                 cats.push(<div className='d-flex flex-column'>{tempfields}</div>)
@@ -315,9 +324,9 @@ const QuizEdit3 = () => {
     const fillFields = () => {
 
         var j = 0
-        for (let i = 0; i <question_text.length; i++) {
-            if(j===catIds.length){
-                j=0
+        for (let i = 0; i < question_text.length; i++) {
+            if (j === catIds.length) {
+                j = 0
             }
             const obj = {
                 point: +fieldPoints[i],
@@ -326,7 +335,7 @@ const QuizEdit3 = () => {
                 quiz: quizId
             }
             newfields.push(obj)
-            j = j + 1 
+            j = j + 1
         }
 
         //console.log(fields)
@@ -334,9 +343,9 @@ const QuizEdit3 = () => {
 
     //notify user that quiz is saved
     const [showSuccess, setShowSuccess] = useState(false);
-    
+
     const handleCloseSuccess = () => setShowSuccess(false);
-    
+
     const handleShowSuccess = () => setShowSuccess(true);
 
     //post new fields in new rows to BACKEND
@@ -366,7 +375,7 @@ const QuizEdit3 = () => {
                 url: url,
                 data: {
                     quiz_name: title,
-                    nr_of_rows: nr_of_rows+newrows.length,
+                    nr_of_rows: nr_of_rows + newrows.length,
                     nr_of_categories: nr_of_categories,
                     author: 1,
                 },

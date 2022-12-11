@@ -21,6 +21,7 @@ const QuizShow = (props) => {
 
     const [cats, setCats] = useState([])
     const [myFields] = useState([])
+    const [question_text, setquestiontext] = useState([])
     const [cols] = useState([])
     for (let i = 0; i < fields.length; i++) {
         if (!cols.includes(fields[i].categorie_name)) {
@@ -36,7 +37,13 @@ const QuizShow = (props) => {
         let rows = []
         for (let k = 0; k < fields.length; k++) {
             if (fields[k].categorie_name == cols[i]) {
-                rows.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question={fields[k].question.question_text} />)
+                if((fields[k].question)==null||fields[k].question==undefined){
+                    question_text[k]="Please choose a question"
+                }
+                else{
+                    question_text[k]=(fields[k].question.question_text)
+                }
+                rows.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question={question_text[k]} />)
             }
         }
         myFields.push(<div className='d-flex flex-column'>{rows}</div>)

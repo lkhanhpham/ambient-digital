@@ -44,10 +44,11 @@ class DefaultAnswer(models.Model):
         return self.text
     
 class Question(models.Model):
+   
     MULTI = 'MC'
     SIMPLE = 'SC'
     ESTIMATE = 'EQ'
-    question_text=models.CharField(max_length=500)
+    question_text=models.CharField(max_length=500,  default = "")
     pub_date = models.DateTimeField('date published',auto_now_add=True)
     last_edit = models.DateTimeField('date published',auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='question_author')
@@ -99,7 +100,7 @@ class FurtherAnswer(models.Model):
 
 class Field(models.Model):
     point = models.PositiveIntegerField(default=100, validators=[MaxValueValidator(1000)])
-    question = models.ForeignKey(Question, on_delete=models.CASCADE,related_name='field_question') 
+    question = models.ForeignKey(Question, on_delete=models.SET_NULL,related_name='field_question',null = True, blank = True) 
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE,related_name='field_categorie')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='field_quiz')
 

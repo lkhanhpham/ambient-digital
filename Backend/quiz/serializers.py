@@ -89,7 +89,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 #When this happens replace this classs with the FieldSerializer in the other branch, because the model has been updated
 class FieldSerializer(serializers.ModelSerializer):
     categorie_name= serializers.ReadOnlyField(source='categorie.categorie_name')
-    question_id=serializers.IntegerField(source='question.id')
+    question_id=serializers.IntegerField(source='question.id', allow_null = True)
     question= QuestionSerializer(read_only=True)
 
     class Meta:
@@ -98,7 +98,10 @@ class FieldSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data: dict):
         question_instance = validated_data.get('question')
-        question_instance = Question.objects.get(id=question_instance.get('id'))
+        if(question_instance.get('id') is not None):
+            question_instance = Question.objects.get(id=question_instance.get('id'))
+        else:
+            question_instance = None
 
         created_field = Field.objects.create(
                 point=validated_data.get('point'),

@@ -81,6 +81,7 @@ const QuizEdit1 = (props) => {
         setValue(value + 1);
         // createdGrid()
     }
+    const [question_text, setquestiontext] = useState([])
 
     function createGrid() {
         for (let i = 0; i < fields.length; i++) {
@@ -95,7 +96,13 @@ const QuizEdit1 = (props) => {
 
                 for (let k = 0; k < fields.length; k++) {
                     if (fields[k].categorie_name == categorie_name) {
-                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={fields[k].question.question_text} handleShow={() => handleShow(fields[k].id)} />)
+                        if((fields[k].question)==null||fields[k].question==undefined){
+                            question_text[k]="Please choose a question"
+                        }
+                        else{
+                            question_text[k]=(fields[k].question.question_text)
+                        }
+                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={question_text[k]} handleShow={() => handleShow(fields[k].id)} />)
                     }
                 }
                 cats.push(<div className='d-flex flex-column'>{tempfields}</div>)
@@ -140,8 +147,11 @@ const QuizEdit1 = (props) => {
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        ques = id
-        point = select2.options[select2.selectedIndex].value
+        if(!question_text.includes(text)){
+            ques = id
+            point = select2.options[select2.selectedIndex].value
+
+        }
 
     }
     //PUT field to backend

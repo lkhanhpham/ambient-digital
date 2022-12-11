@@ -308,6 +308,8 @@ const QuizEdit2 = (props) => {
     }
     // showNewCat()
 
+    const [old_question_text, setquestiontext] = useState([])
+
     function createGrid() {
         for (let i = 0; i < fields.length; i++) {
             // console.log("vor if")
@@ -321,7 +323,13 @@ const QuizEdit2 = (props) => {
 
                 for (let k = 0; k < fields.length; k++) {
                     if (fields[k].categorie_name == categorie_name) {
-                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={fields[k].question.question_text} />)
+                        if((fields[k].question)==null||fields[k].question==undefined){
+                            old_question_text[k]="Please choose a question"
+                        }
+                        else{
+                            old_question_text[k]=(fields[k].question.question_text)
+                        }
+                        tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={old_question_text[k]} />)
                     }
                 }
                 cats.push(<div className='d-flex flex-column'>{tempfields}</div>)

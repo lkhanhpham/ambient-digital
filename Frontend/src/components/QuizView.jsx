@@ -12,7 +12,7 @@ const QuizView = () => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/`)
         const data = await response.json()
         if (response.ok) {
-            //console.log(data)
+            console.log(data)
             setQuizzes(data)
         }
         else {
