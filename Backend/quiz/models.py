@@ -33,6 +33,7 @@ class Quiz(models.Model):
 
 class Categorie(models.Model):
     categorie_name=models.CharField(max_length=200)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='categorie_author')
     def __str__(self):
         return self.categorie_name
 

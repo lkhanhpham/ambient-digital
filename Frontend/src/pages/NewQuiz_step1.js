@@ -1,11 +1,13 @@
-import { useLocation } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import CatField from "../components/CatField";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext  } from "react";
 import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 const NewQuiz1 = () => {
+    const { user } = useContext(AuthContext);
     const location = useLocation();
     const quiz_name = location.state.quiz_name
     const nr_of_rows = location.state.nr_of_rows
@@ -49,11 +51,11 @@ const NewQuiz1 = () => {
 
     //fetch all created categories
     const getAllCats = async () => {
-        const response = await fetch(`${API_BASE_URL}/api/categorie/`)
+        const response = await fetch(`${API_BASE_URL}/api/authorcategorie/${user.user_id}`)
         const data = await response.json()
         if (response.ok) {
             //console.log(data)
-            setCats(data)
+            setCats(data.categorie_author)
         }
         else {
             //console.log(response.status)

@@ -1,11 +1,13 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import axios from "axios"
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
 import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 const CategoryCreator = () => {
 
+    const { user } = useContext(AuthContext);
     const [catName, setCatName] = useState('')
     const [showSuccess, setShowSuccess] = useState(false);
     //show the success notification
@@ -19,6 +21,7 @@ const CategoryCreator = () => {
                 url: `${API_BASE_URL}/api/categorie/`,
                 data: {
                     categorie_name: catName,
+                    author: user.user_id
                 },
                 headers: { 'Content-Type': 'application/json' }
             }
@@ -67,7 +70,7 @@ const CategoryCreator = () => {
                     </div>
                 </div>
             </div>
-            <ModalSuccess showSuccess={showSuccess} handleCloseSuccess={handleCloseSuccess} title={"Category created"} body={"You can now close this tab and continue or create some more categories."} onclick={handleCloseSuccess} />
+            <ModalSuccess showSuccess={showSuccess} handleCloseSuccess={handleCloseSuccess} title={"Category created"} body={"Categorie has been created"} onclick={handleCloseSuccess} />
             <style jsx='true'>{`
         label{
           font-size: 18px;
