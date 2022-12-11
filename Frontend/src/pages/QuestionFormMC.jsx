@@ -183,6 +183,7 @@ const QuestionForm = () => {
                         <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder="New Question"
                             text={questionText}
+                            maxLength="500"
                             onChange={(e) => setQuestionText(e.target.value)}
                             required></input>
                         <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers </label> 
@@ -190,15 +191,21 @@ const QuestionForm = () => {
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="New Answer" text={defaultAnswer} 
+                            <input type="text" class="form-control" id="exampleFormControlInput1" 
+                            placeholder="New Answer" 
+                            text={defaultAnswer} 
                             onChange={(e) => setDefaultAnswer(e.target.value)}
+                            maxLength="500"
                             required></input>
                             </div>
                         </div>
                         <div id= "containerID2" className="container2"> 
                             <label htmlFor="exampleFormControlInput2">Choice 2</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="New Answer" text={defaultAnswer} 
+                                <input type="text" class="form-control" id="exampleFormControlInput2" 
+                                placeholder="New Answer" 
+                                text={defaultAnswer} 
+                                maxLength="500"
                                 onChange={(e) => setQuestionAnswerOption1(e.target.value)}></input>
                                 <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} 
                                 required></input> 
@@ -208,7 +215,10 @@ const QuestionForm = () => {
                         <div id= "containerID3" className="container3"> 
                             <label htmlFor="exampleFormControlInput3">Choice 3</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput3" placeholder="New Answer" text={defaultAnswer} 
+                                <input type="text" class="form-control" id="exampleFormControlInput3" 
+                                placeholder="New Answer" 
+                                text={defaultAnswer} 
+                                maxLength="500"
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
                                 <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} 
@@ -219,7 +229,10 @@ const QuestionForm = () => {
                         <div id= "containerID4" className="container4"> 
                             <label htmlFor="exampleFormControlInput4">Choice 4</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput4" placeholder="New Answer" text={defaultAnswer} 
+                                <input type="text" class="form-control" id="exampleFormControlInput4" 
+                                placeholder="New Answer" 
+                                text={defaultAnswer} 
+                                maxLength="500"
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
                                 <input className="right" id="checkbox3" type="checkbox"  value={questionAnswerOption3b} 
