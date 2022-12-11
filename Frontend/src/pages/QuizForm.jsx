@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import ModalSuccess from "../components/ModalSuccess";
 import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 const QuizForm = () => {
 
     const [quizName, setQuizName] = useState('')
-    const [nrOfRows, setNrOfRows] = useState('')
-    const [nrOfCols, setNrOfCols] = useState('')
+    const [nrOfRows, setNrOfRows] = useState(1)
+    const [nrOfCols, setNrOfCols] = useState(1)
     const [author, setAuthor] = useState('')
     const [quizId, setQuizId] = useState(0)
+    const { user } = useContext(AuthContext);
 
     const navigate = useNavigate();
     function update() {
@@ -36,7 +38,7 @@ const QuizForm = () => {
         setQuizName("")
         setNrOfRows("")
         setNrOfCols("")
-        setAuthor("")
+        setAuthor(user.user_id)
     }
 
     const createQuiz = (event) => {
@@ -49,7 +51,7 @@ const QuizForm = () => {
                     quiz_name: quizName,
                     nr_of_rows: nrOfRows,
                     nr_of_categories: nrOfCols,
-                    author: 1,
+                    author: user.user_id,
 
                 },
                 headers: { 'Content-Type': 'application/json' }

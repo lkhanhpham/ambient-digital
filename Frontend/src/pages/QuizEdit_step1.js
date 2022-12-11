@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 
 // For each created quiz one quizcard is rendered
-const QuizEdit1 = (props) => {
+const QuizEdit1 = () => {
     const navigate = useNavigate()
     const location = useLocation();
     const title = location.state.title
@@ -300,6 +300,7 @@ const QuizEdit1 = (props) => {
                         <input type="text" className="form-control" id="exampleFormControlInput1"
                             placeholder={title}
                             text={quizName}
+                            maxLength = "20"
                             onChange={(e) => setQuizName(e.target.value)}></input>
                     </form>
 

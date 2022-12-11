@@ -82,8 +82,7 @@ Checkout this branch and follow the setup instructions there.
 [Vercel](https://vercel.com/capstone-ambientdigital/quizai) - Frontend Deployment <br>
 [Heroku](https://dashboard.heroku.com/teams/capstone-ambientdigital-2022/apps) - Backend Deployment
 
-Test | Frontend (Link needs to be done. As of now, test deployments result in a dynamic URL)
-(The most recent Test URL can be retrieved [here](https://vercel.com/capstone-ambientdigital/quizai/deployments)) <br>
+[Test | Frontend](https://quizai-test.vercel.app/) <br>
 [Test | Backend](https://quizai-test.herokuapp.com/admin/login)
 
 [Prod | Frontend](https://quizai.vercel.app/) <br>

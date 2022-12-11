@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 import Library from "./Library";
@@ -13,47 +13,46 @@ import CategoryCreator from "./CategoryCreator";
 import QuizShow from "./QuizShow"
 import QuestionFormEdit from "./QuestionFormEdit";
 import QuestionFormEditMC from "./QuestionFormEditMC";
-import {
-  Route,
-  Routes
-} from 'react-router-dom'
+import Login from "./LoginPage";
+import Home from "./HomePage";
+import Registration from "./RegisterPage";
+import { Route, Routes } from "react-router-dom";
+import { AuthProvider } from "../context/AuthContext";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 import QuizEdit1 from "./QuizEdit_step1";
 import QuizEdit2 from "./QuizEdit_step2";
 import QuizEdit3 from "./QuizEdit_step3";
-//the Library, which contains all quizes from one author, and the header are put together
-class App extends Component {
-  render() {
-    return (
-      <>
-        <Helmet>
-          <base href="/"></base>
-        </Helmet>
 
+
+//the Library, which contains all quizes from one author, and the header are put together
+function App() {
+  return (
+    <div>
+      <AuthProvider>
         <Header />
-        {/* use Router to change URL inside a SPA, the components are rendered based on the URLs */}
-        <div>
-          <Routes>
-            <Route exact path="/" element={<Library />} />
-            <Route exact path="/Library" element={<Library />} />
-            <Route exact path="/QuizCreator/*" element={<QuizForm />} />
-            <Route exact path="/QuestionCreator/SC" element={<QuestionForm />} />
-            <Route exact path="/QuestionCreator/MC" element={<QuestionFormMC />} />
-            <Route path="/QuestionCreator/NewQuestion" element={<NewQuestion />} />
-            <Route path="/QuizCreator/NewQuiz1" element={<NewQuiz1 />} />
-            <Route path="/QuizCreator/NewQuiz2" element={<NewQuiz2 />} />
-            <Route path="/QuizCreator/NewQuiz1/CategoryCreator" element={<CategoryCreator />} />
-            <Route exact path="/Quiz/*" element={<QuizShow />} />
-            <Route path="/QuestionCreator/EditQuestion" element={<QuestionFormEdit />} />
-            <Route path="/QuestionCreator/EditQuestionMC" element={<QuestionFormEditMC />} />
-            <Route exact path="/EditQuiz1/*" element={<QuizEdit1 />} />
-            <Route exact path="/EditQuiz2/*" element={<QuizEdit2 />} />
-            <Route exact path="/EditQuiz3/*" element={<QuizEdit3 />} />
-            <Route path="/EditQuiz2/CategoryCreator" element={<CategoryCreator />} />
-          </Routes>
-        </div>
-      </>
-    );
-  }
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/Registration" element={<Registration />} />
+          <Route exact path="/Library" element={<ProtectedRoute><Library /></ProtectedRoute>} />
+          <Route exact path="/QuizCreator/*" element={<ProtectedRoute><QuizForm /></ProtectedRoute>} />
+          <Route exact path="/QuestionCreator/SC" element={<ProtectedRoute><QuestionForm /></ProtectedRoute>} />
+          <Route exact path="/QuestionCreator/MC" element={<ProtectedRoute><QuestionFormMC /></ProtectedRoute>} />
+          <Route path="/QuestionCreator/NewQuestion" element={<ProtectedRoute><NewQuestion /></ProtectedRoute>} />
+          <Route path="/QuizCreator/NewQuiz1" element={<ProtectedRoute><NewQuiz1 /></ProtectedRoute>} />
+          <Route path="/QuizCreator/NewQuiz2" element={<ProtectedRoute><NewQuiz2 /></ProtectedRoute>} />
+          <Route path="/QuizCreator/NewQuiz1/CategoryCreator" element={<ProtectedRoute><CategoryCreator /></ProtectedRoute>} />
+          <Route exact path="/Quiz/*" element={<ProtectedRoute><QuizShow /></ProtectedRoute>} />
+          <Route path="/QuestionCreator/EditQuestion" element={<ProtectedRoute><QuestionFormEdit /></ProtectedRoute>} />
+          <Route path="/QuestionCreator/EditQuestionMC" element={<ProtectedRoute><QuestionFormEditMC /></ProtectedRoute>} />
+          <Route exact path="/EditQuiz1/*" element={<ProtectedRoute><QuizEdit1 /></ProtectedRoute>} />
+          <Route exact path="/EditQuiz2/*" element={<ProtectedRoute><QuizEdit2 /></ProtectedRoute>} />
+          <Route exact path="/EditQuiz3/*" element={<ProtectedRoute><QuizEdit3 /></ProtectedRoute>} />
+        </Routes>
+      </AuthProvider>
+    </div>
+  );
 }
+
 
 export default App;

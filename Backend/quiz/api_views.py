@@ -1,7 +1,10 @@
 from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
-from .serializers import WholeQuizSerializer,QuizAuthorSerializer
+from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer
+from .serializers import QuestionAuthorSerializer
 from rest_framework import viewsets, mixins      
-from .models import Quiz, Categorie, Question, Field, User            
+from .models import Quiz, Categorie, Question, Field, User
+from rest_framework.permissions import AllowAny    
+from rest_framework_simplejwt.views import TokenObtainPairView        
 
 class QuizView(viewsets.ModelViewSet):  
     serializer_class = QuizSerializer   
@@ -27,3 +30,16 @@ class QuizAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retrie
     serializer_class = QuizAuthorSerializer
     queryset=User.objects.all()
     lookup_field = 'id'
+
+class QuestionAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
+    serializer_class = QuestionAuthorSerializer
+    queryset=User.objects.all()
+    lookup_field = 'id'
+
+class RegisterView(viewsets.GenericViewSet,mixins.CreateModelMixin):
+    serializer_class = RegisterSerializer
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
