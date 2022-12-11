@@ -139,7 +139,13 @@ const QuizEdit1 = () => {
     const changeTitle = () => {
         handleShow1()
     }
+    
+    //a Warning if the question already exists in the quiz and user cannot proceed
+    const [showWarningQues, setShowWarningQues] = useState(false);
 
+    const handleCloseWarningQues = () => setShowWarningQues(false);
+
+    const handleShowWarningQues = () => setShowWarningQues(true);
     const fieldUrl = `${API_BASE_URL}/api/field/` + fieldId + "/";
     //save the changed data of the edited field
     const saveField = () => {
@@ -151,6 +157,9 @@ const QuizEdit1 = () => {
             ques = id
             point = select2.options[select2.selectedIndex].value
 
+        }
+        else{
+            handleShowWarningQues
         }
 
     }
@@ -313,6 +322,7 @@ const QuizEdit1 = () => {
                     </div>
                 </Modal.Footer>
             </Modal>
+            <ModalWarning showWarning={showWarningQues} handleCloseWarning={handleCloseWarningQues} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
         </div >
     )
 }
