@@ -6,6 +6,7 @@ import Field from '../components/Field';
 import { API_BASE_URL } from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
+import ModalWarning from '../components/ModalWarning';
 
 // For each created quiz one quizcard is rendered
 const QuizEdit1 = () => {
@@ -159,7 +160,7 @@ const QuizEdit1 = () => {
 
         }
         else{
-            handleShowWarningQues
+            handleShowWarningQues()
         }
 
     }
