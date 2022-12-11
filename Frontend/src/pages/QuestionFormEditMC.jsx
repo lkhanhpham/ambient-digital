@@ -42,13 +42,16 @@ const QuestionFormEdit = (id ) => {
     const handleShow2 = (event) => {
         if(questionText.length!==0 && defaultAnswer.length!==0&& questionAnswerOption1.length!==0&&
             questionAnswerOption2.length!==0&&questionAnswerOption3.length!==0&&questionAnswerOption1.length!==0){
-            editQuestion(event)
+            setShow3(true)
+            
         }else{
             setShow2(true)
         }
     };
 
     const [show2, setShow2] = useState(false);
+    const [show3, setShow3] = useState(false);
+    const handleClose3 = () => setShow3(false);
     
 
     const $ = require( "jquery" );
@@ -236,6 +239,7 @@ const QuestionFormEdit = (id ) => {
                         <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder={questionText}
                             text={questionText}
+                            maxLength="500"
                             value={questionText}
                             onChange={(e) => setQuestionText(e.target.value)}
                             ></input>
@@ -244,15 +248,23 @@ const QuestionFormEdit = (id ) => {
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer.text} text={defaultAnswer.text} 
-                            value={defaultAnswer.text}  onChange={(e) => setdefAnswer(e.target.value, true)}></input>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" 
+                            placeholder={defaultAnswer.text} 
+                            text={defaultAnswer.text} 
+                            value={defaultAnswer.text}  
+                            maxLength="500"
+                            onChange={(e) => setdefAnswer(e.target.value, true)}></input>
                             </div>
                         </div>
                         <div id= "containerID2" className="container2"> 
                             <label htmlFor="exampleFormControlInput2">Choice 2</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder={questionAnswerOption1} text={questionAnswerOption1} 
-                                value={questionAnswerOption1} onChange={(e) => setQuestionAnswerOption1(e.target.value)} ></input>
+                                <input type="text" class="form-control" id="exampleFormControlInput2" 
+                                placeholder={questionAnswerOption1} 
+                                text={questionAnswerOption1} 
+                                value={questionAnswerOption1} 
+                                maxLength="500"
+                                onChange={(e) => setQuestionAnswerOption1(e.target.value)} ></input>
                                 <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} checked={questionAnswerOption1b} onChange={(e)=> setQuestionAnswerOption1b(!questionAnswerOption1b)}></input> 
                                 <label id="checkbox-value1">true</label>
                             </div>
@@ -260,7 +272,10 @@ const QuestionFormEdit = (id ) => {
                         <div id= "containerID3" className="container3"> 
                             <label htmlFor="exampleFormControlInput3">Choice 3</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput3" placeholder={questionAnswerOption2} text={questionAnswerOption2} 
+                                <input type="text" class="form-control" id="exampleFormControlInput3" 
+                                placeholder={questionAnswerOption2} 
+                                maxLength="500"
+                                text={questionAnswerOption2} 
                                 value={questionAnswerOption2}
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
@@ -271,7 +286,10 @@ const QuestionFormEdit = (id ) => {
                         <div id= "containerID4" className="container4"> 
                             <label htmlFor="exampleFormControlInput4">Choice 4</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput4" placeholder={questionAnswerOption3} text={questionAnswerOption3} 
+                                <input type="text" class="form-control" id="exampleFormControlInput4" 
+                                placeholder={questionAnswerOption3} 
+                                text={questionAnswerOption3} 
+                                maxLength="500"
                                 value={questionAnswerOption3}
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
@@ -306,6 +324,17 @@ const QuestionFormEdit = (id ) => {
                     <Modal.Header closeButton>
                     </Modal.Header>
                     <Modal.Body>You forgot something. Please fill in every field.</Modal.Body>
+                    </Modal>
+                    {/* Update Sucess */}
+                    <Modal show={show3} onHide={handleClose3}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Your Update was sucessfull.</Modal.Body>
+                    <Modal.Footer>
+                    <Link>
+                        <Button variant="primary" onClick={editQuestion}> Back to Libary</Button>
+                    </Link>
+                    </Modal.Footer>
                     </Modal>
                 </div>
                 </div>

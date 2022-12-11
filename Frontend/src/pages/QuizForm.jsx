@@ -86,7 +86,8 @@ const QuizForm = () => {
                             <label className="mb-2" htmlFor="exampleFormControlInput1">Quiz Name</label>
                             <input type="text" className="form-control" id="exampleFormControlInput1"
                                 placeholder="New quiz"
-                                text={quizName}
+                                text={quizName} 
+                                maxLength = "20" 
                                 onChange={(e) => setQuizName(e.target.value)}></input>
                         </div>
                         <div className="form-group m-3">

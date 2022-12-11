@@ -16,6 +16,7 @@ const QuestionView = () => {
         if (response.ok) {
             setQuiz(data)
             //console.log(questions)
+            
         }
         else {
             //console.log(response.status)
@@ -82,6 +83,12 @@ const QuestionView = () => {
             return false
         }
     }
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
+    }
 
     return (
         <>
@@ -100,7 +107,7 @@ const QuestionView = () => {
                                     
                                     <Question
                                     key = {item.id}
-                                    question_text={item.question_text}
+                                    question_text={item.question_text.length > 20 ? (<>{item.question_text.substring(0, Math.min(item.question_text.length, 20))+"..."}</>) : (<>{item.question_text}</>)}
                                     pub_date={item.pub_date.substring(0,10)}
                                     
                                     deleteItem ={() => deleteItem(item.id)}

@@ -30,6 +30,7 @@ router.register(r'wholequiz', api_views.WholeQuizView, 'wholequiz')  # localhost
 router.register(r'authorquiz',api_views.QuizAuthorView,'authorquiz')
 router.register(r'registration',api_views.RegisterView,'registration')
 router.register(r'authorquestion',api_views.QuestionAuthorView,'authorquestion')
+router.register(r'authorcategorie',api_views.CategorieAuthorView,'authorcategorie')
 
 urlpatterns = [
    # path('', home, name='home'),

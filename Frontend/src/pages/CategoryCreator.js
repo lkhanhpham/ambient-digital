@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { useLocation } from "react-router-dom";
+import { useState, useContext } from "react"
 import axios from "axios"
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
-import { API_BASE_URL } from "../constants.ts";
+import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 const CategoryCreator = () => {
     const location = useLocation();
     const quiz_name = location.state.quiz_name
@@ -12,6 +12,7 @@ const CategoryCreator = () => {
     const nr_of_categories = location.state.nr_of_categories
     const quizId = location.state.quizId
 
+    const { user } = useContext(AuthContext);
     const [catName, setCatName] = useState('')
     const [showSuccess, setShowSuccess] = useState(false);
     //show the success notification
@@ -25,6 +26,7 @@ const CategoryCreator = () => {
                 url: `${API_BASE_URL}/api/categorie/`,
                 data: {
                     categorie_name: catName,
+                    author: user.user_id
                 },
                 headers: { 'Content-Type': 'application/json' }
             }
