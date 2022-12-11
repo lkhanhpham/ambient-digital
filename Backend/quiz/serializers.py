@@ -12,7 +12,7 @@ class QuizSerializer(serializers.ModelSerializer):
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
-        fields = '__all__'
+        fields = ('id','categorie_name','author')
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -145,6 +145,12 @@ class QuestionAuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields =  ('id','username','question_author')
+
+class CategorieAuthorSerializer(serializers.ModelSerializer):
+    categorie_author=CategorieSerializer(read_only=True, many=True)
+    class Meta:
+        model = User
+        fields =  ('id','username','categorie_author')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

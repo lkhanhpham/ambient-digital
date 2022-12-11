@@ -41,6 +41,7 @@ function App() {
                 <Route exact path="/Quiz/*" element={<ProtectedRoute><QuizShow/></ProtectedRoute>} />
                 <Route path="/QuestionCreator/EditQuestion" element={<ProtectedRoute><QuestionFormEdit/></ProtectedRoute>} />
                 <Route path="/QuestionCreator/EditQuestionMC" element={<ProtectedRoute><QuestionFormEditMC/></ProtectedRoute>} />
+                <Route path="/CategoryCreator" element={<ProtectedRoute><CategoryCreator/></ProtectedRoute>} />
               </Routes>
           </AuthProvider>
       </div>
