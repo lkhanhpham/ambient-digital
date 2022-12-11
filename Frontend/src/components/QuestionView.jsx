@@ -107,7 +107,7 @@ const QuestionView = () => {
                                     
                                     <Question
                                     key = {item.id}
-                                    question_text={item.question_text.substring(0, Math.min(item.question_text.length, 20))+"..."}
+                                    question_text={item.question_text.length > 20 ? (<>{item.question_text.substring(0, Math.min(item.question_text.length, 20))+"..."}</>) : (<>{item.question_text}</>)}
                                     pub_date={item.pub_date.substring(0,10)}
                                     
                                     deleteItem ={() => deleteItem(item.id)}

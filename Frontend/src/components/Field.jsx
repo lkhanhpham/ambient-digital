@@ -7,8 +7,15 @@ const Field = (props) => {
                 <span>point:{props.points}</span>
                 <span>position:{props.row},{props.col}</span>
                 {props.chosen? (
-                    <p className="align-self-center">
-                    {props.question_text}</p>
+                    <>
+                    {props.question_text.length >= 20 ? (
+                        <p className="align-self-center">
+                        {props.question_text.substring(0, Math.min(props.question_text.length, 20))+"..."}</p>
+                    ) : (
+                        <p className="align-self-center">
+                        {props.question_text}</p>
+                    )}
+                    </>
                 ):(
                     <p className="align-self-center">
                     Choose a question</p>
