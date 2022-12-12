@@ -125,7 +125,7 @@ const NewQuiz1 = () => {
 
     }
     const goToCategory = (event) => {
-        navigate("/QuizCreator/NewQuiz1/CategoryCreator", {
+        navigate("../../CategoryCreator", {
             state: {
                 quiz_name: quiz_name, nr_of_rows: nr_of_rows,
                 nr_of_categories: nr_of_categories, categories: cat_name,

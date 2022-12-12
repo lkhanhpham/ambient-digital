@@ -36,8 +36,8 @@ const QuizForm = () => {
     const createFrontendQuiz = async () => {
         navigate("/QuizCreator/Newquiz1", { state: { quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols, quizId: quizId } })
         setQuizName("")
-        setNrOfRows("")
-        setNrOfCols("")
+        setNrOfRows(1)
+        setNrOfCols(1)
         setAuthor(user.user_id)
     }
 

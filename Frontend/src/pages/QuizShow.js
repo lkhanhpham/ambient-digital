@@ -43,7 +43,7 @@ const QuizShow = (props) => {
                 else{
                     question_text[k]=(fields[k].question.question_text)
                 }
-                rows.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question={question_text[k]} />)
+                rows.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={question_text[k]} />)
             }
         }
         myFields.push(<div className='d-flex flex-column'>{rows}</div>)
