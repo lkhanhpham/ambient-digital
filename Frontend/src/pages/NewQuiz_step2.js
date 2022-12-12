@@ -180,6 +180,7 @@ const NewQuiz2 = () => {
 
     const update = () => {
         var select1 = document.getElementById('questions')
+       
         //console.log(select1.options[select1.selectedIndex].value);
     }
 

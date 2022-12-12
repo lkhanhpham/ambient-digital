@@ -6,6 +6,7 @@ import { Link, useNavigate} from "react-router-dom";
 import $ from "jquery";
 import { useLocation } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
+import ModalWarning from "../components/ModalWarning";
 import {API_BASE_URL} from "../constants.ts";
 
 
@@ -19,20 +20,27 @@ const Teams = () => {
     const[User, setUser] = useState([])
     const[UserId, setUserId] = useState([])
     const [userName, setUserName] = useState([])
-    const [teamId, setTeamId] = useState('')
+    const [teamId, setTeamId] = useState(0)
+    const [position, setPosition] = useState(0)
+    const [MemberName, setMemberName] = useState(0)
+    
 
 
-    const [chosen] = useState([false])
+    const [chosen] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
+    const handleCloseWarning = () => setShowWarning(false);
     const handleShow = () => setShow(true);
     const confirm = () => {
         handleShow()
     }
     const [showWarning, setShowWarning] = useState(false);
     const handleShowWarning = () => setShowWarning(true);
-   
+    
+    const [showWarning1, setShowWarning1] = useState(false);
+    const handleShowWarning1 = () => setShowWarning1(true);
+    const handleCloseWarning1 = () => setShowWarning1(false);
 
     const getAllUser = async () => {
         const response = await fetch(`${API_BASE_URL}/api/user/`)
@@ -40,7 +48,7 @@ const Teams = () => {
         if (response.ok) {
             //console.log(data)
             setUser(data)
-            
+           
             
         }
         else {
@@ -51,9 +59,10 @@ const Teams = () => {
     }
     
     const update = () => {
-        var select1 = document.getElementById('user')
-        //const id = select1.options[select1.selectedIndex].value
-        
+        var select1 = document.getElementById('User')
+        const id = select1.options[select1.selectedIndex].value
+        console.log(select1)
+        setMemberName(id)
         
         //console.log(select1.options[select1.selectedIndex].value);
     }
@@ -75,7 +84,7 @@ const Teams = () => {
 
                     team_name: teamName,
                     team_points: 0,
-                    quiz: 1,                
+                    quiz: 5,                
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -88,43 +97,65 @@ const Teams = () => {
     }
 
 
-    function saveMember(position) {
-        var select1 = document.getElementById('user')
-        //const text = (select1.options[select1.selectedIndex].text)
-        const id = select1.options[select1.selectedIndex].value
-        if(!UserId.includes(id)){
-           // userName[position] = text
-            UserId[position] = id
-            
-        }
-        else{
-            handleShowWarning()
-        }
+    function saveMember() {
         
-        //handleClose()
-    }
-
-
-    function createMember(event) {
-        //setTeamPoints(100)
-        for (let i = 0; i < userName.length; i++) {
+        var select1 = document.getElementById('User')
+        const id = select1.options[select1.selectedIndex].value
+        console.log(id)
+        //const text = (select1.options[select1.selectedIndex].text)
+        if(!UserId.includes(id) & teamId != 0){
+           UserId.push(id)
+           console.log(UserId)
+        
             axios(
                 {
                     method: "POST",
                     url: `${API_BASE_URL}/api/AddTeammates/`,
                     data: {
                     team: teamId,
-                    member: UserId[i]
+                    member: id
                                      
                     },
                     headers: {'Content-Type': 'application/json'}
                 }
             ).then((response) => {
                 console.log(response.data)
+                
+
             })
         }
-            confirm()
-            event.preventDefault()
+        else if (UserId.includes(id)){
+            handleShowWarning()
+        }
+        else {
+            handleShowWarning1()
+        }
+    }
+
+
+    function createMember(event) {
+        //setTeamPoints(100)
+
+        // console.log(teamId)
+        // console.log(UserId)
+        
+        //     axios(
+        //         {
+        //             method: "POST",
+        //             url: `${API_BASE_URL}/api/AddTeammates/`,
+        //             data: {
+        //             team: teamId,
+        //             member: UserId(id)
+                                     
+        //             },
+        //             headers: {'Content-Type': 'application/json'}
+        //         }
+        //     ).then((response) => {
+        //         console.log(response.data)
+        //     })
+        
+        //     confirm()
+        //     event.preventDefault()
         }
 
     useEffect(
@@ -165,8 +196,7 @@ const Teams = () => {
                             
                            
                          </select> 
-                         {/* <button onClick={addFirstMember} className="btn btn-primary">Add First</button> */}
-                         <button onClick={saveMember} className="btn btn-primary">Add Teammember</button>
+                        
 
 
                     </form>
@@ -175,8 +205,10 @@ const Teams = () => {
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2" >Cancel</button>
                     </Link>       
-                    <button onClick={createMember} className="btn btn-primary">Create</button>              
+                    <button onClick={() => saveMember()} className="btn btn-primary">Create</button>              
                 </div>
+                <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Oops! You forgot to add a Teamname"} body={"Choose a Teamname"} />
+                <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! This player already has a team"} body={"Choose another name"} />
                 <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New team created!"} body = {"Team created with name: " + teamName}  />
                 {/* <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createMember} /> */}
                 </div>
