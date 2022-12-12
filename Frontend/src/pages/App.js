@@ -9,7 +9,6 @@ import QuestionFormMC from "./QuestionFormMC";
 import NewQuestion from "./NewQuestion";
 import NewQuiz1 from "./NewQuiz_step1";
 import NewQuiz2 from "./NewQuiz_step2";
-import AddTeams from "./AddTeams";
 import CategoryCreator from "./CategoryCreator";
 import QuizShow from "./QuizShow"
 import QuestionFormEdit from "./QuestionFormEdit";
@@ -36,18 +35,17 @@ class App extends Component {
         <Route exact path="/" element={<Library/>} />
         <Route exact path="/Library" element={<Library/>} />
         <Route exact path="/QuizCreator/*" element={<QuizForm/>} />
-        <Route exact path="/TeamsCreator/*" element={<Teams/>} />
         <Route exact path="/QuestionCreator/SC" element={<QuestionForm/>} />
         <Route exact path="/QuestionCreator/MC" element={<QuestionFormMC/>} />
         <Route path="/QuestionCreator/NewQuestion" element={<NewQuestion/>} />
         <Route path="/QuizCreator/NewQuiz1" element={<NewQuiz1/>} />
         <Route path="/QuizCreator/NewQuiz2" element={<NewQuiz2/>} />
-        <Route path="QuizCreator/AddTeams" element={<AddTeams/>} />
+        <Route path="QuizCreator/TeamsCreator" element={<Teams/>} />
         <Route path="/QuizCreator/NewQuiz1/CategoryCreator" element={<CategoryCreator/>} />
         <Route exact path="/Quiz/*" element={<QuizShow/>} />
         <Route path="/QuestionCreator/EditQuestion" element={<QuestionFormEdit/>} />
         <Route path="/QuestionCreator/EditQuestionMC" element={<QuestionFormEditMC/>} />
-        <Route exact path="/GuestCreator/*" element={<GuestCreator/>} /> 
+        <Route path="/CreateGuest/*" element={<GuestCreator/>} /> 
         </Routes>
         
     </div>

@@ -2,9 +2,8 @@
 import axios from "axios"
 import React from "react";
 import { useState, useEffect } from "react"
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate, useLocation} from "react-router-dom";
 import $ from "jquery";
-import { useLocation } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import {API_BASE_URL} from "../constants.ts";
@@ -14,15 +13,17 @@ import {API_BASE_URL} from "../constants.ts";
 
 const Teams = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const [teamName, setTeamName] = useState('')
     const [teamPoints, setTeamPoints] = useState('')
-    const [quizId, setQuizId] = useState('')
+    const quizId = location.state.quizId
     const[User, setUser] = useState([])
     const[UserId, setUserId] = useState([])
     const [userName, setUserName] = useState([])
     const [teamId, setTeamId] = useState(0)
     const [position, setPosition] = useState(0)
-    const [MemberName, setMemberName] = useState(0)
+    const [MemberName, setMemberName] = useState([])
+    const [teamNames, setTeamNames] = useState([])
     
 
 
@@ -62,11 +63,17 @@ const Teams = () => {
         var select1 = document.getElementById('User')
         const id = select1.options[select1.selectedIndex].value
         console.log(select1)
-        setMemberName(id)
+        //setMemberName(id)
         
         //console.log(select1.options[select1.selectedIndex].value);
     }
 
+    const [value, setValue] = useState(0);
+    const refresh = () => {
+        // it re-renders the component
+        setValue(value + 1);
+        // createdGrid()
+    }
     
 
     
@@ -75,6 +82,8 @@ const Teams = () => {
 
  function createTeam(event) {
     //setTeamPoints(100)
+    teamNames.push(teamName)
+    console.log(teamNames)
 
         axios(
             {
@@ -84,7 +93,7 @@ const Teams = () => {
 
                     team_name: teamName,
                     team_points: 0,
-                    quiz: 5,                
+                    quiz: quizId,                
                 },
                 headers: {'Content-Type': 'application/json'}
             }
@@ -102,6 +111,9 @@ const Teams = () => {
         var select1 = document.getElementById('User')
         const id = select1.options[select1.selectedIndex].value
         console.log(id)
+        const username = (User.find(item => item.id == id).username)
+        const object = {username: username, teamName: teamName}
+        MemberName.push(object)
         //const text = (select1.options[select1.selectedIndex].text)
         if(!UserId.includes(id) & teamId != 0){
            UserId.push(id)
@@ -120,7 +132,7 @@ const Teams = () => {
                 }
             ).then((response) => {
                 console.log(response.data)
-                
+                refresh()
 
             })
         }
@@ -130,33 +142,25 @@ const Teams = () => {
         else {
             handleShowWarning1()
         }
+
     }
 
-
-    function createMember(event) {
-        //setTeamPoints(100)
-
-        // console.log(teamId)
-        // console.log(UserId)
-        
-        //     axios(
-        //         {
-        //             method: "POST",
-        //             url: `${API_BASE_URL}/api/AddTeammates/`,
-        //             data: {
-        //             team: teamId,
-        //             member: UserId(id)
-                                     
-        //             },
-        //             headers: {'Content-Type': 'application/json'}
-        //         }
-        //     ).then((response) => {
-        //         console.log(response.data)
-        //     })
-        
-        //     confirm()
-        //     event.preventDefault()
+    const teams = useState([])
+    function showTeams() {
+        if(teamNames.length > 0){
+        for (let i = 0; i < teamNames.length; i++) {
+            teams.push(<h1>{teamNames[i]}</h1>)
+            for (let j = 0; j < MemberName.length; j++){
+                if(MemberName[j].teamName == teamNames[i]){
+                    teams.push(<h3>{MemberName[j].username}</h3>)
+                }
+            }
         }
+        console.log(teams)
+    }
+
+    }
+    showTeams()
 
     useEffect(
         () => {
@@ -196,22 +200,29 @@ const Teams = () => {
                             
                            
                          </select> 
-                        
-
 
                     </form>
+                    <Link to="../../createGuest" target='_blank'>
+                        <button className="small-button mt-3">Create member</button>
+                         </Link>
+
 
                 <div className="d-flex justify-content-end p-3">
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2" >Cancel</button>
                     </Link>       
-                    <button onClick={() => saveMember()} className="btn btn-primary">Create</button>              
+                    <button onClick={() => saveMember()} className="btn btn-primary">Create</button> 
+                                   
                 </div>
+                
                 <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Oops! You forgot to add a Teamname"} body={"Choose a Teamname"} />
                 <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! This player already has a team"} body={"Choose another name"} />
                 <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New team created!"} body = {"Team created with name: " + teamName}  />
                 {/* <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createMember} /> */}
                 </div>
+            </div>
+            <div>
+                {teams}
             </div>
             <style jsx='true'>{`
         label{

@@ -180,14 +180,14 @@ const NewQuiz2 = () => {
 
     const update = () => {
         var select1 = document.getElementById('questions')
-       
+        
         //console.log(select1.options[select1.selectedIndex].value);
     }
 
     const nextStep = () => {
         checkValid(chosen)
         if (valid === true) {
-            navigate("/QuizCreator/AddTeams", {
+            navigate("/QuizCreator/TeamsCreator", {
                 state: {
                    // quiz_name: quiz_name, nr_of_rows: nr_of_rows,
                    // nr_of_categories: nr_of_categories, categories: cat_name,
