@@ -1,12 +1,11 @@
 import { useState, useContext } from "react"
 import axios from "axios"
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
 import {API_BASE_URL} from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 const CategoryCreator = () => {
-
     const { user } = useContext(AuthContext);
     const [catName, setCatName] = useState('')
     const [showSuccess, setShowSuccess] = useState(false);
@@ -27,18 +26,12 @@ const CategoryCreator = () => {
             }
         ).then((response) => {
             //console.log(response.data)
-            navigateBack()
+            handleShowSuccess()
             setCatName("")
         })
 
         event.preventDefault()
     }
-    function navigateBack(event) {
-        handleShowSuccess()
-        event.preventDefault()
-
-    }
-
 
     return (
         <>
@@ -64,13 +57,12 @@ const CategoryCreator = () => {
                         <Link to="/Library">
                             <button className="btn btn-secondary me-2" >Cancel</button>
                         </Link>
-
                         <button onClick={createCat} className="btn btn-primary">Create</button>
 
                     </div>
                 </div>
             </div>
-            <ModalSuccess showSuccess={showSuccess} handleCloseSuccess={handleCloseSuccess} title={"Category created"} body={"Categorie has been created"} onclick={handleCloseSuccess} />
+            <ModalSuccess showSuccess={showSuccess} handleCloseSuccess={handleCloseSuccess} title={"Category created"} body={"You can now close this tab and continue or create some more categories."} onclick={handleCloseSuccess} />
             <style jsx='true'>{`
         label{
           font-size: 18px;

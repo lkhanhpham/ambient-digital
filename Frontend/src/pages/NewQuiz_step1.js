@@ -21,12 +21,12 @@ const NewQuiz1 = () => {
 
     const [cats, setCats] = useState([])
 
-    const [show, setShow] = useState(false);
 
     const [position, setPosition] = useState(0)
 
     const [valid, setValid] = useState(false)
 
+    const [show, setShow] = useState(false);
     //close the Category form
     const handleClose = () => setShow(false);
     //show the Category form
@@ -83,12 +83,12 @@ const NewQuiz1 = () => {
         var select1 = document.getElementById('categories')
         const text = (select1.options[select1.selectedIndex].text)
         const id = select1.options[select1.selectedIndex].value
-        if(!catIds.includes(id)){
+        if (!catIds.includes(id)) {
             cat_name[position] = text
             catIds[position] = id
             chosen[position] = true
         }
-        else{
+        else {
             handleShowWarning1()
         }
         checkValid(chosen)
@@ -97,12 +97,12 @@ const NewQuiz1 = () => {
 
 
     const navigate = useNavigate();
-    
+
     //check if user has chosen all categories
     const checkValid = (chosen) => {
         // console.log(chosen)
         // console.log("cats",nr_of_categories,"length", chosen.length)
-        if(chosen.length == nr_of_categories){
+        if (chosen.length == nr_of_categories) {
             setValid(chosen.every((element) => element === true))
         }
         //console.log("valid", valid)
@@ -123,6 +123,16 @@ const NewQuiz1 = () => {
 
         }
 
+    }
+    const goToCategory = (event) => {
+        navigate("../../CategoryCreator", "_blank",  {
+            state: {
+                quiz_name: quiz_name, nr_of_rows: nr_of_rows,
+                nr_of_categories: nr_of_categories, categories: cat_name,
+                quizId: quizId, catIds: catIds
+            }
+        },)
+        event.preventDefault()
     }
 
 
@@ -145,9 +155,7 @@ const NewQuiz1 = () => {
                 <div className="col-12 d-flex flex-row justify-content-center">
                     {cols}
                 </div>
-                {/* <div className="col-12 d-flex flex-column ">
-                    {rows}
-                </div> */}
+
 
             </div>
             {/* Modal shown when clicked on the field */}
@@ -163,36 +171,31 @@ const NewQuiz1 = () => {
                     <form >
                         <select className="form-control" id="categories" onChange={update}>
                             {cats.map((item) => (
-                                <option key={item.id} value = {item.id}>
+                                <option key={item.id} value={item.id}>
                                     {item.categorie_name}
                                 </option>
                             ))}
                         </select>
 
                     </form>
-                    <Link to="CategoryCreator" target='_blank'>
-                        <button className="small-button mt-3">Create category</button>
+                    <Link to="../../CategoryCreator" target="_blank">
+                        <button  className="small-button mt-3">Create category</button>
                     </Link>
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="d-flex justify-content-end p-3">
                         <button onClick={handleClose} className="btn btn-secondary me-2">Cancel</button>
-                        {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
+
                         <button onClick={() => saveCat(position)} className="btn btn-primary">Save</button>
-                        {/* </Link> */}
                     </div>
                 </Modal.Footer>
             </Modal>
             <div className="d-flex justify-content-end p-3">
-                {/* <Link to = {{pathname: "/QuizCreator/NewQuiz",
-                    state: {quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols}}}
-                    > */}
+
                 <button onClick={nextStep} className="btn btn-primary">Next</button>
-                {/* </Link> */}
+
             </div>
-            <ModalWarning showWarning = {showWarning} handleCloseWarning = {handleCloseWarning} title = {"Oops! You forgot something"} body = {"Please pick all categories to proceed"} />
+            <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! You forgot something"} body={"Please pick all categories to proceed"} />
             <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Category is not unique."} body={"Looks like this category exists in your quiz. Please choose another one."} />
         </div>
     )
