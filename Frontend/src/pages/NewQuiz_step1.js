@@ -125,7 +125,7 @@ const NewQuiz1 = () => {
 
     }
     const goToCategory = (event) => {
-        navigate("../../CategoryCreator", {
+        navigate("../../CategoryCreator", "_blank",  {
             state: {
                 quiz_name: quiz_name, nr_of_rows: nr_of_rows,
                 nr_of_categories: nr_of_categories, categories: cat_name,
@@ -178,7 +178,9 @@ const NewQuiz1 = () => {
                         </select>
 
                     </form>
-                    <button onClick={goToCategory} className="small-button mt-3">Create category</button>
+                    <Link to="../../CategoryCreator" target="_blank">
+                        <button  className="small-button mt-3">Create category</button>
+                    </Link>
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="d-flex justify-content-end p-3">

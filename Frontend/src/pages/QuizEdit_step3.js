@@ -53,7 +53,7 @@ const QuizEdit3 = () => {
     const handleShowWarningQues = () => setShowWarningQues(true);
 
     function saveQuestion(positionField) {
-        console.log("position", positionField)
+        //console.log("position", positionField)
         var select1 = document.getElementById('questions')
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
@@ -94,7 +94,7 @@ const QuizEdit3 = () => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + quizId + "/")
         const data = await response.json()
         if (response.ok) {
-            console.log(data.field_quiz)
+            //console.log(data.field_quiz)
             setFields(data.field_quiz)
         }
         else {
@@ -148,15 +148,15 @@ const QuizEdit3 = () => {
     const [rows, setRows] = useState([])
     const [nrOfRows, setNrOfRows] = useState(nr_of_rows)
     const removeRow = (rowId) => {
-        console.log(rowId)
+        //console.log(rowId)
         if (rowId > nrOfRows - 1) {
-            console.log("can be removed immediately")
+            //console.log("can be removed immediately")
             setNrOfNewrows(nr_of_newrows => nr_of_newrows - 1)
-            console.log("rows before delete", rows)
+            //console.log("rows before delete", rows)
             rows[rowId - nrOfRows] = null
             const test = rows.filter(item => item != null)
             setRows(test)
-            console.log("rows after delete", test)
+            //console.log("rows after delete", test)
             showNewRow(test)
         }
         else {
@@ -171,7 +171,7 @@ const QuizEdit3 = () => {
                     if (fieldIds[i].row === confirmId)
                         removedfields.push(id)
                 }
-                console.log("removed fields", removedfields)
+                //console.log("removed fields", removedfields)
                 var test = []
                 test = fields.map(field => {
                     if (removedfields.includes(field.id)) {
@@ -180,7 +180,7 @@ const QuizEdit3 = () => {
                     return field
                 });
                 test = test.filter(el => el !== null)
-                console.log("test removed", test)
+                //console.log("test removed", test)
                 setCols([])
                 setCats([])
                 setNrOfRows(nrOfRows - 1)
@@ -253,12 +253,12 @@ const QuizEdit3 = () => {
     }
 
     function showNewRow(arr) {
-        console.log("arr", arr)
+        //console.log("arr", arr)
         while (newrows.length) { newrows.pop(); }
-        console.log("newrows before", newrows)
+        //console.log("newrows before", newrows)
         for (let index = 0; index < arr.length; index++) {
             // if()
-            console.log("this ", index, "can be shown")
+            //console.log("this ", index, "can be shown")
             tempfields = []
             for (let i = 0; i < cols.length; i++) {
                 tempfields.push(<Field category={cols[i]} question_text={question_text[index * cols.length + i]}
@@ -266,7 +266,7 @@ const QuizEdit3 = () => {
             }
             newrows.push(<div className='d-flex'>{tempfields}</div>)
         }
-        console.log("newrows after", newrows)
+        //console.log("newrows after", newrows)
         refresh()
     }
     // showNewCat()
@@ -311,7 +311,7 @@ const QuizEdit3 = () => {
                 cats.push(<div className='d-flex flex-column'>{tempfields}</div>)
             }
         }
-        console.log("fieldIds", fieldIds)
+        //console.log("fieldIds", fieldIds)
         buttons = []
         for (let i = 0; i < nrOfRows + nr_of_newrows; i++) {
             buttons.push(<button className='small-button margin-large' onClick={() => removeRow(i)}>Remove row</button>)
@@ -366,7 +366,7 @@ const QuizEdit3 = () => {
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response) => {
-                console.log(response.data)
+                //console.log(response.data)
             })
         }
         axios(
@@ -382,7 +382,7 @@ const QuizEdit3 = () => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
         }
         )
         handleShowSuccess()
@@ -493,7 +493,7 @@ const QuizEdit3 = () => {
 
             <ModalWarning showWarning={showWarningQues} handleCloseWarning={handleCloseWarningQues} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
             <ModalSuccess showSuccess={showSuccess} title={"Quiz saved"} body={"You can keep editing or go back."}
-                handleCloseSuccess={handleCloseSuccess} onclick={nextStep} />
+                handleCloseSuccess={handleCloseSuccess} onclick={handleCloseSuccess} />
         </div>
     )
 }

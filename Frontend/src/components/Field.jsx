@@ -5,7 +5,6 @@ const Field = (props) => {
                 <p className="align-self-center">{props.question}</p>
                 <span className="align-self-center">cat: {props.category}</span>
                 <span className="align-self-center">points: {props.points}</span>
-                <span>position:{props.row},{props.col}</span>
                 {props.chosen? (
                     <>
                     {props.question_text.length >= 20 ? (

@@ -53,7 +53,7 @@ const QuizEdit1 = () => {
         const response = await fetch(`${API_BASE_URL}/api/wholequiz/` + quizId + "/")
         const data = await response.json()
         if (response.ok) {
-            console.log(data.field_quiz)
+            //console.log(data.field_quiz)
             setFields(data.field_quiz)
         }
         else {
@@ -89,7 +89,7 @@ const QuizEdit1 = () => {
         for (let i = 0; i < fields.length; i++) {
             // console.log("vor if")
             if (!cols.includes(fields[i].categorie_name)) {
-                console.log("push categorie", fields[i].categorie_name)
+                //console.log("push categorie", fields[i].categorie_name)
                 const categorie_name = fields[i].categorie_name
                 cols.push(categorie_name)
                 catIds.push(fields[i].categorie)
@@ -132,7 +132,7 @@ const QuizEdit1 = () => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
         })
         setChange(true)
         handleClose1()
@@ -181,7 +181,7 @@ const QuizEdit1 = () => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
 
             const test = fields.map(field => {
                 if (field.id === response.data.id) {
@@ -189,7 +189,7 @@ const QuizEdit1 = () => {
                 }
                 return field
             })
-            console.log("test", test)
+            //console.log("test", test)
             setCols([])
             setCats([])
             setFields(test)

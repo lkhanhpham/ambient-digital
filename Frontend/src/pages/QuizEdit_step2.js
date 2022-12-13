@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useLocation  } from 'react-router-dom';
 import CatField from '../components/CatField';
 import Field from '../components/Field';
 import { API_BASE_URL } from "../constants.ts";
@@ -8,9 +8,11 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import ModalSuccess from '../components/ModalSuccess';
 import ModalWarning from '../components/ModalWarning';
+import AuthContext from "../context/AuthContext";
 
 // For each created quiz one quizcard is rendered
 const QuizEdit2 = (props) => {
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate()
     const location = useLocation();
     const title = location.state.title
@@ -105,11 +107,11 @@ const QuizEdit2 = (props) => {
     const [questions, setQuestions] = useState([])
     //fetch all created questions
     const getAllQues = async () => {
-        const response = await fetch(`${API_BASE_URL}/api/question/`)
+        const response = await fetch(`${API_BASE_URL}/api/authorquestion/`+user.user_id)
         const data = await response.json()
         if (response.ok) {
             //console.log(data)
-            setQuestions(data)
+            setQuestions(data.question_author)
         }
         else {
             //console.log(response.status)
@@ -397,7 +399,7 @@ const QuizEdit2 = (props) => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
             refresh()
         }
         )
