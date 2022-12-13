@@ -46,7 +46,7 @@ const QuestionShow = (props) => {
     console.log(answer[0])
     var button =document.getElementById("button");
     button.addEventListener('click', function () {
-        if(WholeQuestion.question_type=="SC"){
+        if(WholeQuestion.question_type!=="MC"){
            // var scanswer= <><AnswerField key={arr[0].id} answer={arr[0].text}/></>;
           //  console.log(scanswer)
             var div=document.getElementById("singlechoice")
@@ -103,7 +103,7 @@ const QuestionShow = (props) => {
                 )}
             </div>
             <div>
-            <button className="btn btn-secondary my-4 btn-lg w-100" id="button"> Reveal Answer</button>
+            <button className="btn btn-secondary my-4 btn-lg w-100" id="button"> Show Solution</button>
             </div>
             <div class="d-flex justify-content-center">
             <button className="btn btn-secondary my-4 btn-lg" onClick={() => navigate(-1)}> Back to Quiz</button>
