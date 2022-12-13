@@ -394,7 +394,7 @@ const QuizEdit2 = (props) => {
                     quiz_name: title,
                     nr_of_rows: nr_of_rows,
                     nr_of_categories: cols.length + nr_of_newcats,
-                    author: 1,
+                    author: user.user_id,
                 },
                 headers: { 'Content-Type': 'application/json' }
             }

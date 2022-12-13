@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import CatField from '../components/CatField';
@@ -8,9 +8,11 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import ModalWarning from '../components/ModalWarning';
 import editButton from "../icons/editbutton.png"
+import AuthContext from "../context/AuthContext";
 
 // For each created quiz one quizcard is rendered
 const QuizEdit1 = () => {
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate()
     const location = useLocation();
     const title = location.state.title
@@ -127,7 +129,7 @@ const QuizEdit1 = () => {
                     quiz_name: quizName,
                     nr_of_rows: nr_of_rows,
                     nr_of_categories: nr_of_categories,
-                    author: 1,
+                    author: user.user_id,
                 },
                 headers: { 'Content-Type': 'application/json' }
             }
