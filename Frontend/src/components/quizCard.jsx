@@ -23,6 +23,11 @@ const Quiz = (props) => {
 
     const display = (event) => {
         event.preventDefault()
+
+        const status =new Array(fields.length).fill(0)
+        const fieldStatus = JSON.stringify(status);
+        localStorage.setItem(props.id, fieldStatus);
+        console.log(status);
         navigate("/Quiz/" + props.id + "/", { state: { id: props.id, title: props.title, nr_of_categories: props.nr_of_categories,nr_of_rows: props.nr_of_rows, fields: fields } })
     }
         useEffect(

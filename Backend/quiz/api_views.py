@@ -4,7 +4,8 @@ from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins      
 from .models import Quiz, Categorie, Question, Field, User
 from rest_framework.permissions import AllowAny    
-from rest_framework_simplejwt.views import TokenObtainPairView        
+from rest_framework_simplejwt.views import TokenObtainPairView 
+from django.db.models import Prefetch       
 
 class QuizView(viewsets.ModelViewSet):  
     serializer_class = QuizSerializer   
@@ -24,7 +25,8 @@ class FieldView(viewsets.ModelViewSet):
 
 class WholeQuizView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class=WholeQuizSerializer
-    queryset=Quiz.objects.all()
+    queryset=Quiz.objects.prefetch_related(Prefetch('field_quiz',
+        queryset=Field.objects.order_by('point')))
 
 class QuizAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = QuizAuthorSerializer
