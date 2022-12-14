@@ -14,7 +14,16 @@ const ModalSuccess = (props) => {
                 <p>{props.body}</p>
             </Modal.Body>
             <Modal.Footer>
+                <div className="d-flex">
+                {
+                    props.goback?(
+                        <button className="btn btn-primary me-3" onClick={props.onclick1}>Go back</button>
+                    ):(
+                        <></>
+                    )
+                }
                 <button className="btn btn-primary" onClick={props.onclick}>Continue</button>
+                </div>
             </Modal.Footer>
         </Modal>
     )

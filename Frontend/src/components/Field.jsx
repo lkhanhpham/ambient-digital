@@ -6,14 +6,14 @@ const Field = (props) => {
                 <span>cat:{props.category}</span>
                 <span>point:{props.points}</span>
                 <span>position:{props.row},{props.col}</span>
-                {props.chosen? (
+                {props.chosen ? (
                     <p className="align-self-center">
-                    {props.question_text}</p>
-                ):(
+                        {props.question_text}</p>
+                ) : (
                     <p className="align-self-center">
-                    Choose a question</p>
+                        Choose a question</p>
                 )}
-                
+
             </div>
             <style jsx="true">{
 

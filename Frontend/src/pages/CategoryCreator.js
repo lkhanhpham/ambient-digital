@@ -24,8 +24,8 @@ const CategoryCreator = () => {
             }
         ).then((response) => {
             //console.log(response.data)
-            navigateBack()
             setCatName("")
+            navigateBack()
         })
 
         event.preventDefault()
@@ -35,7 +35,6 @@ const CategoryCreator = () => {
         event.preventDefault()
 
     }
-
 
     return (
         <>

@@ -41,7 +41,7 @@ class App extends Component {
         <Route path="/QuizCreator/NewQuiz1" element={<NewQuiz1/>} />
         <Route path="/QuizCreator/NewQuiz2" element={<NewQuiz2/>} />
         <Route path="QuizCreator/TeamsCreator" element={<Teams/>} />
-        <Route path="/QuizCreator/NewQuiz1/CategoryCreator" element={<CategoryCreator/>} />
+        <Route path="/CategoryCreator" element={<CategoryCreator/>} />
         <Route exact path="/Quiz/*" element={<QuizShow/>} />
         <Route path="/QuestionCreator/EditQuestion" element={<QuestionFormEdit/>} />
         <Route path="/QuestionCreator/EditQuestionMC" element={<QuestionFormEditMC/>} />

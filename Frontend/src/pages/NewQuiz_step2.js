@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import ModalSuccess from "../components/ModalSuccess";
 import axios from "axios"
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
 
 const NewQuiz2 = () => {
     const location = useLocation();
@@ -20,7 +20,7 @@ const NewQuiz2 = () => {
     const [position, setPosition] = useState(0)
     const [questions, setQuestions] = useState([])
     //array that stores all the question texts (index = row_index + col_index*nr_of_row)
-    const [question_text] = useState([""])
+    const [question_text] = useState([])
     const [question_ids] = useState([0])
     //array that stores the points of all the fields
     const [fieldPoints] = useState([100])
@@ -85,16 +85,23 @@ const NewQuiz2 = () => {
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        if (!question_text.includes(text)) {
-            question_text[position] = text
-            question_ids[position] = id
-            chosen[position] = true
+
+        if (question_text[position] == null) {
+            if (!question_text.includes(text)) {
+                question_text[position] = text
+                question_ids[position] = id
+                chosen[position] = true
+                fieldPoints[position] = select2.options[select2.selectedIndex].value
+            }
+            else{
+                handleShowWarning1()
+            }
         }
-        else {
-            handleShowWarning1()
+        else if(question_text[position] != null && question_text[position] ===text ){
+            chosen[position] = true
+            fieldPoints[position] = select2.options[select2.selectedIndex].value
         }
         // console.log(select1.options[select1.selectedIndex].value)
-        fieldPoints[position] = select2.options[select2.selectedIndex].value
         checkValid(chosen)
         handleClose()
     }
@@ -138,8 +145,8 @@ const NewQuiz2 = () => {
         //console.log(fields)
     }
     const navigate = useNavigate();
-    const createBackendFields = (event) => {
-        event.preventDefault()
+    const createBackendFields = () => {
+       
         fillFields()
         for (let i = 0; i < question_text.length; i++) {
             axios(
@@ -148,7 +155,7 @@ const NewQuiz2 = () => {
                     url: `${API_BASE_URL}/api/field/`,
                     data: {
                         point: fields[i].point,
-                        question_id: fields[i].question ,
+                        question_id: fields[i].question,
                         categorie: fields[i].categorie,
                         quiz: fields[i].quiz
                     },
@@ -158,9 +165,8 @@ const NewQuiz2 = () => {
                 //console.log(response.data)
             })
         }
-        // navigate back to library page
-        navigate("../../Library/")
-        
+        handleShowSuccess()
+
     }
 
     //fetch all created questions
@@ -180,20 +186,15 @@ const NewQuiz2 = () => {
 
     const update = () => {
         var select1 = document.getElementById('questions')
-        
+
         //console.log(select1.options[select1.selectedIndex].value);
     }
 
-    const nextStep = () => {
+    const saveQuiz = () => {
         checkValid(chosen)
         if (valid === true) {
-            navigate("/QuizCreator/TeamsCreator", {
-                state: {
-                   // quiz_name: quiz_name, nr_of_rows: nr_of_rows,
-                   // nr_of_categories: nr_of_categories, categories: cat_name,
-                    quizId: quizId
-                }
-            },)
+            createBackendFields()
+
         } else {
             handleShowWarning()
 
@@ -201,6 +202,18 @@ const NewQuiz2 = () => {
 
     }
 
+    const goToTeams = () => {
+        navigate("/QuizCreator/TeamsCreator", {
+            state: {
+                // quiz_name: quiz_name, nr_of_rows: nr_of_rows,
+                // nr_of_categories: nr_of_categories, categories: cat_name,
+                quizId: quizId
+            }
+        },)
+    }
+    const goBack = () => {
+        navigate("../Library",)
+    }
 
     useEffect(
         () => {
@@ -271,11 +284,11 @@ const NewQuiz2 = () => {
 
             <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
 
-            <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createBackendFields} />
+            <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played! Click on continue to create some teams for your quiz or go back to Library"} onclick={goToTeams} goback={true} onclick1={goBack} />
 
             <div className="d-flex justify-content-end p-3">
 
-                <button onClick={nextStep} className="btn btn-primary">Next</button>
+                <button onClick={saveQuiz} className="btn btn-primary">Save</button>
 
             </div>
 

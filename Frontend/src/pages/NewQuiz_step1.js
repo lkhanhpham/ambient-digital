@@ -168,7 +168,7 @@ const NewQuiz1 = () => {
                         </select>
 
                     </form>
-                    <Link to="CategoryCreator" target='_blank'>
+                    <Link to="../../CategoryCreator" target='_blank'>
                         <button className="small-button mt-3">Create category</button>
                     </Link>
                 </Modal.Body>

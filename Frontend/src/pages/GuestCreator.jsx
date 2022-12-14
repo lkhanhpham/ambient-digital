@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import ModalSuccess from "../components/ModalSuccess";
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
 
 
 
@@ -19,7 +19,7 @@ const GuestCreator = () => {
         handleShow()
     }
 
-    const [guest, setGuest]= useState('')
+    const [guest, setGuest] = useState('')
 
     const createGuest = (event) => {
 
@@ -28,12 +28,12 @@ const GuestCreator = () => {
                 method: "POST",
                 url: `${API_BASE_URL}/api/guestregistration/`,
                 data: {
-                   username: guest
-
+                    username: guest,
+                    is_guest: true
                 },
                 headers: { 'Content-Type': 'application/json' }
             }
-        ).then((response) => {          
+        ).then((response) => {
 
         })
         confirm()
@@ -44,12 +44,12 @@ const GuestCreator = () => {
 
     return (
         <>
-    
+
             <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
                 <h3 className="big-title">New Guest</h3>
             </div>
             <div className="row justify-content-center">
-    
+
                 <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
                     <form className="text-light">
                         <div className="form-group m-3">
@@ -59,19 +59,19 @@ const GuestCreator = () => {
                                 text={guest}
                                 onChange={(e) => setGuest(e.target.value)}></input>
                         </div>
-    
+
                     </form>
-    
+
                     <div className="d-flex justify-content-end p-3">
                         <Link to="/Library">
                             <button className="btn btn-secondary me-2">Cancel</button>
                         </Link>
-    
+
                         <button onClick={createGuest} className="btn btn-primary">Create</button>
                     </div>
                     {/* modal show to announce that quiz is created successfully */}
-                     <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New Guest created!"} body = {"Guest created with name: " + guest} onclick = {handleClose} />
-     
+                    <ModalSuccess showSuccess={show} handleCloseSuccess={handleClose} title={"New Guest created!"} body={"Guest created with name: " + guest} onclick={handleClose} />
+
                 </div>
             </div>
             <style jsx="true">{`
