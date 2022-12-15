@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import CatField from '../components/CatField';
@@ -100,11 +100,11 @@ const QuizEdit1 = () => {
 
                 for (let k = 0; k < fields.length; k++) {
                     if (fields[k].categorie_name == categorie_name) {
-                        if((fields[k].question)==null||fields[k].question==undefined){
-                            question_text[k]="Please choose a question"
+                        if ((fields[k].question) == null || fields[k].question == undefined) {
+                            question_text[k] = "Please choose a question"
                         }
-                        else{
-                            question_text[k]=(fields[k].question.question_text)
+                        else {
+                            question_text[k] = (fields[k].question.question_text)
                         }
                         tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={question_text[k]} handleShow={() => handleShow(fields[k].id)} />)
                     }
@@ -143,7 +143,7 @@ const QuizEdit1 = () => {
     const changeTitle = () => {
         handleShow1()
     }
-    
+
     //a Warning if the question already exists in the quiz and user cannot proceed
     const [showWarningQues, setShowWarningQues] = useState(false);
 
@@ -157,12 +157,12 @@ const QuizEdit1 = () => {
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        if(!question_text.includes(text)){
+        if (!question_text.includes(text)) {
             ques = id
             point = select2.options[select2.selectedIndex].value
 
         }
-        else{
+        else {
             handleShowWarningQues()
         }
 
@@ -204,9 +204,9 @@ const QuizEdit1 = () => {
         handleClose()
         event.preventDefault()
     }
-    
+
     const nextStep = () => {
-        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: change?(quizName):(title), nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows} })
+        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: change ? (quizName) : (title), nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows } })
     }
 
     useEffect(
@@ -254,7 +254,10 @@ const QuizEdit1 = () => {
                         }
 
                     </div>
-                    <div className="d-flex justify-content-end p-3">
+                    <div className="d-flex justify-content-between p-3">
+                        <Link to="../../Library">
+                        <button className="btn btn-secondary">Cancel</button>
+                        </Link>
                         <button onClick={nextStep} className="btn btn-primary">Next</button>
                     </div>
                 </div>
@@ -313,7 +316,7 @@ const QuizEdit1 = () => {
                         <input type="text" className="form-control" id="exampleFormControlInput1"
                             placeholder={title}
                             text={quizName}
-                            maxLength = "20"
+                            maxLength="20"
                             onChange={(e) => setQuizName(e.target.value)}></input>
                     </form>
 
