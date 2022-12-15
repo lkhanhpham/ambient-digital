@@ -77,8 +77,8 @@ const Teams = () => {
         if (response.ok) {
             //console.log(data)
             data.map((team) => {
-                if(team.quiz === quizId){
-                    if(!teamNames.includes(team.team_name)){
+                if (team.quiz === quizId) {
+                    if (!teamNames.includes(team.team_name)) {
                         teamNames.push(team.team_name)
                         teamIds.push(team.id)
                     }
@@ -92,20 +92,20 @@ const Teams = () => {
         }
     }
 
-    const deleteItem = (teamId) =>{
+    const deleteItem = (teamId) => {
         axios(
             {
                 method: "DELETE",
-                url: `${API_BASE_URL}/api/Teams/`+teamId+"/",
-                headers: {'Content-Type': 'application/json'}
+                url: `${API_BASE_URL}/api/Teams/` + teamId + "/",
+                headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
             console.log(response.data)
             // refresh()
         })
         getAllTeams()
-        refresh()
-        // window.location.reload();
+        // refresh()
+        window.location.reload();
 
     }
 
@@ -122,7 +122,7 @@ const Teams = () => {
     const refresh = () => {
         // it re-renders the component
         setValue(value + 1);
-       
+
     }
 
 
@@ -132,11 +132,11 @@ const Teams = () => {
 
         if (teamName === "") {
             handleShowWarning1()
-                }
-        
-        else if(teamNames.includes(teamName)) {
+        }
+
+        else if (teamNames.includes(teamName)) {
             handleShowWarning2();
-                } 
+        }
         else {
             teamNames.push(teamName)
             console.log(teamNames)
@@ -145,7 +145,7 @@ const Teams = () => {
                     method: "POST",
                     url: `${API_BASE_URL}/api/Teams/`,
                     data: {
-    
+
                         team_name: teamName,
                         team_points: 0,
                         quiz: quizId,
@@ -159,10 +159,10 @@ const Teams = () => {
             })
             confirm()
             refresh()
-            
+
         }
         event.preventDefault()
-      
+
     }
 
 
@@ -206,19 +206,23 @@ const Teams = () => {
 
 
     function showTeams() {
+        console.log("teams length", teamNames)
+        while(teams.length){teams.pop()}
         if (teamNames.length > 0) {
             const temp1 = []
             const temp2 = []
             for (let i = 0; i < teamNames.length; i++) {
-                if(i<teamNames.length/2){
-                    temp1.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={()=>deleteItem(teamIds[i])} />)
-                }else{
-                    temp2.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} />)
+                if (i < teamNames.length / 2) {
+                    temp1.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={() => deleteItem(teamIds[i])} />)
+                } else {
+                    temp2.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={() => deleteItem(teamIds[i])}/>)
                 }
             }
             teams.push(<div className="d-flex"><div className="d-flex flex-column">{temp1}</div><div className="d-flex flex-column"> {temp2}</div></div>)
             // console.log(teams)
         }
+       
+        console.log("teams created", teams)
     }
     showTeams();
 
@@ -270,9 +274,19 @@ const Teams = () => {
                     {/* <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createMember} /> */}
                 </div>
             </div>
-            <div className="p-3 d-flex justify-content-center align-items-center">
-                {teams}
+            <div className="text-dark d-flex justify-content-center align-self-center pt-5 pb-3">
+                <h3 className="big-title">My Teams</h3>
             </div>
+            {teamNames.length>0 ? (
+                <div className="p-3 d-flex justify-content-center align-items-center">
+                    {teams}
+                </div>
+            ) : (
+                <div className="p-3 d-flex justify-content-center align-items-center">
+                    <p>You haven't created any team for this quiz.</p>
+                </div>
+            )}
+
             <style jsx='true'>{`
         label{
           font-size: 18px;
