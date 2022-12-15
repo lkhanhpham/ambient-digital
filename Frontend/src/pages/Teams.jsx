@@ -47,8 +47,47 @@ const Teams = () => {
     const handleCloseWarning2 = () => setShowWarning2(false);
 
 
+    const [selectedUsers] = useState([])
+    const selectUser = (arr, teamId, teamName) => {
+        // while(selectedUsers.length){ selectedUsers.pop()}
+        const index = selectedUsers.findIndex(item => item.id === teamId)
+        if (index === -1) {
+            selectedUsers.push({ id: teamId, members: arr })
+        }
+        else {
+            selectedUsers.splice(index, 1, { id: teamId, members: arr })
+        }
+        const teamMember = []
+        console.log("copy from this", arr)
+        for (let index = 0; index < arr[0].length; index++) {
+            console.log(arr[0][index])
+            var element = { member: +arr[0][index] };
+            teamMember.push(element)
+        }
 
-    const [userOptions, setUserOptions] = useState([""])
+        console.log("send this", teamMember)
+        axios(
+            {
+                method: "PUT",
+                url: `${API_BASE_URL}/api/Teams/` + teamId + "/",
+                data: {
+                    id: teamId,
+                    team_name: teamName,
+                    team_points: 0,
+                    quiz: quizId,
+                    teamMember_team: teamMember.length ? (teamMember) : ([])
+                },
+                headers: { 'Content-Type': 'application/json' }
+            }
+        ).then((response) => {
+            console.log(response.data)
+            refresh()
+        })
+
+        console.log("selected user:", selectedUsers)
+    }
+    // const [userOptions, setUserOptions] = useState([""])
+
 
     const getAllUser = async () => {
         const response = await fetch(`${API_BASE_URL}/api/user/`)
@@ -56,10 +95,10 @@ const Teams = () => {
         var arr = []
         if (response.ok) {
             //console.log(data)
-            data.map((user) => {
-                return arr.push({ value: user.id, label: user.username })
-            })
-            setUserOptions(arr)
+            // data.map((user) => {
+            //     return arr.push({ value: user.id, label: user.username })
+            // })
+            // setUserOptions(arr)
             setUser(data)
         }
         else {
@@ -104,8 +143,8 @@ const Teams = () => {
             // refresh()
         })
         getAllTeams()
-        // refresh()
-        window.location.reload();
+        refresh()
+        // window.location.reload();
 
     }
 
@@ -207,21 +246,21 @@ const Teams = () => {
 
     function showTeams() {
         console.log("teams length", teamNames)
-        while(teams.length){teams.pop()}
+        while (teams.length) { teams.pop() }
         if (teamNames.length > 0) {
             const temp1 = []
             const temp2 = []
             for (let i = 0; i < teamNames.length; i++) {
                 if (i < teamNames.length / 2) {
-                    temp1.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={() => deleteItem(teamIds[i])} />)
+                    temp1.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={() => deleteItem(teamIds[i])} selectUser={selectUser} selectedUsers={selectedUsers} />)
                 } else {
-                    temp2.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={() => deleteItem(teamIds[i])}/>)
+                    temp2.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={() => deleteItem(teamIds[i])} selectUser={selectUser} selectedUsers={selectedUsers} />)
                 }
             }
             teams.push(<div className="d-flex"><div className="d-flex flex-column">{temp1}</div><div className="d-flex flex-column"> {temp2}</div></div>)
             // console.log(teams)
         }
-       
+
         console.log("teams created", teams)
     }
     showTeams();
@@ -277,8 +316,8 @@ const Teams = () => {
             <div className="text-dark d-flex justify-content-center align-self-center pt-5 pb-3">
                 <h3 className="big-title">My Teams</h3>
             </div>
-            {teamNames.length>0 ? (
-                <div className="p-3 d-flex justify-content-center align-items-center">
+            {teamNames.length > 0 ? (
+                <div className="p-3 d-flex justify-content-center align-items-center mb-5">
                     {teams}
                 </div>
             ) : (
