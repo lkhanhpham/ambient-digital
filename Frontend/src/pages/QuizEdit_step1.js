@@ -240,7 +240,7 @@ const QuizEdit1 = () => {
                 <div className=' col-4 d-flex flex-column justify-content-center align-self-start'>
                     <p className='instruction bold p-3'> 1. Edit quiz name and fields</p>
                     <p className='instruction ps-3'> 2. Add/Remove categories</p>
-                    <p className='instruction ps-3'> 1. Add/Remove rows</p>
+                    <p className='instruction ps-3'> 3. Add/Remove rows</p>
                 </div>
                 <div className='col-8 d-flex flex-column justify-content-start align-self-start'>
 

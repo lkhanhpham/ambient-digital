@@ -7,8 +7,9 @@ import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import ModalSuccess from "../components/ModalSuccess";
 import axios from "axios"
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
+import Select from "react-select"
 
 const NewQuiz2 = () => {
     const { user } = useContext(AuthContext);
@@ -25,10 +26,11 @@ const NewQuiz2 = () => {
     const [question_text] = useState([""])
     const [question_ids] = useState([0])
     //array that stores the points of all the fields
-    const [fieldPoints] = useState([100])
+    const [fieldPoints] = useState([])
     const [chosen] = useState([false])
 
     const [valid, setValid] = useState(false)
+    const $ = require("jquery");
 
     const [show, setShow] = useState(false);
     //close the Question form
@@ -38,6 +40,14 @@ const NewQuiz2 = () => {
         setShow(true);
         setPosition(x + y * length)
     }
+
+    const pointOptions = [
+        {value: "100", label: "100"},
+        {value: "200", label: "200"},
+        {value: "300", label: "300"},
+        {value: "400", label: "400"},
+        {value: "500", label: "500"},
+    ]
 
 
     const [showSuccess, setShowSuccess] = useState(false);
@@ -64,8 +74,14 @@ const NewQuiz2 = () => {
         var points = 100;
         const fields = []
         for (let k = 0; k < nr_of_rows; k++) {
+            if (k % nr_of_rows == 0) {
+                points = 100
+            }
+            if (!chosen[k + i * nr_of_rows]) {
+                fieldPoints[k + i * nr_of_rows] = points
+            }
             fields.push(<Field key={k} points={fieldPoints[k + i * nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k, i, nr_of_rows)} question_text={question_text[k + i * nr_of_rows]} chosen={chosen[k + i * nr_of_rows]} />)
-            points += 100;
+            points += 100
         }
         //create an array that stores all the fields in a column
         rows.push(<div key={i} className="d-flex flex-column justify-content-center">{fields}</div>)
@@ -87,18 +103,27 @@ const NewQuiz2 = () => {
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        if (!question_text.includes(text)) {
-            question_text[position] = text
-            question_ids[position] = id
-            chosen[position] = true
+        console.log(text)
+        console.log(question_text)
+        if (question_text[position] === null || (question_text[position] !== null && question_text[position] !== text)) {
+            if (!question_text.includes(text)) {
+                question_text[position] = text
+                question_ids[position] = id
+                chosen[position] = true
+                fieldPoints[position] = select2.options[select2.selectedIndex].value
+            }
+            else {
+                handleShowWarning1()
+            }
         }
-        else {
-            handleShowWarning1()
+        if (question_text[position] !== null && question_text[position] == text) {
+            chosen[position] = true
+            fieldPoints[position] = select2.options[select2.selectedIndex].value
         }
         // console.log(select1.options[select1.selectedIndex].value)
-        fieldPoints[position] = select2.options[select2.selectedIndex].value
         checkValid(chosen)
         handleClose()
+
     }
 
     //check if user has chosen all fields
@@ -150,7 +175,7 @@ const NewQuiz2 = () => {
                     url: `${API_BASE_URL}/api/field/`,
                     data: {
                         point: fields[i].point,
-                        question_id: fields[i].question ,
+                        question_id: fields[i].question,
                         categorie: fields[i].categorie,
                         quiz: fields[i].quiz
                     },
@@ -162,7 +187,7 @@ const NewQuiz2 = () => {
         }
         // navigate back to library page
         navigate("../../Library/")
-        
+
     }
 
     //fetch all created questions
@@ -229,13 +254,18 @@ const NewQuiz2 = () => {
                             ))}
                         </select>
                         <h1 className="small-title mb-2">Points</h1>
-                        <select className="form-control" id="points" onChange={update}>
+                        {/* <select className="form-control" id="points" onChange={update}>
                             <option value={100}>100</option>
-                            <option value={200}>200</option>
+                            <option  selected value={200}>200</option>
                             <option value={300}>300</option>
                             <option value={400}>400</option>
                             <option value={500}>500</option>
-                        </select>
+                        </select> */}
+                        <Select
+                            placeholder="Choose points"
+                            defaultValue={pointOptions.find(option => option.value === fieldPoints[position].toString())}
+                            options={pointOptions}
+                        />
                     </form>
                     <Link to="../../QuestionCreator/SC" target='_blank'>
                         <button className="small-button mt-3">Create question</button>

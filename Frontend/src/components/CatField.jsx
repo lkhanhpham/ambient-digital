@@ -26,7 +26,7 @@ const CatField = (props) => {
             background-color:#292b2c;
             color:white;
     }
-    .custom-card:hover{
+    .custom-card:hover{ 
         cursor: pointer;
     }
         `

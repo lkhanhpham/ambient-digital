@@ -3,7 +3,7 @@ const Field = (props) => {
         <>
             <div onClick={props.handleShow} className="card field d-flex justify-content-center ">
                 <p className="align-self-center">{props.question}</p>
-                <span className="align-self-center">cat: {props.category}</span>
+                {/* <span className="align-self-center">cat: {props.category}</span> */}
                 <span className="align-self-center">points: {props.points}</span>
                 {props.chosen? (
                     <>
