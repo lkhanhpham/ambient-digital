@@ -39,6 +39,7 @@ const NewQuiz2 = () => {
     const handleShow = (x, y, length) => {
         setShow(true);
         setPosition(x + y * length)
+        setPoint(fieldPoints[x + y * length])
     }
 
     const pointOptions = [
@@ -48,8 +49,7 @@ const NewQuiz2 = () => {
         {value: "400", label: "400"},
         {value: "500", label: "500"},
     ]
-
-
+    const[point, setPoint] = useState(100)
     const [showSuccess, setShowSuccess] = useState(false);
     //show the success notification
     const handleShowSuccess = () => setShowSuccess(true);
@@ -100,17 +100,15 @@ const NewQuiz2 = () => {
 
     function saveQuestion(position) {
         var select1 = document.getElementById('questions')
-        var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        console.log(text)
-        console.log(question_text)
+        console.log(point)
         if (question_text[position] === null || (question_text[position] !== null && question_text[position] !== text)) {
             if (!question_text.includes(text)) {
                 question_text[position] = text
                 question_ids[position] = id
                 chosen[position] = true
-                fieldPoints[position] = select2.options[select2.selectedIndex].value
+                fieldPoints[position] = point
             }
             else {
                 handleShowWarning1()
@@ -118,7 +116,7 @@ const NewQuiz2 = () => {
         }
         if (question_text[position] !== null && question_text[position] == text) {
             chosen[position] = true
-            fieldPoints[position] = select2.options[select2.selectedIndex].value
+            fieldPoints[position] = point
         }
         // console.log(select1.options[select1.selectedIndex].value)
         checkValid(chosen)
@@ -265,6 +263,7 @@ const NewQuiz2 = () => {
                             placeholder="Choose points"
                             defaultValue={pointOptions.find(option => option.value === fieldPoints[position].toString())}
                             options={pointOptions}
+                            onChange = {(choice)=>setPoint(choice.value)}
                         />
                     </form>
                     <Link to="../../QuestionCreator/SC" target='_blank'>
