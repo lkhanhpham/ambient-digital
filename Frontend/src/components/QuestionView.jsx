@@ -4,6 +4,7 @@ import { Link, useNavigate} from "react-router-dom";
 import axios from "axios"
 import {API_BASE_URL} from "../constants.ts";
 import AuthContext from "../context/AuthContext";
+import Spinner from 'react-bootstrap/Spinner';
 
 const QuestionView = () => {
     const [questions, setQuiz] = useState([])
@@ -26,9 +27,9 @@ const QuestionView = () => {
     useEffect(
         () => {
             const timer = setTimeout(() => {
-                console.log('')
-              }, 1000);
-              getAllQuestions();
+                getAllQuestions()
+              }, 500);
+              ;
               return () => clearTimeout(timer);
 
         }, []
@@ -127,6 +128,11 @@ const QuestionView = () => {
 
                              ) : (
                                 <div>
+                                    <div>
+                                        <Spinner  className="spinner" animation="border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                        </Spinner>
+                                    </div>
                                     <p>There are no questions yet.</p>
                                     <p>Create a new question or quiz to get started!</p>
                                 </div>
@@ -145,6 +151,9 @@ const QuestionView = () => {
         }
         .top{
             margin-top:20px;
+        }
+        .spinner{
+
         }
       `}</style>
             </div>
