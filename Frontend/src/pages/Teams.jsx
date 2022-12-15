@@ -68,6 +68,47 @@ const Teams = () => {
         }
     }
 
+    const teams = useState([])
+
+    const getAllTeams = async () => {
+        const response = await fetch(`${API_BASE_URL}/api/Teams/`)
+        const data = await response.json()
+        // var arr = []
+        if (response.ok) {
+            //console.log(data)
+            data.map((team) => {
+                if(team.quiz === quizId){
+                    if(!teamNames.includes(team.team_name)){
+                        teamNames.push(team.team_name)
+                        teamIds.push(team.id)
+                    }
+                }
+            })
+            // refresh()
+        }
+        else {
+            //console.log(response.status)
+            console.log("Failed Network request")
+        }
+    }
+
+    const deleteItem = (teamId) =>{
+        axios(
+            {
+                method: "DELETE",
+                url: `${API_BASE_URL}/api/Teams/`+teamId+"/",
+                headers: {'Content-Type': 'application/json'}
+            }
+        ).then((response) => {
+            console.log(response.data)
+            // refresh()
+        })
+        getAllTeams()
+        refresh()
+        // window.location.reload();
+
+    }
+
     const update = () => {
         var select1 = document.getElementById('User')
         const id = select1.options[select1.selectedIndex].value
@@ -81,8 +122,9 @@ const Teams = () => {
     const refresh = () => {
         // it re-renders the component
         setValue(value + 1);
-        // createdGrid()
+       
     }
+
 
 
     function createTeam(event) {
@@ -136,7 +178,6 @@ const Teams = () => {
         if (!UserId.includes(id) & teamId != 0) {
             UserId.push(id)
             console.log(UserId)
-
             axios(
                 {
                     method: "POST",
@@ -163,13 +204,19 @@ const Teams = () => {
 
     }
 
-    const teams = []
+
     function showTeams() {
         if (teamNames.length > 0) {
+            const temp1 = []
+            const temp2 = []
             for (let i = 0; i < teamNames.length; i++) {
-                const temp = []
-                teams.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} key={i}/>)
+                if(i<teamNames.length/2){
+                    temp1.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} deleteItem={()=>deleteItem(teamIds[i])} />)
+                }else{
+                    temp2.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} />)
+                }
             }
+            teams.push(<div className="d-flex"><div className="d-flex flex-column">{temp1}</div><div className="d-flex flex-column"> {temp2}</div></div>)
             // console.log(teams)
         }
     }
@@ -178,6 +225,7 @@ const Teams = () => {
     useEffect(
         () => {
             getAllUser();
+            getAllTeams()
         }, []
     )
 
@@ -218,11 +266,11 @@ const Teams = () => {
                     <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Oops! You forgot to add a Team name"} body={"Choose a Team name"} />
                     <ModalWarning showWarning={showWarning2} handleCloseWarning={handleCloseWarning2} title={"Oops! This Team already exists"} body={"Please choose another Team name"} />
                     <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! This player already has a team"} body={"Choose another name"} />
-                    <ModalSuccess showSuccess={show} handleCloseSuccess={handleClose} onclick = {handleClose} title={"New team created!"} body={"Team created with name: " + teamName} />
+                    <ModalSuccess showSuccess={show} handleCloseSuccess={handleClose} onclick={handleClose} title={"New team created!"} body={"Team created with name: " + teamName} />
                     {/* <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createMember} /> */}
                 </div>
             </div>
-            <div className="p-3 d-flex flex-column justify-content-center">
+            <div className="p-3 d-flex justify-content-center align-items-center">
                 {teams}
             </div>
             <style jsx='true'>{`

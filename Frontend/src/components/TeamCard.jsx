@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
-import Select from 'react-select'
+import Select from 'react-select';
+import axios from 'axios';
 
 // For each created quiz one quizcard is rendered
 const TeamCard = (props) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [userOptions, setUserOptions] = useState([])
+
     const handleTypeSelect = (e) => {
         let value = Array.from(e, option => option.label);
         console.log(value)
@@ -30,6 +32,7 @@ const TeamCard = (props) => {
         }
     }
 
+
     useEffect(
         () => {
             getAllUser()
@@ -37,7 +40,7 @@ const TeamCard = (props) => {
     )
     return (
         <div className='team-card d-flex flex-column justify-content-center m-2'>
-            <div className='align-self-end p-2'><img src='/XCircle.png'className='' width = "32px" height = "32px"></img></div>
+            <div onClick={props.deleteItem} className='align-self-end p-2 delete-button'><img src='/XCircle.png'className='' width = "32px" height = "32px"></img></div>
             <h1 className='small-title align-self-center text-light'>{props.teamName}</h1>
             <span>{props.teamId}</span>
             <div className='d-flex flex-column justify-content-center ps-3 pe-3'>
@@ -63,6 +66,10 @@ const TeamCard = (props) => {
                     height: auto;
                     border-radius: 1rem;
                     background-color: #CA6702;
+                }
+
+                .delete-button:hover{
+                    cursor: pointer
                 }
                 `
             }
