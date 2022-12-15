@@ -42,6 +42,11 @@ const Teams = () => {
     const handleShowWarning1 = () => setShowWarning1(true);
     const handleCloseWarning1 = () => setShowWarning1(false);
 
+    const [showWarning2, setShowWarning2] = useState(false);
+    const handleShowWarning2 = () => setShowWarning2(true);
+    const handleCloseWarning2 = () => setShowWarning2(false);
+
+
 
     const [userOptions, setUserOptions] = useState([""])
 
@@ -82,28 +87,40 @@ const Teams = () => {
 
     function createTeam(event) {
         //setTeamPoints(100)
-        teamNames.push(teamName)
-        console.log(teamNames)
-        axios(
-            {
-                method: "POST",
-                url: `${API_BASE_URL}/api/Teams/`,
-                data: {
 
-                    team_name: teamName,
-                    team_points: 0,
-                    quiz: quizId,
-                },
-                headers: { 'Content-Type': 'application/json' }
-            }
-        ).then((response) => {
-            console.log(response.data)
-            setTeamId(response.data.id)
-            teamIds.push(response.data.id)
-        })
-        confirm()
-        refresh()
+        if (teamName === "") {
+            handleShowWarning1()
+                }
+        
+        else if(teamNames.includes(teamName)) {
+            handleShowWarning2();
+                } 
+        else {
+            teamNames.push(teamName)
+            console.log(teamNames)
+            axios(
+                {
+                    method: "POST",
+                    url: `${API_BASE_URL}/api/Teams/`,
+                    data: {
+    
+                        team_name: teamName,
+                        team_points: 0,
+                        quiz: quizId,
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then((response) => {
+                console.log(response.data)
+                setTeamId(response.data.id)
+                teamIds.push(response.data.id)
+            })
+            confirm()
+            refresh()
+            
+        }
         event.preventDefault()
+      
     }
 
 
@@ -146,18 +163,17 @@ const Teams = () => {
 
     }
 
-    const teams = useState([])
+    const teams = []
     function showTeams() {
         if (teamNames.length > 0) {
             for (let i = 0; i < teamNames.length; i++) {
                 const temp = []
-                teams.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} />)
+                teams.push(<TeamCard teamName={teamNames[i]} teamId={teamIds[i]} key={i}/>)
             }
             // console.log(teams)
         }
-
     }
-    showTeams()
+    showTeams();
 
     useEffect(
         () => {
@@ -199,7 +215,8 @@ const Teams = () => {
 
                     </div>
 
-                    <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Oops! You forgot to add a Teamname"} body={"Choose a Teamname"} />
+                    <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Oops! You forgot to add a Team name"} body={"Choose a Team name"} />
+                    <ModalWarning showWarning={showWarning2} handleCloseWarning={handleCloseWarning2} title={"Oops! This Team already exists"} body={"Please choose another Team name"} />
                     <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! This player already has a team"} body={"Choose another name"} />
                     <ModalSuccess showSuccess={show} handleCloseSuccess={handleClose} onclick = {handleClose} title={"New team created!"} body={"Team created with name: " + teamName} />
                     {/* <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createMember} /> */}
