@@ -4,14 +4,20 @@
 
 ## Intro
 This project was developed in cooperation with Ambient Digital as part of the Capstone Project at the University of Cologne.
-Our Goal is to build an own verison of the famous jeopardy quiz for company to strengthen the their culture on team events.
+Our Goal is to build our own verison of the famous jeopardy quiz for companies to strengthen their team culture.
 
 ## Getting started
+If you want to checkout the current status of the **develop branch** you can check the [Links](#Links) section and open the [Test | Frontend](https://quizai-test.vercel.app/) and [Test | Backend](https://quizai-test.herokuapp.com/admin/login) to find the current commit of develop branch deployed on Vercel / Heroku.
+
+Use the [Prod | Frontend](https://quizai.vercel.app/) and [Prod | Backend](https://quizai-prod.herokuapp.com/admin/login) Links to checkout the current commit on the main branch.
+
+If you want to checkout any of the other branches please follow the setps below.
+
 You will need __Python 3.11.0__ or higher.
 You can download the current Python version from [here](https://www.python.org/downloads/)
 
 ## Installations
-We suggest you run the following project in a docker container.
+We suggest you run the project in a docker container.
 Get docker [here](https://docs.docker.com/).
 You need to type the following command only once after the installation of docker.
 ```
@@ -63,19 +69,15 @@ Moreover you can created questions individually and select them in the process o
 The edit button of the questions is not used at the moment.
 
 ## Upcoming changes
-The next major changes are to include a possibility to build teams which can play the quiz against each other and to give the Quizmaster an own log in possibility so that he or she sees just their own quetsions and quizes.
+The next major changes are to include a possibility to build teams which can play the quiz against each other. It will also be possible to assign points to these teams. Furthermore you will be able to upload Pictures or add YouTube Videos to your questions.
 
 ## Testing
 We will test our project end to end with Playwright. So if you want to work with this project you will need playwright too. This will be installed automatically, when you followed the installation instructions.
-Till now we did not write so many tests, so there are just a few examples on the branch.
 
 ## Development status
 This Project is still in development.
-We are currently working on branch different branches for different features.
-Currently our backend is faster than our frontend, so there are two branches, [feature/Teams](https://gitlab.com/ciis-capstone-project/winter-2022-2023/team-03/ambient-digital/-/tree/feature/Teams) and [feature/Quizmasterbereich](https://gitlab.com/ciis-capstone-project/winter-2022-2023/team-03/ambient-digital/-/tree/feature/quizmasterbereich), where the backend is finished, but the frontend needs to be done.
-To see this you can checkout this branches clone them and go to localhost:8000/api to see all the devoloped APIs and their payload.
-
-Checkout this branch and follow the setup instructions there.
+We are currently working on branch different branches for different features. Please checkout the following branches to see our progress on these features: <br>
+[feature/teams](https://gitlab.com/ciis-capstone-project/winter-2022-2023/team-03/ambient-digital/-/tree/feature/teams) for our progress on adding teams to a quiz.<br>
 
 ## Links
 
