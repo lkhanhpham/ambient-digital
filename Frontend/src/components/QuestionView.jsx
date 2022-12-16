@@ -5,13 +5,18 @@ import axios from "axios"
 import {API_BASE_URL} from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 import Spinner from 'react-bootstrap/Spinner';
+import Modal from 'react-bootstrap/Modal';
 
 const QuestionView = () => {
+    const [show, setShow] = useState(true);
+
+    const handleClose = () => setShow(false);
     const [questions, setQuiz] = useState([])
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
     const getAllQuestions = async () => {
+        setShow(false)
         const response = await fetch(`${API_BASE_URL}/api/question`)
         const data = await response.json()
         if (response.ok) {
@@ -28,7 +33,7 @@ const QuestionView = () => {
         () => {
             const timer = setTimeout(() => {
                 getAllQuestions()
-              }, 500);
+              }, 1000);
               ;
               return () => clearTimeout(timer);
 
@@ -128,11 +133,6 @@ const QuestionView = () => {
 
                              ) : (
                                 <div>
-                                    <div>
-                                        <Spinner  className="spinner" animation="border" role="status">
-                                        <span className="visually-hidden">Loading...</span>
-                                        </Spinner>
-                                    </div>
                                     <p>There are no questions yet.</p>
                                     <p>Create a new question or quiz to get started!</p>
                                 </div>
@@ -141,6 +141,18 @@ const QuestionView = () => {
                         }
 
                     </div>
+                    <Modal show={show} onHide={handleClose}>
+                    <Modal.Header>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className= "mx-auto align-items-center justify-content-center">
+                            <Spinner  className="spinner" animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                            <span> Loading...</span>
+                        </div>
+                    </Modal.Body>
+                    </Modal>
                 </div>
                     <style jsx='true'>{`
       
