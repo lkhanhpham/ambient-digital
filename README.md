@@ -77,7 +77,7 @@ We will test our project end to end with Playwright. So if you want to work with
 ## Development status
 This Project is still in development.
 We are currently working on branch different branches for different features. Please checkout the following branches to see our progress on these features: <br>
-[feature/teams](https://gitlab.com/ciis-capstone-project/winter-2022-2023/team-03/ambient-digital/-/tree/feature/teams) for our progress on adding teams to a quiz.<br>
+- [feature/teams](https://gitlab.com/ciis-capstone-project/winter-2022-2023/team-03/ambient-digital/-/tree/feature/teams) for our progress on adding teams to a quiz.<br>
 
 ## Links
 
