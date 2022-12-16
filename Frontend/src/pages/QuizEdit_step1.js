@@ -118,25 +118,33 @@ const QuizEdit1 = () => {
 
     const url = `${API_BASE_URL}/api/quiz/` + quizId + "/";
 
+    const [showWarning, setShowWarning] = useState(false)
+    const handleShowWarning = () => setShowWarning(true)
+    const handleCloseWarning = () => setShowWarning(false)
     //PUT new quiz name to backend
     const saveQuizname = (event) => {
         event.preventDefault()
-        axios(
-            {
-                method: "PUT",
-                url: url,
-                data: {
-                    quiz_name: quizName,
-                    nr_of_rows: nr_of_rows,
-                    nr_of_categories: nr_of_categories,
-                    author: user.user_id,
-                },
-                headers: { 'Content-Type': 'application/json' }
-            }
-        ).then((response) => {
-            //console.log(response.data)
-        })
-        setChange(true)
+        if (quizName === '') {
+            handleShowWarning()
+        }
+        else {
+            axios(
+                {
+                    method: "PUT",
+                    url: url,
+                    data: {
+                        quiz_name: quizName,
+                        nr_of_rows: nr_of_rows,
+                        nr_of_categories: nr_of_categories,
+                        author: user.user_id,
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then((response) => {
+                //console.log(response.data)
+            })
+            setChange(true)
+        }
         handleClose1()
     }
     //show the form to change quiz name
@@ -157,10 +165,9 @@ const QuizEdit1 = () => {
         var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        if (!question_text.includes(text)) {
+        if (!question_text.includes(text) || fields.find(({id}) => id == fieldId).question_id == id) {
             ques = id
             point = select2.options[select2.selectedIndex].value
-
         }
         else {
             handleShowWarningQues()
@@ -195,10 +202,6 @@ const QuizEdit1 = () => {
             setCols([])
             setCats([])
             setFields(test)
-            // window.location.reload()
-            // getAllFields()
-            // createdGrid()
-            // fields = allfields
             refresh()
         })
         handleClose()
@@ -216,15 +219,6 @@ const QuizEdit1 = () => {
 
         }, []
     )
-    // useEffect(
-    //     () => {
-    //         console.log("render", fields)
-    //         if (fields.length !== 0) {
-    //             createdGrid()
-    //         }
-    //     }, [fields]
-    // )
-
 
     return (
         <div className="container">
@@ -256,7 +250,7 @@ const QuizEdit1 = () => {
                     </div>
                     <div className="d-flex justify-content-between p-3">
                         <Link to="../../Library">
-                        <button className="btn btn-secondary">Cancel</button>
+                            <button className="btn btn-secondary">Cancel</button>
                         </Link>
                         <button onClick={nextStep} className="btn btn-primary">Next</button>
                     </div>
@@ -302,6 +296,7 @@ const QuizEdit1 = () => {
                     </div>
                 </Modal.Footer>
             </Modal>
+            {/* modal to edit quiz name */}
             <Modal
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
@@ -314,7 +309,7 @@ const QuizEdit1 = () => {
                     <form >
                         <label className="mb-2">New Name</label>
                         <input type="text" className="form-control" id="exampleFormControlInput1"
-                            placeholder={title}
+                            placeholder={change ? (quizName) : (title)}
                             text={quizName}
                             maxLength="20"
                             onChange={(e) => setQuizName(e.target.value)}></input>
@@ -330,6 +325,7 @@ const QuizEdit1 = () => {
                 </Modal.Footer>
             </Modal>
             <ModalWarning showWarning={showWarningQues} handleCloseWarning={handleCloseWarningQues} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
+            <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Not so fast buddy!"} body={"Please type in a name."} />
         </div >
     )
 }
