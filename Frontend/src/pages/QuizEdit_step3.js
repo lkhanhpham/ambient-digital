@@ -19,13 +19,9 @@ const QuizEdit3 = () => {
     const quizId = location.state.id
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
-    // const fields = location.state.fields
-    const [quizName, setQuizName] = useState('')
-    const [change, setChange] = useState(false)
     //store all categories of quiz (from BACKEND)
     var [cats, setCats] = useState([])
     const [cols, setCols] = useState([])
-
     const [value, setValue] = useState(0);
 
     //-------------------------------------

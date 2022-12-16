@@ -30,8 +30,6 @@ const NewQuiz2 = () => {
     const [chosen] = useState([false])
 
     const [valid, setValid] = useState(false)
-    const $ = require("jquery");
-
     const [show, setShow] = useState(false);
     //close the Question form
     const handleClose = () => setShow(false);
@@ -41,7 +39,7 @@ const NewQuiz2 = () => {
         setPosition(x + y * length)
         setPoint(fieldPoints[x + y * length])
     }
-
+    //options of points to choose for a field
     const pointOptions = [
         {value: "100", label: "100"},
         {value: "200", label: "200"},
@@ -102,7 +100,7 @@ const NewQuiz2 = () => {
         var select1 = document.getElementById('questions')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-        console.log(point)
+        // console.log(point)
         if (question_text[position] === null || (question_text[position] !== null && question_text[position] !== text)) {
             if (!question_text.includes(text)) {
                 question_text[position] = text

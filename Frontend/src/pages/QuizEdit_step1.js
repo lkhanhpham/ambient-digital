@@ -25,7 +25,6 @@ const QuizEdit1 = () => {
 
     const [quizName, setQuizName] = useState('')
     const [change, setChange] = useState(false)
-    const [newcats, setNewcats] = useState([])
     var [cats, setCats] = useState([])
     var [cols, setCols] = useState([])
     const [value, setValue] = useState(0);

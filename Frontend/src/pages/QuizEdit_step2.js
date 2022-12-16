@@ -19,8 +19,6 @@ const QuizEdit2 = (props) => {
     const quizId = location.state.id
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
-    const [quizName, setQuizName] = useState('')
-    const [change, setChange] = useState(false)
     //store all categories of quiz (from BACKEND)
     var [cats, setCats] = useState([])
     var [cols, setCols] = useState([])
@@ -257,7 +255,7 @@ const QuizEdit2 = (props) => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
         })
         // console.log("these will be removed", removedfields)
         for (let i = 0; i < removedfields.length; i++) {
@@ -268,7 +266,7 @@ const QuizEdit2 = (props) => {
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response) => {
-                console.log(response.data)
+                // console.log(response.data)
             })
         }
 
@@ -395,7 +393,7 @@ const QuizEdit2 = (props) => {
                         headers: { 'Content-Type': 'application/json' }
                     }
                 ).then((response) => {
-                    console.log(response.data)
+                    // console.log(response.data)
                 })
             }
             axios(
