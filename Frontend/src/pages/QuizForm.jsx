@@ -4,13 +4,14 @@ import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import ModalSuccess from "../components/ModalSuccess";
-import {API_BASE_URL} from "../constants.ts";
+import ModalWarning from "../components/ModalWarning";
+import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 const QuizForm = () => {
 
     const [quizName, setQuizName] = useState('')
-    const [nrOfRows, setNrOfRows] = useState(1)
-    const [nrOfCols, setNrOfCols] = useState(1)
+    const [nrOfRows, setNrOfRows] = useState(5)
+    const [nrOfCols, setNrOfCols] = useState(5)
     const [author, setAuthor] = useState('')
     const [quizId, setQuizId] = useState(0)
     const { user } = useContext(AuthContext);
@@ -36,34 +37,40 @@ const QuizForm = () => {
     const createFrontendQuiz = async () => {
         navigate("/QuizCreator/Newquiz1", { state: { quiz_name: quizName, nr_of_rows: nrOfRows, nr_of_categories: nrOfCols, quizId: quizId } })
         setQuizName("")
-        setNrOfRows(1)
-        setNrOfCols(1)
+        setNrOfRows(5)
+        setNrOfCols(5)
         setAuthor(user.user_id)
     }
-
+    const [showWarning, setShowWarning] = useState(false)
+    const handleShowWarning =()=> setShowWarning(true)
+    const handleCloseWarning =()=> setShowWarning(false)
     const createQuiz = (event) => {
-
-        axios(
-            {
-                method: "POST",
-                url: `${API_BASE_URL}/api/quiz/`,
-                data: {
-                    quiz_name: quizName,
-                    nr_of_rows: nrOfRows,
-                    nr_of_categories: nrOfCols,
-                    author: user.user_id,
-
-                },
-                headers: { 'Content-Type': 'application/json' }
-            }
-        ).then((response) => {
-            //console.log(response.data)
-            //console.log(response.data.id)
-            setQuizId(response.data.id)
-
-        })
-        confirm()
-        event.preventDefault()
+        if (quizName === '') {
+            handleShowWarning()
+        }
+        else{
+            axios(
+                {
+                    method: "POST",
+                    url: `${API_BASE_URL}/api/quiz/`,
+                    data: {
+                        quiz_name: quizName,
+                        nr_of_rows: nrOfRows,
+                        nr_of_categories: nrOfCols,
+                        author: user.user_id,
+    
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then((response) => {
+                //console.log(response.data)
+                //console.log(response.data.id)
+                setQuizId(response.data.id)
+    
+            })
+            confirm()
+            event.preventDefault()
+        }
     }
 
 
@@ -86,8 +93,8 @@ const QuizForm = () => {
                             <label className="mb-2" htmlFor="exampleFormControlInput1">Quiz Name</label>
                             <input type="text" className="form-control" id="exampleFormControlInput1"
                                 placeholder="New quiz"
-                                text={quizName} 
-                                maxLength = "20" 
+                                text={quizName}
+                                maxLength="20"
                                 onChange={(e) => setQuizName(e.target.value)}></input>
                         </div>
                         <div className="form-group m-3">
@@ -97,7 +104,7 @@ const QuizForm = () => {
                                 <option value={2}>2</option>
                                 <option value={3}>3</option>
                                 <option value={4}>4</option>
-                                <option value={5}>5</option>
+                                <option selected = "selected" value={5}>5</option>
                                 <option value={6}>6</option>
                                 <option value={7}>7</option>
                                 <option value={8}>8</option>
@@ -112,7 +119,7 @@ const QuizForm = () => {
                                 <option value={2}>2</option>
                                 <option value={3}>3</option>
                                 <option value={4}>4</option>
-                                <option value={5}>5</option>
+                                <option selected = "selected" value={5}>5</option>
                                 <option value={6}>6</option>
                                 <option value={7}>7</option>
                                 <option value={8}>8</option>
@@ -131,8 +138,8 @@ const QuizForm = () => {
                         <button onClick={createQuiz} className="btn btn-primary">Create</button>
                     </div>
                     {/* modal show to announce that quiz is created successfully */}
-                    <ModalSuccess showSuccess = {show} handleCloseSuccess = {handleClose} title = {"New quiz created!"} body = {"Quiz created with id: " + quizId} onclick = {createFrontendQuiz} />
-
+                    <ModalSuccess showSuccess={show} handleCloseSuccess={handleClose} title={"New quiz created!"} body={"Quiz created with id: " + quizId} onclick={createFrontendQuiz} />
+                    <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Not so fast buddy!"} body={"Please give this quiz a name."} />
                 </div>
             </div>
             <style jsx="true">{`

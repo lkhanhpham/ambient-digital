@@ -2,8 +2,6 @@ import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 import React from "react";
 import { Link, useNavigate} from "react-router-dom";
-import $ from "jquery";
-import { useLocation } from "react-router-dom";
 import {API_BASE_URL} from "../constants.ts";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';

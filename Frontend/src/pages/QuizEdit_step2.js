@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { useLocation  } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import CatField from '../components/CatField';
 import Field from '../components/Field';
 import { API_BASE_URL } from "../constants.ts";
@@ -19,8 +19,6 @@ const QuizEdit2 = (props) => {
     const quizId = location.state.id
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
-    const [quizName, setQuizName] = useState('')
-    const [change, setChange] = useState(false)
     //store all categories of quiz (from BACKEND)
     var [cats, setCats] = useState([])
     var [cols, setCols] = useState([])
@@ -30,7 +28,7 @@ const QuizEdit2 = (props) => {
     //all variables related to editing field
 
     const [chosen1] = useState([false])
-    const [question_text] = useState([""])
+    const [question_text] = useState([])
     //array that stores the question_id of all the fields
     const [question_ids] = useState([0])
     const [positionField, setPositionField] = useState(0)
@@ -58,7 +56,7 @@ const QuizEdit2 = (props) => {
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
         //check if question exits in new created columns
-        if (!question_text.includes(text)) {
+        if (!question_text.includes(text) || question_text[positionField] === text) {
             var exist = false
             for (let i = 0; i < fields.length; i++) {
                 //check if question exits in old columns
@@ -107,7 +105,7 @@ const QuizEdit2 = (props) => {
     const [questions, setQuestions] = useState([])
     //fetch all created questions
     const getAllQues = async () => {
-        const response = await fetch(`${API_BASE_URL}/api/authorquestion/`+user.user_id)
+        const response = await fetch(`${API_BASE_URL}/api/authorquestion/` + user.user_id)
         const data = await response.json()
         if (response.ok) {
             //console.log(data)
@@ -193,7 +191,7 @@ const QuizEdit2 = (props) => {
     const handleClose1 = () => setShowRemove(false);
     //show the remove form
     const handleShow1 = () => setShowRemove(true);
-     
+
     //boolean indicates whether user want to remove a category
     var [confirm, setConfirm] = useState(false)
     //name of the to-be-removed category
@@ -257,7 +255,7 @@ const QuizEdit2 = (props) => {
                 headers: { 'Content-Type': 'application/json' }
             }
         ).then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
         })
         // console.log("these will be removed", removedfields)
         for (let i = 0; i < removedfields.length; i++) {
@@ -268,7 +266,7 @@ const QuizEdit2 = (props) => {
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response) => {
-                console.log(response.data)
+                // console.log(response.data)
             })
         }
 
@@ -325,11 +323,11 @@ const QuizEdit2 = (props) => {
 
                 for (let k = 0; k < fields.length; k++) {
                     if (fields[k].categorie_name == categorie_name) {
-                        if((fields[k].question)==null||fields[k].question==undefined){
-                            old_question_text[k]="Please choose a question"
+                        if ((fields[k].question) == null || fields[k].question == undefined) {
+                            old_question_text[k] = "Please choose a question"
                         }
-                        else{
-                            old_question_text[k]=(fields[k].question.question_text)
+                        else {
+                            old_question_text[k] = (fields[k].question.question_text)
                         }
                         tempfields.push(<Field category={fields[k].categorie_name} points={fields[k].point} chosen={true} question_text={old_question_text[k]} />)
                     }
@@ -340,6 +338,13 @@ const QuizEdit2 = (props) => {
 
     }
     createGrid()
+
+    //a Warning if the required data is missing and user cannot proceed
+    const [showWarning, setShowWarning] = useState(false);
+
+    const handleCloseWarning = () => setShowWarning(false);
+
+    const handleShowWarning = () => setShowWarning(true);
 
     // After user edits all fields, the data is saved into fields
     const fillFields = () => {
@@ -360,55 +365,61 @@ const QuizEdit2 = (props) => {
 
     //notify user that quiz is saved
     const [showSuccess, setShowSuccess] = useState(false);
-    
+
     const handleCloseSuccess = () => setShowSuccess(false);
-    
+
     const handleShowSuccess = () => setShowSuccess(true);
 
     //post new fields in new columns to BACKEND
     const saveStep2 = (event) => {
         event.preventDefault()
-        fillFields()
-        for (let i = 0; i < question_text.length; i++) {
+        if (question_text.length !== nr_of_newcats * nr_of_rows) {
+
+            handleShowWarning()
+        }
+        else{
+            fillFields()
+            for (let i = 0; i < question_text.length; i++) {
+                axios(
+                    {
+                        method: "POST",
+                        url: `${API_BASE_URL}/api/field/`,
+                        data: {
+                            point: newfields[i].point,
+                            question_id: newfields[i].question,
+                            categorie: newfields[i].categorie,
+                            quiz: newfields[i].quiz
+                        },
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                ).then((response) => {
+                    // console.log(response.data)
+                })
+            }
             axios(
                 {
-                    method: "POST",
-                    url: `${API_BASE_URL}/api/field/`,
+                    method: "PUT",
+                    url: url,
                     data: {
-                        point: newfields[i].point,
-                        question_id: newfields[i].question,
-                        categorie: newfields[i].categorie,
-                        quiz: newfields[i].quiz
+                        quiz_name: title,
+                        nr_of_rows: nr_of_rows,
+                        nr_of_categories: cols.length + nr_of_newcats,
+                        author: user.user_id,
                     },
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response) => {
-                console.log(response.data)
-            })
-        }
-        axios(
-            {
-                method: "PUT",
-                url: url,
-                data: {
-                    quiz_name: title,
-                    nr_of_rows: nr_of_rows,
-                    nr_of_categories: cols.length + nr_of_newcats,
-                    author: user.user_id,
-                },
-                headers: { 'Content-Type': 'application/json' }
+                //console.log(response.data)
+                refresh()
             }
-        ).then((response) => {
-            //console.log(response.data)
-            refresh()
+            )
+            handleShowSuccess()
         }
-        )
-        handleShowSuccess()
     }
 
 
     const nextStep = () => {
-        navigate("/EditQuiz3/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories+nr_of_newcats, nr_of_rows: nr_of_rows, fields: fields } })
+        navigate("/EditQuiz3/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories + nr_of_newcats, nr_of_rows: nr_of_rows, fields: fields } })
     }
     const prevStep = () => {
         navigate("/EditQuiz1/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nr_of_rows } })
@@ -534,8 +545,8 @@ const QuizEdit2 = (props) => {
             </Modal>
             <ModalSuccess showSuccess={showRemove} title={"Are you sure you want to remove this category?"} body={"All the fields belong to this category will also be deleted."}
                 handleCloseSuccess={handleClose1} onclick={confirmRemove} />
+            <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! You forgot something"} body={"Edit all fields to proceed"} />
             <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Category is not unique."} body={"Looks like this category exists in your quiz. Please choose another one."} />
-
             <ModalWarning showWarning={showWarningQues} handleCloseWarning={handleCloseWarningQues} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
             <ModalSuccess showSuccess={showSuccess} title={"Quiz saved"} body={"You can proceed to next step"}
                 handleCloseSuccess={handleCloseSuccess} onclick={handleCloseSuccess} />

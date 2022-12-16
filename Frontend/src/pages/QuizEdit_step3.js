@@ -19,25 +19,21 @@ const QuizEdit3 = () => {
     const quizId = location.state.id
     const nr_of_rows = location.state.nr_of_rows
     const nr_of_categories = location.state.nr_of_categories
-    // const fields = location.state.fields
-    const [quizName, setQuizName] = useState('')
-    const [change, setChange] = useState(false)
     //store all categories of quiz (from BACKEND)
     var [cats, setCats] = useState([])
     const [cols, setCols] = useState([])
-
     const [value, setValue] = useState(0);
 
     //-------------------------------------
     //all variables related to editing field
 
     const [chosen] = useState([false])
-    const [question_text] = useState([""])
+    const [question_text] = useState([])
     //array that stores the question_id of all the fields
     const [question_ids] = useState([0])
     const [positionField, setPositionField] = useState(0)
     //array that stores the points of all the fields
-    const [fieldPoints] = useState([100])
+    const [fieldPoints] = useState([])
     const [newfields] = useState([])
     const [show, setShow] = useState(false);
     //close the Question form
@@ -61,7 +57,7 @@ const QuizEdit3 = () => {
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
         //check if question exits in new created columns
-        if (!question_text.includes(text)) {
+        if (!question_text.includes(text) || question_text[positionField] === text) {
             var exist = false
             for (let i = 0; i < fields.length; i++) {
                 //check if question exits in old columns
@@ -165,9 +161,6 @@ const QuizEdit3 = () => {
             //check if user confirms to delete
             //if already confirmed, proceed to delete
             if (confirm) {
-                // removedfields = fields.filter(field => field.)
-                // const test = fields.filter(field => field.categorie_name !== name)
-                // console.log(test)
                 for (let i = 0; i < fieldIds.length; i++) {
                     let id = fieldIds[i].id
                     if (fieldIds[i].row === confirmId)
@@ -214,7 +207,7 @@ const QuizEdit3 = () => {
                 url: url,
                 data: {
                     quiz_name: title,
-                    nr_of_rows: nr_of_rows - 1,
+                    nr_of_rows: nrOfRows - 1,
                     nr_of_categories: nr_of_categories,
                     author: user.user_id,
                 },
@@ -322,25 +315,29 @@ const QuizEdit3 = () => {
     }
     createGrid()
 
+    //a Warning if the required data is missing and user cannot proceed
+    const [showWarning, setShowWarning] = useState(false);
+
+    const handleCloseWarning = () => setShowWarning(false);
+
+    const handleShowWarning = () => setShowWarning(true);
     // After user edits all fields, the data is saved into fields
     const fillFields = () => {
-
-        var j = 0
-        for (let i = 0; i < question_text.length; i++) {
-            if (j === catIds.length) {
-                j = 0
+            var j = 0
+            for (let i = 0; i < question_text.length; i++) {
+                if (j === catIds.length) {
+                    j = 0
+                }
+                const obj = {
+                    point: +fieldPoints[i],
+                    question: +question_ids[i],
+                    categorie: +catIds[j],
+                    quiz: quizId
+                }
+                newfields.push(obj)
+                j = j + 1
             }
-            const obj = {
-                point: +fieldPoints[i],
-                question: +question_ids[i],
-                categorie: +catIds[j],
-                quiz: quizId
-            }
-            newfields.push(obj)
-            j = j + 1
-        }
-
-        //console.log(fields)
+        
     }
 
     //notify user that quiz is saved
@@ -353,41 +350,48 @@ const QuizEdit3 = () => {
     //post new fields in new rows to BACKEND
     const saveStep3 = (event) => {
         event.preventDefault()
-        fillFields()
-        for (let i = 0; i < question_text.length; i++) {
+        if (question_text.length !== nr_of_newrows * nr_of_categories) {
+            console.log(nr_of_newrows * nr_of_categories)
+            handleShowWarning()
+        }
+        else{
+            fillFields()
+            for (let i = 0; i < question_text.length; i++) {
+                axios(
+                    {
+                        method: "POST",
+                        url: `${API_BASE_URL}/api/field/`,
+                        data: {
+                            point: newfields[i].point,
+                            question_id: newfields[i].question,
+                            categorie: newfields[i].categorie,
+                            quiz: newfields[i].quiz
+                        },
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                ).then((response) => {
+                    //console.log(response.data)
+                })
+            }
             axios(
                 {
-                    method: "POST",
-                    url: `${API_BASE_URL}/api/field/`,
+                    method: "PUT",
+                    url: url,
                     data: {
-                        point: newfields[i].point,
-                        question_id: newfields[i].question,
-                        categorie: newfields[i].categorie,
-                        quiz: newfields[i].quiz
+                        quiz_name: title,
+                        nr_of_rows: nr_of_rows + newrows.length,
+                        nr_of_categories: nr_of_categories,
+                        author: user.user_id,
                     },
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response) => {
                 //console.log(response.data)
-            })
-        }
-        axios(
-            {
-                method: "PUT",
-                url: url,
-                data: {
-                    quiz_name: title,
-                    nr_of_rows: nr_of_rows + newrows.length,
-                    nr_of_categories: nr_of_categories,
-                    author: user.user_id,
-                },
-                headers: { 'Content-Type': 'application/json' }
             }
-        ).then((response) => {
-            //console.log(response.data)
+            )
+            handleShowSuccess()
+
         }
-        )
-        handleShowSuccess()
     }
 
 
@@ -395,7 +399,7 @@ const QuizEdit3 = () => {
         navigate("/Library/")
     }
     const prevStep = () => {
-        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nrOfRows, fields: fields } })
+        navigate("/EditQuiz2/" + quizId + "/", { state: { id: quizId, title: title, nr_of_categories: nr_of_categories, nr_of_rows: nrOfRows + nr_of_newrows, fields: fields } })
     }
 
     useEffect(
@@ -492,7 +496,7 @@ const QuizEdit3 = () => {
 
             <ModalSuccess showSuccess={showRemove} title={"Are you sure you want to remove this row?"} body={"All the fields on this row will also be deleted."}
                 handleCloseSuccess={handleClose1} onclick={confirmRemove} />
-
+            <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Oops! You forgot something"} body={"Edit all fields to proceed"} />
             <ModalWarning showWarning={showWarningQues} handleCloseWarning={handleCloseWarningQues} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
             <ModalSuccess showSuccess={showSuccess} title={"Quiz saved"} body={"You can keep editing or go back."}
                 handleCloseSuccess={handleCloseSuccess} onclick={handleCloseSuccess} />
