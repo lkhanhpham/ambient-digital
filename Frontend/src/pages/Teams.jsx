@@ -172,10 +172,11 @@ const Teams = () => {
         headers: { "Content-Type": "application/json" },
       }).then((response) => {
         // console.log(response.data);
-        setTeamId(response.data.id);
-        teamIds.push(response.data.id);
+        //setTeamId(response.data.id);
+        //teamIds.push(response.data.id);
+        window.location.reload();
       });
-      confirm();
+      //confirm();
       refresh();
     }
     event.preventDefault();
