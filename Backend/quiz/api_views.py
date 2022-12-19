@@ -65,6 +65,7 @@ class UserObtainView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retrie
 class TeamView(viewsets.ModelViewSet):
     serializer_class=TeamSerializer
     queryset=Team.objects.all()
+    queryset=Team.objects. order_by('team_name')
 
 class TeammateView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
     serializer_class= TeammateSerializer
