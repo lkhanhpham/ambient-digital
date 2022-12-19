@@ -35,12 +35,12 @@ class QuizAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retrie
 
 class QuestionAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = QuestionAuthorSerializer
-    queryset=User.objects.all()
+    queryset=MyUser.objects.all()
     lookup_field = 'id'
 
 class CategorieAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = CategorieAuthorSerializer
-    queryset=User.objects.all()
+    queryset=MyUser.objects.all()
     lookup_field = 'id'
 
 class RegisterView(viewsets.GenericViewSet,mixins.CreateModelMixin):

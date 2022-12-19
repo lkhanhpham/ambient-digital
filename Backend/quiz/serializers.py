@@ -156,13 +156,13 @@ class QuizAuthorSerializer(serializers.ModelSerializer):
 class QuestionAuthorSerializer(serializers.ModelSerializer):
     question_author=QuestionSerializer(read_only=True, many=True)
     class Meta:
-        model = User
+        model = MyUser
         fields =  ('id','username','question_author')
 
 class CategorieAuthorSerializer(serializers.ModelSerializer):
     categorie_author=CategorieSerializer(read_only=True, many=True)
     class Meta:
-        model = User
+        model = MyUser
         fields =  ('id','username','categorie_author')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
