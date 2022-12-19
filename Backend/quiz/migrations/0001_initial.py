@@ -14,129 +14,432 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MyUser',
+            name="MyUser",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=150, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('points', models.PositiveIntegerField(default=0)),
-                ('birth_date', models.DateField(blank=True, null=True)),
-                ('is_guest', models.BooleanField(default=False)),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        error_messages={
+                            "unique": "A user with that username already exists."
+                        },
+                        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        max_length=150,
+                        unique=True,
+                        validators=[
+                            django.contrib.auth.validators.UnicodeUsernameValidator()
+                        ],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, max_length=150, verbose_name="first name"
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True, max_length=150, verbose_name="last name"
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        blank=True, max_length=254, verbose_name="email address"
+                    ),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                        verbose_name="active",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                ("points", models.PositiveIntegerField(default=0)),
+                ("birth_date", models.DateField(blank=True, null=True)),
+                ("is_guest", models.BooleanField(default=False)),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='Categorie',
+            name="Categorie",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('categorie_name', models.CharField(max_length=200)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categorie_author', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("categorie_name", models.CharField(max_length=200)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="categorie_author",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DefaultAnswer',
+            name="DefaultAnswer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.CharField(max_length=500)),
-                ('is_correct', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.CharField(max_length=500)),
+                ("is_correct", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Quiz',
+            name="Quiz",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quiz_name', models.CharField(max_length=200)),
-                ('pub_date', models.DateTimeField(auto_now_add=True, verbose_name='date published')),
-                ('last_edit', models.DateTimeField(auto_now=True, verbose_name='date edited')),
-                ('nr_of_rows', models.PositiveIntegerField(default=5, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)])),
-                ('nr_of_categories', models.PositiveIntegerField(default=5, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)])),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quiz_author', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quiz_name", models.CharField(max_length=200)),
+                (
+                    "pub_date",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="date published"
+                    ),
+                ),
+                (
+                    "last_edit",
+                    models.DateTimeField(auto_now=True, verbose_name="date edited"),
+                ),
+                (
+                    "nr_of_rows",
+                    models.PositiveIntegerField(
+                        default=5,
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(10),
+                        ],
+                    ),
+                ),
+                (
+                    "nr_of_categories",
+                    models.PositiveIntegerField(
+                        default=5,
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(10),
+                        ],
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="quiz_author",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Team',
+            name="Team",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('team_name', models.CharField(max_length=200)),
-                ('team_points', models.PositiveIntegerField(default=0)),
-                ('pub_date', models.DateTimeField(auto_now_add=True, verbose_name='date published')),
-                ('last_edit', models.DateTimeField(auto_now=True, verbose_name='date edited')),
-                ('quiz', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='team_quiz', to='quiz.quiz')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("team_name", models.CharField(max_length=200)),
+                ("team_points", models.PositiveIntegerField(default=0)),
+                (
+                    "pub_date",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="date published"
+                    ),
+                ),
+                (
+                    "last_edit",
+                    models.DateTimeField(auto_now=True, verbose_name="date edited"),
+                ),
+                (
+                    "quiz",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="team_quiz",
+                        to="quiz.quiz",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TeamMember',
+            name="TeamMember",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='teamMember_member', to=settings.AUTH_USER_MODEL)),
-                ('quiz', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='teamMember_quiz', to='quiz.quiz')),
-                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='teamMember_team', to='quiz.team')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="teamMember_member",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "quiz",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="teamMember_quiz",
+                        to="quiz.quiz",
+                    ),
+                ),
+                (
+                    "team",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="teamMember_team",
+                        to="quiz.team",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question_text', models.CharField(default='', max_length=500)),
-                ('pub_date', models.DateTimeField(auto_now_add=True, verbose_name='date published')),
-                ('last_edit', models.DateTimeField(auto_now=True, verbose_name='date edited')),
-                ('multiplayer', models.BooleanField(default=False)),
-                ('question_type', models.CharField(choices=[('MC', 'Multiple choice'), ('SC', 'Simple question'), ('EQ', 'Estimation question')], default='SC', max_length=2)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='question_author', to=settings.AUTH_USER_MODEL)),
-                ('default_answer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='question_default_answer', to='quiz.defaultanswer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("question_text", models.CharField(default="", max_length=500)),
+                (
+                    "pub_date",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="date published"
+                    ),
+                ),
+                (
+                    "last_edit",
+                    models.DateTimeField(auto_now=True, verbose_name="date edited"),
+                ),
+                ("multiplayer", models.BooleanField(default=False)),
+                (
+                    "question_type",
+                    models.CharField(
+                        choices=[
+                            ("MC", "Multiple choice"),
+                            ("SC", "Simple question"),
+                            ("EQ", "Estimation question"),
+                        ],
+                        default="SC",
+                        max_length=2,
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="question_author",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "default_answer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="question_default_answer",
+                        to="quiz.defaultanswer",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='FurtherAnswer',
+            name="FurtherAnswer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.CharField(max_length=500)),
-                ('is_correct', models.BooleanField(default=False)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='question_answer_option', to='quiz.question')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.CharField(max_length=500)),
+                ("is_correct", models.BooleanField(default=False)),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="question_answer_option",
+                        to="quiz.question",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Field',
+            name="Field",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('point', models.PositiveIntegerField(default=100, validators=[django.core.validators.MaxValueValidator(1000)])),
-                ('categorie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='field_categorie', to='quiz.categorie')),
-                ('question', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='field_question', to='quiz.question')),
-                ('quiz', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='field_quiz', to='quiz.quiz')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "point",
+                    models.PositiveIntegerField(
+                        default=100,
+                        validators=[django.core.validators.MaxValueValidator(1000)],
+                    ),
+                ),
+                (
+                    "categorie",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="field_categorie",
+                        to="quiz.categorie",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="field_question",
+                        to="quiz.question",
+                    ),
+                ),
+                (
+                    "quiz",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="field_quiz",
+                        to="quiz.quiz",
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='teammember',
-            constraint=models.UniqueConstraint(fields=('quiz', 'member'), name='user_once_per_quiz'),
+            model_name="teammember",
+            constraint=models.UniqueConstraint(
+                fields=("quiz", "member"), name="user_once_per_quiz"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='teammember',
-            constraint=models.UniqueConstraint(fields=('team', 'member'), name='member_once_per_team'),
+            model_name="teammember",
+            constraint=models.UniqueConstraint(
+                fields=("team", "member"), name="member_once_per_team"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='field',
-            constraint=models.UniqueConstraint(fields=('quiz', 'question'), name='unique_question_quiz'),
+            model_name="field",
+            constraint=models.UniqueConstraint(
+                fields=("quiz", "question"), name="unique_question_quiz"
+            ),
         ),
     ]

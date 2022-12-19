@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
 import Select from "react-select";
-import ModalWarning from "./ModalWarning";
 
 // For each created quiz one quizcard is rendered
 const TeamCard = (props) => {
@@ -64,7 +62,7 @@ const TeamCard = (props) => {
       selectedUsers.pop();
     }
     members.forEach((element) => {
-      const obj = userOptions.find((user) => user.value == element.member);
+      const obj = userOptions.find((user) => user.value === element.member);
       // console.log(obj)
       defaultOptions.push(obj);
       selectedUsers.push(element.member);
