@@ -1,13 +1,19 @@
 from rest_framework import serializers
-from .models import Quiz, Categorie, Question, Field, FurtherAnswer, User, DefaultAnswer
+from .models import Quiz, Categorie, Question, Field, FurtherAnswer, MyUser, DefaultAnswer, Team, TeamMember
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 
+class QuizTeamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Team
+        fields=('id','team_name','team_points')
+
 class QuizSerializer(serializers.ModelSerializer):
+    team_quiz=QuizTeamsSerializer(many=True,read_only=True)
     class Meta:
         model = Quiz
-        fields = ('id','quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author')
+        fields = ('id','quiz_name' ,'pub_date', 'nr_of_rows', 'nr_of_categories','author','team_quiz',)
 
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +29,9 @@ class DefaultAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model=DefaultAnswer
         fields='__all__'
+    def create(self, validated_data: dict):
+        super.create(validated_data)
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     question_answer_option=AnswerSerializer(many=True, required=False)
@@ -125,6 +134,7 @@ class FieldSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class WholeQuizSerializer(serializers.ModelSerializer):
     field_quiz=FieldSerializer(many=True, read_only=True)
 
@@ -140,19 +150,19 @@ class AuthorAssociatedSerializer(serializers.ModelSerializer):
 class QuizAuthorSerializer(serializers.ModelSerializer):
     quiz_author=AuthorAssociatedSerializer(read_only=True, many=True)
     class Meta:
-        model = User
+        model = MyUser
         fields =  ('id','username','quiz_author')
 
 class QuestionAuthorSerializer(serializers.ModelSerializer):
     question_author=QuestionSerializer(read_only=True, many=True)
     class Meta:
-        model = User
+        model = MyUser
         fields =  ('id','username','question_author')
 
 class CategorieAuthorSerializer(serializers.ModelSerializer):
     categorie_author=CategorieSerializer(read_only=True, many=True)
     class Meta:
-        model = User
+        model = MyUser
         fields =  ('id','username','categorie_author')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -168,10 +178,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
     email = serializers.EmailField(
-            required=True,validators=[UniqueValidator(queryset=User.objects.all())])
+            required=True,validators=[UniqueValidator(queryset=MyUser.objects.all())])
 
     class Meta:
-        model = User
+        model = MyUser
         fields = ('username', 'password', 'password2','email')
 
     def validate(self, attrs):
@@ -181,7 +191,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = MyUser.objects.create(
             username=validated_data['username'],
             email=validated_data['email'])
             
@@ -189,3 +199,98 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class GuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ('username','is_guest')
+        read_only_fields=('is_guest',)
+
+    def create(self, validated_data):
+        user = MyUser.objects.create(
+            username=validated_data['username'],
+            is_guest=True
+            )
+            
+        user.save()
+
+        return user
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MyUser
+        fields=('id','username','is_guest','is_superuser','points','email')
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TeamMember
+        fields=('id','team','member','quiz')
+        read_only_fields=('team','quiz','id')
+
+class TeamSerializer(serializers.ModelSerializer):
+    teamMember_team= TeamMemberSerializer(many=True, required=False)
+
+    class Meta:
+        model=Team
+        fields=('id','team_name','team_points','quiz','teamMember_team')
+
+    def create(self, validated_data: dict):
+        team_member_list = []
+        if validated_data.get('teamMember_team'):
+            team_member_list = validated_data.pop('teamMember_team')
+
+        created_team = super().create(validated_data)
+
+        for teammember in team_member_list:
+            TeamMember.objects.create(
+                quiz=created_team.quiz,
+                member=teammember.get('member'),
+                team=created_team
+            )
+
+        return created_team
+
+    def update(self, instance, validated_data):
+
+        TeamMember.objects.filter(team=instance.id).delete()
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.quiz= validated_data.get('quiz',instance.quiz)
+        instance.team_name = validated_data.get('team_name', instance.team_name)
+        instance.team_points = validated_data.get('team_points', instance.team_points)
+
+        team_member_list = []
+        if validated_data.get('teamMember_team'):
+            team_member_list = validated_data.pop('teamMember_team')
+
+        for teammember in team_member_list:
+            TeamMember.objects.create(
+                quiz=instance.quiz,
+                member=teammember.get('member'),
+                team=instance
+            )
+
+        instance.save()
+        return instance
+
+class TeammateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TeamMember
+        fields=('id','team','member','quiz')
+        read_only_fields=('team','quiz','id')
+
+class AddTeammateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TeamMember
+        fields=('id','team','member','quiz')
+        read_only_fields=('id','quiz')
+
+    def create(self, validated_data: dict):
+        team_instance = validated_data.get('team')
+
+        created_member = TeamMember.objects.create(
+                team=team_instance,
+                member=validated_data.get('member'),
+                quiz=team_instance.quiz,
+            )
+        return created_member

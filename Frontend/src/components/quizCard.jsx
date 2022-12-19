@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
 
 // For each created quiz one quizcard is rendered
 const Quiz = (props) => {
@@ -18,7 +18,7 @@ const Quiz = (props) => {
             console.log("Failed Network request")
 
         }
-        
+
     }
 
     const display = (event) => {
@@ -30,7 +30,13 @@ const Quiz = (props) => {
         console.log(status);
         navigate("/Quiz/" + props.id + "/", { state: { id: props.id, title: props.title, nr_of_categories: props.nr_of_categories,nr_of_rows: props.nr_of_rows, fields: fields } })
     }
-        useEffect(
+
+    const addTeam = (event) => {
+        event.preventDefault()
+        navigate("/QuizCreator/TeamsCreator/", { state: { quizId: props.id, title: props.title, nr_of_categories: props.nr_of_categories } })
+    }
+
+    useEffect(
         () => {
             getAllFields()
         }, []
@@ -56,11 +62,14 @@ const Quiz = (props) => {
             <div className='d-flex justify-content-center p-3'>
                 <p className='quiz-title' onClick={display}> {props.title} </p>
             </div>
-            <div className='d-flex justify-content-center p-3'>
+            <div className='d-flex justify-content-center pt-3'>
                 <p className='body-text'> {props.nr_of_categories} categories</p>
             </div>
-            <div className='d-flex justify-content-center p-3'>
+            <div className='d-flex justify-content-center'>
                 <p className='body-text text-muted'> Created: {props.pub_date}</p>
+            </div>
+            <div className='d-flex justify-content-center my-div'>
+                <button className="col my-btn" onClick={addTeam}>Add teams</button>
             </div>
             <div className='d-flex justify-content-center p-3'>
                 <div className='row '>
@@ -90,7 +99,11 @@ const Quiz = (props) => {
                     color:blue;
                     cursor: pointer;
                 }
-                  `
+                .my-div{
+                    padding-left: 80px;
+                    padding-right: 80px;
+                }
+                `
                 }
             </style>
         </div>

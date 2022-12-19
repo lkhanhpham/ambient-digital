@@ -29,6 +29,11 @@ router.register(r'field', api_views.FieldView, 'field')  # localhost:8000/api/fi
 router.register(r'wholequiz', api_views.WholeQuizView, 'wholequiz')  # localhost:8000/api/wholequiz/
 router.register(r'authorquiz',api_views.QuizAuthorView,'authorquiz')
 router.register(r'registration',api_views.RegisterView,'registration')
+router.register(r'guestregistration',api_views.RegisterGuestView,'guestregistration')
+router.register(r'user',api_views.UserObtainView,'user')
+router.register(r'Teams',api_views.TeamView,'Teams')
+router.register(r'Teammates',api_views.TeammateView,'Teammates')
+router.register(r'AddTeammates',api_views.AddTeammateView,'AddTeammates')
 router.register(r'authorquestion',api_views.QuestionAuthorView,'authorquestion')
 router.register(r'authorcategorie',api_views.CategorieAuthorView,'authorcategorie')
 

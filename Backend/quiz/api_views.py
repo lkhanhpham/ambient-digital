@@ -1,8 +1,8 @@
-from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer
-from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer
+from .serializers import QuizSerializer, CategorieSerializer, QuestionSerializer, FieldSerializer, UserSerializer, TeamSerializer, TeammateSerializer
+from .serializers import WholeQuizSerializer,QuizAuthorSerializer, RegisterSerializer, MyTokenObtainPairSerializer, GuestSerializer, AddTeammateSerializer
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins      
-from .models import Quiz, Categorie, Question, Field, User
+from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember
 from rest_framework.permissions import AllowAny    
 from rest_framework_simplejwt.views import TokenObtainPairView 
 from django.db.models import Prefetch       
@@ -30,23 +30,47 @@ class WholeQuizView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.Retriev
 
 class QuizAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = QuizAuthorSerializer
-    queryset=User.objects.all()
+    queryset=MyUser.objects.all()
     lookup_field = 'id'
 
 class QuestionAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = QuestionAuthorSerializer
-    queryset=User.objects.all()
+    queryset=MyUser.objects.all()
     lookup_field = 'id'
 
 class CategorieAuthorView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
     serializer_class = CategorieAuthorSerializer
-    queryset=User.objects.all()
+    queryset=MyUser.objects.all()
     lookup_field = 'id'
 
 class RegisterView(viewsets.GenericViewSet,mixins.CreateModelMixin):
     serializer_class = RegisterSerializer
-    queryset = User.objects.all()
+    queryset = MyUser.objects.all()
     permission_classes = (AllowAny,)
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class RegisterGuestView(viewsets.GenericViewSet,mixins.CreateModelMixin):
+    serializer_class = GuestSerializer
+    queryset = MyUser.objects.all()
+    permission_classes = (AllowAny,)
+
+class UserObtainView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin):
+    serializer_class=UserSerializer
+    queryset=MyUser.objects.all()
+    permission_classes = (AllowAny,)
+
+class TeamView(viewsets.ModelViewSet):
+    serializer_class=TeamSerializer
+    queryset=Team.objects.all()
+    queryset=Team.objects. order_by('team_name')
+
+class TeammateView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
+    serializer_class= TeammateSerializer
+    queryset=TeamMember.objects.all()
+
+class AddTeammateView(viewsets.GenericViewSet,mixins.CreateModelMixin,mixins.DestroyModelMixin):
+    serializer_class = AddTeammateSerializer
+    queryset = TeamMember.objects.all()

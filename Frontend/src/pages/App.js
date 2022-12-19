@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 import Library from "./Library";
 import QuizForm from "./QuizForm";
+import Teams from "./Teams";
 import QuestionForm from "./QuestionForm";
 import QuestionFormMC from "./QuestionFormMC";
 import NewQuestion from "./NewQuestion";
@@ -13,6 +14,7 @@ import CategoryCreator from "./CategoryCreator";
 import QuizShow from "./QuizShow"
 import QuestionFormEdit from "./QuestionFormEdit";
 import QuestionFormEditMC from "./QuestionFormEditMC";
+import GuestCreator from "./GuestCreator";
 import Login from "./LoginPage";
 import Home from "./HomePage";
 import Registration from "./RegisterPage";
@@ -23,6 +25,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 import QuizEdit1 from "./QuizEdit_step1";
 import QuizEdit2 from "./QuizEdit_step2";
 import QuizEdit3 from "./QuizEdit_step3";
+
 
 //the Library, which contains all quizes from one author, and the header are put together
 function App() {
@@ -49,6 +52,8 @@ function App() {
                 <Route exact path="/EditQuiz1/*" element={<ProtectedRoute><QuizEdit1 /></ProtectedRoute>} />
                 <Route exact path="/EditQuiz2/*" element={<ProtectedRoute><QuizEdit2 /></ProtectedRoute>} />
                 <Route exact path="/EditQuiz3/*" element={<ProtectedRoute><QuizEdit3 /></ProtectedRoute>} />
+                <Route path="QuizCreator/TeamsCreator" element={<ProtectedRoute> <Teams/></ProtectedRoute>} />
+                <Route path="/CreateGuest/*" element={<ProtectedRoute><GuestCreator/></ProtectedRoute>} /> 
               </Routes>
           </AuthProvider>
       </div>

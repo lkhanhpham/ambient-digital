@@ -23,7 +23,7 @@ const NewQuiz2 = () => {
     const [position, setPosition] = useState(0)
     const [questions, setQuestions] = useState([])
     //array that stores all the question texts (index = row_index + col_index*nr_of_row)
-    const [question_text] = useState([""])
+    const [question_text] = useState([])
     const [question_ids] = useState([0])
     //array that stores the points of all the fields
     const [fieldPoints] = useState([])
@@ -134,15 +134,15 @@ const NewQuiz2 = () => {
     }
 
 
-    const nextStep = () => {
-        checkValid(chosen)
-        if (valid == true) {
-            handleShowSuccess()
-        } else {
-            handleShowWarning()
-        }
+    // const nextStep = () => {
+    //     checkValid(chosen)
+    //     if (valid == true) {
+    //         handleShowSuccess()
+    //     } else {
+    //         handleShowWarning()
+    //     }
 
-    }
+    // }
 
     // After user edits all fields, the data is saved into fields
     const fillFields = () => {
@@ -161,8 +161,8 @@ const NewQuiz2 = () => {
         //console.log(fields)
     }
     const navigate = useNavigate();
-    const createBackendFields = (event) => {
-        event.preventDefault()
+    const createBackendFields = () => {
+       
         fillFields()
         for (let i = 0; i < question_text.length; i++) {
             axios(
@@ -203,9 +203,34 @@ const NewQuiz2 = () => {
 
     const update = () => {
         var select1 = document.getElementById('questions')
+
         //console.log(select1.options[select1.selectedIndex].value);
     }
 
+    const saveQuiz = () => {
+        checkValid(chosen)
+        if (valid === true) {
+            createBackendFields()
+
+        } else {
+            handleShowWarning()
+
+        }
+
+    }
+
+    const goToTeams = () => {
+        navigate("/QuizCreator/TeamsCreator", {
+            state: {
+                // quiz_name: quiz_name, nr_of_rows: nr_of_rows,
+                // nr_of_categories: nr_of_categories, categories: cat_name,
+                quizId: quizId
+            }
+        },)
+    }
+    const goBack = () => {
+        navigate("../Library",)
+    }
 
     useEffect(
         () => {
@@ -282,11 +307,11 @@ const NewQuiz2 = () => {
 
             <ModalWarning showWarning={showWarning1} handleCloseWarning={handleCloseWarning1} title={"Question is not unique."} body={"Looks like this question exists in your quiz. Please choose another question."} />
 
-            <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played!"} onclick={createBackendFields} />
+            <ModalSuccess showSuccess={showSuccess} title={"Finished!"} body={"Your quiz is finished and ready to be played! Click on continue to create some teams for your quiz or go back to Library"} onclick={goToTeams} goback={true} onclick1={goBack} />
 
             <div className="d-flex justify-content-end p-3">
 
-                <button onClick={nextStep} className="btn btn-primary">Next</button>
+                <button onClick={saveQuiz} className="btn btn-primary">Save</button>
 
             </div>
 
