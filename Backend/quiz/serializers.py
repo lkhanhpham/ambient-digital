@@ -18,7 +18,7 @@ class QuizSerializer(serializers.ModelSerializer):
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
-        fields = '__all__'
+        fields = ('id','categorie_name','author')
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -101,16 +101,19 @@ class QuestionSerializer(serializers.ModelSerializer):
 #When this happens replace this classs with the FieldSerializer in the other branch, because the model has been updated
 class FieldSerializer(serializers.ModelSerializer):
     categorie_name= serializers.ReadOnlyField(source='categorie.categorie_name')
-    question_id=serializers.IntegerField(source='question.id')
+    question_id=serializers.IntegerField(source='question.id', allow_null = True)
     question= QuestionSerializer(read_only=True)
 
     class Meta:
         model = Field
-        fields = ('point','categorie','categorie_name','quiz','question_id','question')
+        fields = ('id','point','categorie','categorie_name','quiz','question_id','question')
     
     def create(self, validated_data: dict):
         question_instance = validated_data.get('question')
-        question_instance = Question.objects.get(id=question_instance.get('id'))
+        if(question_instance.get('id') is not None):
+            question_instance = Question.objects.get(id=question_instance.get('id'))
+        else:
+            question_instance = None
 
         created_field = Field.objects.create(
                 point=validated_data.get('point'),
@@ -149,6 +152,18 @@ class QuizAuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields =  ('id','username','quiz_author')
+
+class QuestionAuthorSerializer(serializers.ModelSerializer):
+    question_author=QuestionSerializer(read_only=True, many=True)
+    class Meta:
+        model = User
+        fields =  ('id','username','question_author')
+
+class CategorieAuthorSerializer(serializers.ModelSerializer):
+    categorie_author=CategorieSerializer(read_only=True, many=True)
+    class Meta:
+        model = User
+        fields =  ('id','username','categorie_author')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

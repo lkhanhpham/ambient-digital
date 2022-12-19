@@ -2,14 +2,17 @@ import { useLocation } from "react-router-dom";
 import Field from "../components/Field";
 import CatField from "../components/CatField";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Modal from 'react-bootstrap/Modal';
 import ModalWarning from "../components/ModalWarning";
 import ModalSuccess from "../components/ModalSuccess";
 import axios from "axios"
 import { API_BASE_URL } from "../constants.ts";
+import AuthContext from "../context/AuthContext";
+import Select from "react-select"
 
 const NewQuiz2 = () => {
+    const { user } = useContext(AuthContext);
     const location = useLocation();
     const quiz_name = location.state.quiz_name
     const nr_of_rows = location.state.nr_of_rows
@@ -23,11 +26,10 @@ const NewQuiz2 = () => {
     const [question_text] = useState([])
     const [question_ids] = useState([0])
     //array that stores the points of all the fields
-    const [fieldPoints] = useState([100])
+    const [fieldPoints] = useState([])
     const [chosen] = useState([false])
 
     const [valid, setValid] = useState(false)
-
     const [show, setShow] = useState(false);
     //close the Question form
     const handleClose = () => setShow(false);
@@ -35,9 +37,17 @@ const NewQuiz2 = () => {
     const handleShow = (x, y, length) => {
         setShow(true);
         setPosition(x + y * length)
+        setPoint(fieldPoints[x + y * length])
     }
-
-
+    //options of points to choose for a field
+    const pointOptions = [
+        {value: "100", label: "100"},
+        {value: "200", label: "200"},
+        {value: "300", label: "300"},
+        {value: "400", label: "400"},
+        {value: "500", label: "500"},
+    ]
+    const[point, setPoint] = useState(100)
     const [showSuccess, setShowSuccess] = useState(false);
     //show the success notification
     const handleShowSuccess = () => setShowSuccess(true);
@@ -62,8 +72,14 @@ const NewQuiz2 = () => {
         var points = 100;
         const fields = []
         for (let k = 0; k < nr_of_rows; k++) {
+            if (k % nr_of_rows == 0) {
+                points = 100
+            }
+            if (!chosen[k + i * nr_of_rows]) {
+                fieldPoints[k + i * nr_of_rows] = points
+            }
             fields.push(<Field key={k} points={fieldPoints[k + i * nr_of_rows]} category={catIds[i]} row={k} col={i} handleShow={() => handleShow(k, i, nr_of_rows)} question_text={question_text[k + i * nr_of_rows]} chosen={chosen[k + i * nr_of_rows]} />)
-            points += 100;
+            points += 100
         }
         //create an array that stores all the fields in a column
         rows.push(<div key={i} className="d-flex flex-column justify-content-center">{fields}</div>)
@@ -82,28 +98,28 @@ const NewQuiz2 = () => {
 
     function saveQuestion(position) {
         var select1 = document.getElementById('questions')
-        var select2 = document.getElementById('points')
         const text = select1.options[select1.selectedIndex].text
         const id = select1.options[select1.selectedIndex].value
-
-        if (question_text[position] == null) {
+        // console.log(point)
+        if (question_text[position] === null || (question_text[position] !== null && question_text[position] !== text)) {
             if (!question_text.includes(text)) {
                 question_text[position] = text
                 question_ids[position] = id
                 chosen[position] = true
-                fieldPoints[position] = select2.options[select2.selectedIndex].value
+                fieldPoints[position] = point
             }
-            else{
+            else {
                 handleShowWarning1()
             }
         }
-        else if(question_text[position] != null && question_text[position] ===text ){
+        if (question_text[position] !== null && question_text[position] == text) {
             chosen[position] = true
-            fieldPoints[position] = select2.options[select2.selectedIndex].value
+            fieldPoints[position] = point
         }
         // console.log(select1.options[select1.selectedIndex].value)
         checkValid(chosen)
         handleClose()
+
     }
 
     //check if user has chosen all fields
@@ -165,17 +181,18 @@ const NewQuiz2 = () => {
                 //console.log(response.data)
             })
         }
-        handleShowSuccess()
+        // navigate back to library page
+        navigate("../../Library/")
 
     }
 
     //fetch all created questions
     const getAllQues = async () => {
-        const response = await fetch(`${API_BASE_URL}/api/question/`)
+        const response = await fetch(`${API_BASE_URL}/api/authorquestion/${user.user_id}`)
         const data = await response.json()
         if (response.ok) {
             //console.log(data)
-            setQuestions(data)
+            setQuestions(data.question_author)
         }
         else {
             //console.log(response.status)
@@ -258,13 +275,19 @@ const NewQuiz2 = () => {
                             ))}
                         </select>
                         <h1 className="small-title mb-2">Points</h1>
-                        <select className="form-control" id="points" onChange={update}>
+                        {/* <select className="form-control" id="points" onChange={update}>
                             <option value={100}>100</option>
-                            <option value={200}>200</option>
+                            <option  selected value={200}>200</option>
                             <option value={300}>300</option>
                             <option value={400}>400</option>
                             <option value={500}>500</option>
-                        </select>
+                        </select> */}
+                        <Select
+                            placeholder="Choose points"
+                            defaultValue={pointOptions.find(option => option.value === fieldPoints[position].toString())}
+                            options={pointOptions}
+                            onChange = {(choice)=>setPoint(choice.value)}
+                        />
                     </form>
                     <Link to="../../QuestionCreator/SC" target='_blank'>
                         <button className="small-button mt-3">Create question</button>

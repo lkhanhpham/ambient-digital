@@ -1,39 +1,45 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import axios from "axios"
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ModalSuccess from "../components/ModalSuccess";
-import {API_BASE_URL} from "../constants.ts";
+import { API_BASE_URL } from "../constants.ts";
+import AuthContext from "../context/AuthContext";
+import ModalWarning from "../components/ModalWarning";
 const CategoryCreator = () => {
-
+    const { user } = useContext(AuthContext);
     const [catName, setCatName] = useState('')
     const [showSuccess, setShowSuccess] = useState(false);
     //show the success notification
     const handleShowSuccess = () => setShowSuccess(true);
     const handleCloseSuccess = () => setShowSuccess(false)
+
+    const [showWarning, setShowWarning] = useState(false)
+    const handleShowWarning =()=> setShowWarning(true)
+    const handleCloseWarning =()=> setShowWarning(false)
     function createCat(event) {
-
-        axios(
-            {
-                method: "POST",
-                url: `${API_BASE_URL}/api/categorie/`,
-                data: {
-                    categorie_name: catName,
-                },
-                headers: { 'Content-Type': 'application/json' }
-            }
-        ).then((response) => {
-            //console.log(response.data)
-            setCatName("")
-            navigateBack()
-        })
+        if (catName === '') {
+            handleShowWarning()
+        }
+        else {
+            axios(
+                {
+                    method: "POST",
+                    url: `${API_BASE_URL}/api/categorie/`,
+                    data: {
+                        categorie_name: catName,
+                        author: user.user_id
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then((response) => {
+                //console.log(response.data)
+                handleShowSuccess()
+                setCatName("")
+            })
+        }
 
         event.preventDefault()
-    }
-    function navigateBack(event) {
-        handleShowSuccess()
-        event.preventDefault()
-
     }
 
     return (
@@ -60,12 +66,12 @@ const CategoryCreator = () => {
                         <Link to="/Library">
                             <button className="btn btn-secondary me-2" >Cancel</button>
                         </Link>
-
                         <button onClick={createCat} className="btn btn-primary">Create</button>
 
                     </div>
                 </div>
             </div>
+            <ModalWarning showWarning={showWarning} handleCloseWarning={handleCloseWarning} title={"Not so fast buddy!"} body={"Please type in a category name."} />
             <ModalSuccess showSuccess={showSuccess} handleCloseSuccess={handleCloseSuccess} title={"Category created"} body={"You can now close this tab and continue or create some more categories."} onclick={handleCloseSuccess} />
             <style jsx='true'>{`
         label{

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 // import Modal from 'react-bootstrap/Modal';
 const CatField = (props) => {
-
     return (
         <>
-            <div onClick={props.handleShow} className="custom-card d-flex justify-content-center">
+            <div onClick={props.handleShow} className="custom-card d-flex  rounded-0 justify-content-center">
                 {props.chosen? (
-                    <p className="align-self-center">
+                    <p className="align-self-center text-wrap text-break" style={{overflowWrap: 'break-word'}}>
                     {props.cat_name}</p>
                 ):(
-                    <p className="align-self-center">
+                    <p className="align-self-center text-wrap text-break" style={{overflowWrap: 'break-word'}}>
                     {props.category_name}</p>
                 )}
                 
@@ -22,11 +21,12 @@ const CatField = (props) => {
     .custom-card{
             width: 160px;
             height: 80px;
-            border: solid 1px black;
+            border: solid 2px black;
             border-radius: 8px;
+            background-color:#292b2c;
+            color:white;
     }
-    .custom-card:hover{
-        background-color: green;
+    .custom-card:hover{ 
         cursor: pointer;
     }
         `

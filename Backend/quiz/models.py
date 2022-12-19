@@ -57,6 +57,7 @@ class DefaultAnswer(models.Model):
         return self.text
     
 class Question(models.Model):
+   
     MULTI = 'MC'
     SIMPLE = 'SC'
     ESTIMATE = 'EQ'

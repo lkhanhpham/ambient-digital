@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Quiz from './quizCard'
 import { Link, useNavigate} from "react-router-dom";
 import axios from "axios"
 import {API_BASE_URL} from "../constants.ts";
+import AuthContext from "../context/AuthContext";
 //all created quizes are inserted into the quizview
 const QuizView = () => {
     const [quizzes, setQuizzes] = useState([])
     const navigate = useNavigate()
+    const { user } = useContext(AuthContext);
 
     const getAllQuizzes = async () => {
-        const response = await fetch(`${API_BASE_URL}/api/wholequiz/`)
+        const response = await fetch(`${API_BASE_URL}/api/quiz/`)
         const data = await response.json()
         if (response.ok) {
-            //console.log(data)
+            console.log(data)
             setQuizzes(data)
         }
         else {
@@ -43,18 +45,19 @@ const QuizView = () => {
         window.location.reload();
     }
 
-    const editItem = async (quizId) => {
-        // edit function
-        //leads uder to the quizEditor page for the chosen quiz
-        //console.log(quizId)
-        navigate("/QuizCreator/EditQuiz", 
-            {state: 
-            {   
-                id: quizId, 
+    var arr=[]
+    function functionOwn(){
+        quizzes.forEach(element => {
+            if(element.author===user.user_id && quizzes.length > 0){
+                arr.push(element)
+            }else{
             }
-        } 
-        )
-
+        });
+        if(arr.length>0){
+            return true
+        }else{
+            return false
+        }
     }
 
     return (
@@ -67,23 +70,20 @@ const QuizView = () => {
                 </div>
                 <div className="card-body scrollable ">
                     <div className="">
-                        {quizzes.length > 0 ?
+                        {functionOwn() ?
                             (<div className='mx-auto align-items-center justify-content-center'>
                             <div className='d-block'>
-                                {quizzes.map((item) => (
-
+                                {arr.map((item) => (
                                     <Quiz
                                         key={item.id}
                                         id = {item.id}
                                         title={item.quiz_name}
                                         pub_date={item.pub_date.substring(0,10)}
                                         nr_of_categories={item.nr_of_categories}
+                                        nr_of_rows = {item.nr_of_rows}
                                         deleteItem ={() => deleteItem(item.id)}
-                                        editItem ={() => editItem(item.id)}
                                     />
-                                )
-                                )
-                                }
+                                ))}
                             </div>
 
                             </div>

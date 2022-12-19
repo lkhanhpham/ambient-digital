@@ -2,11 +2,13 @@ import { useState } from "react"
 import axios from "axios"
 import { Link, useNavigate} from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import {React, useEffect } from 'react';
+import {React, useEffect, useContext } from 'react';
 import Question from '../components/QuestionCard';
 import $ from "jquery";
 import {API_BASE_URL} from "../constants.ts";
-
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import AuthContext from "../context/AuthContext";
 
 
 const QuestionFormEdit = (id ) => {
@@ -21,6 +23,7 @@ const QuestionFormEdit = (id ) => {
     const [questionText, setQuestionText] = useState('')
     const [defaultAnswer, setDefaultAnswer] = useState('')
     const [author, setAuthorId] = useState('')
+    const { user } = useContext(AuthContext);
 
     const [questiontype, setQuestionType] = useState('MC')
     const [questionAnswerOption1, setQuestionAnswerOption1] = useState('')
@@ -29,6 +32,26 @@ const QuestionFormEdit = (id ) => {
     const [questionAnswerOption1b, setQuestionAnswerOption1b] = useState('')
     const [questionAnswerOption2b, setQuestionAnswerOption2b] = useState('')
     const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState('')
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
+        setShow(true)
+    };
+    const handleClose2 = () => setShow2(false);
+    const handleShow2 = (event) => {
+        if(questionText.length!==0 && defaultAnswer.length!==0&& questionAnswerOption1.length!==0&&
+            questionAnswerOption2.length!==0&&questionAnswerOption3.length!==0&&questionAnswerOption1.length!==0){
+            setShow3(true)
+            
+        }else{
+            setShow2(true)
+        }
+    };
+
+    const [show2, setShow2] = useState(false);
+    const [show3, setShow3] = useState(false);
+    const handleClose3 = () => setShow3(false);
     
 
     const $ = require( "jquery" );
@@ -36,7 +59,6 @@ const QuestionFormEdit = (id ) => {
     
     function deleteItem(event){
         event.preventDefault()
-        if (window.confirm('Do you really want to delete this question?')){
             axios(
                 {
                     method: "DELETE",
@@ -49,9 +71,6 @@ const QuestionFormEdit = (id ) => {
 
             navigate("/Library", 
             )
-        }else{
-            // They clicked no
-        }
         
     }
 
@@ -62,7 +81,7 @@ const QuestionFormEdit = (id ) => {
             setQuiz(data)
             setQuestionText(data.question_text)
             setDefaultAnswer(data.default_answer)
-            setAuthorId(1)
+            setAuthorId(user.user_id)
             setQuestionType(data.question_type)
 
             setQuestionAnswerOption1(data.question_answer_option[0].text)
@@ -94,7 +113,7 @@ const QuestionFormEdit = (id ) => {
                     question_text: questionText,
                     default_answer: defaultAnswer,
                     question_type: questiontype,
-                    author: 1,
+                    author: user.user_id,
                     question_answer_option:[
                         {
                             text: questionAnswerOption1,
@@ -118,30 +137,8 @@ const QuestionFormEdit = (id ) => {
         })
         setAuthorId(1)
         event.preventDefault()
-        navigate("/QuestionCreator/NewQuestion", 
-            {state: 
-                { 
-                    question_text: questionText,
-                default_answer: defaultAnswer,
-                question_type: questiontype,
-                author: 1,
-                question_answer_option:[
-                    {
-                        text: questionAnswerOption1,
-                        is_correct: questionAnswerOption1b
-                    },
-                    {
-                        text: questionAnswerOption2,
-                        is_correct: questionAnswerOption2b
-                    },
-                    {
-                        text: questionAnswerOption3,
-                        is_correct: questionAnswerOption3b
-                    }
-
-                ]
-                }
-            } 
+        navigate("/Library", 
+        // Update erfolgreich meldung einfügen
         )
         
     
@@ -160,7 +157,7 @@ const QuestionFormEdit = (id ) => {
                             is_correct: defaultAnswer.is_correct
                         },
                         question_type: value,
-                        author: 1
+                        author: user.user_id
                     }
                 } 
             )
@@ -170,48 +167,29 @@ const QuestionFormEdit = (id ) => {
         dropdownV=value
     }
 
-    $('#checkbox-value1').text($('#checkbox1').val());
 
     $("#checkbox1").on('change', function() {
       if ($(this).is(':checked')) {
-        $(this).attr('value', 'true');
         setQuestionAnswerOption1b(true);
       } else {
-        $(this).attr('value', 'false');
         setQuestionAnswerOption1b(false);
       }
-      
-      $('#checkbox-value1').text($('#checkbox1').val());
     });
-
-    $('#checkbox-value2').text($('#checkbox2').val());
 
     $("#checkbox2").on('change', function() {
       if ($(this).is(':checked')) {
-        $(this).attr('value', 'true');
         setQuestionAnswerOption2b(true);
       } else {
-        $(this).attr('value', 'false');
         setQuestionAnswerOption2b(false);
       }
-      
-      $('#checkbox-value2').text($('#checkbox2').val());
     });
-
-    $('#checkbox-value3').text($('#checkbox3').val());
 
     $("#checkbox3").on('change', function() {
       if ($(this).is(':checked')) {
-        $(this).attr('value', 'true');
-        $(this).attr('checked', 'true');
         setQuestionAnswerOption3b(true);
       } else {
-        $(this).attr('value', 'false');
-        $(this).attr('checked', 'false');
         setQuestionAnswerOption3b(false);
       }
-      
-      $('#checkbox-value3').text($('#checkbox3').val());
     });
 
     function setdefAnswer(defAnswer, bDefAnswer){
@@ -222,6 +200,23 @@ const QuestionFormEdit = (id ) => {
         }
         setDefaultAnswer(data)
     }
+
+    const eventListener = async () => {
+
+        var input = document.getElementById("formidCustom");
+        input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#submitButton").click()
+            //console.log("asyncFunktiom")
+        }
+        });
+    }
+    useEffect(
+        () => {
+            eventListener();
+        }, []
+    )
     
     return (
         <>
@@ -230,8 +225,8 @@ const QuestionFormEdit = (id ) => {
             </div>
             <div className="row justify-content-center">
 
-                <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
-                <form className="text-light" >
+                <div id= "formidCustom" className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+                    <form className="text-light" >
                         <label for="type">Choose a Type: </label>
                         <select  id="selectOpt" name="typeSelection" onChange={(e) => changeQuestion(e.target.value)}>
                             <option id="McId" value="MC">Multiple Choice</option>
@@ -244,6 +239,8 @@ const QuestionFormEdit = (id ) => {
                         <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder={questionText}
                             text={questionText}
+                            maxLength="500"
+                            value={questionText}
                             onChange={(e) => setQuestionText(e.target.value)}
                             ></input>
                         <label className="mb-2"  htmlFor="exampleFormControlInput1">Answers </label> 
@@ -251,50 +248,94 @@ const QuestionFormEdit = (id ) => {
                         <div className="container1"> 
                             <label htmlFor="exampleFormControlInput1">Choice 1 (has to be true)</label>
                             <div>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder={defaultAnswer.text} text={defaultAnswer.text} 
+                            <input type="text" class="form-control" id="exampleFormControlInput1" 
+                            placeholder={defaultAnswer.text} 
+                            text={defaultAnswer.text} 
+                            value={defaultAnswer.text}  
+                            maxLength="500"
                             onChange={(e) => setdefAnswer(e.target.value, true)}></input>
                             </div>
                         </div>
                         <div id= "containerID2" className="container2"> 
                             <label htmlFor="exampleFormControlInput2">Choice 2</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder={questionAnswerOption1} text={questionAnswerOption1} 
+                                <input type="text" class="form-control" id="exampleFormControlInput2" 
+                                placeholder={questionAnswerOption1} 
+                                text={questionAnswerOption1} 
+                                value={questionAnswerOption1} 
+                                maxLength="500"
                                 onChange={(e) => setQuestionAnswerOption1(e.target.value)} ></input>
                                 <input className="right" id="checkbox1" type="checkbox"  value={questionAnswerOption1b} checked={questionAnswerOption1b} onChange={(e)=> setQuestionAnswerOption1b(!questionAnswerOption1b)}></input> 
-                                <label id="checkbox-value1"></label>
+                                <label id="checkbox-value1">true</label>
                             </div>
                         </div>
                         <div id= "containerID3" className="container3"> 
                             <label htmlFor="exampleFormControlInput3">Choice 3</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput3" placeholder={questionAnswerOption2} text={questionAnswerOption2} 
+                                <input type="text" class="form-control" id="exampleFormControlInput3" 
+                                placeholder={questionAnswerOption2} 
+                                maxLength="500"
+                                text={questionAnswerOption2} 
+                                value={questionAnswerOption2}
                                 onChange={(e) => setQuestionAnswerOption2(e.target.value)}>
                                 </input>
                                 <input className="right" id="checkbox2" type="checkbox"  value={questionAnswerOption2b} checked={questionAnswerOption2b} onChange={(e)=> setQuestionAnswerOption2b(!questionAnswerOption2b)}></input> 
-                                <label id="checkbox-value2"></label>
+                                <label id="checkbox-value2">true</label>
                             </div>
                         </div>
                         <div id= "containerID4" className="container4"> 
                             <label htmlFor="exampleFormControlInput4">Choice 4</label>
                             <div>
-                                <input type="text" class="form-control" id="exampleFormControlInput4" placeholder={questionAnswerOption3} text={questionAnswerOption3} 
+                                <input type="text" class="form-control" id="exampleFormControlInput4" 
+                                placeholder={questionAnswerOption3} 
+                                text={questionAnswerOption3} 
+                                maxLength="500"
+                                value={questionAnswerOption3}
                                 onChange={(e) => setQuestionAnswerOption3(e.target.value)}>
                                 </input>
                                 <input className="right" id="checkbox3" type="checkbox" value={questionAnswerOption3b} checked={questionAnswerOption3b} onChange={(e)=> setQuestionAnswerOption3b(!questionAnswerOption3b)}></input> 
-                                <label id="checkbox-value3"></label>
+                                <label id="checkbox-value3">true</label>
                             </div>
                         </div>
                     </form>
 
                 <div className="d-flex justify-content-end p-3">
-                    <Link to ="/Library">
-                    <button  className="btn btn-secondary me-2" onClick={deleteItem} >Delete</button> 
-                    </Link>
+
+                    <button  className="btn btn-secondary me-2" onClick={handleShow} >Delete</button> 
                     <Link to ="/Library">
                     <button className="btn btn-secondary me-2">Cancel</button>
                     </Link>
-                    <button  className="btn btn-primary" onClick={editQuestion}>Update</button>
-                    
+                    <button id="submitButton" className="btn btn-primary" onClick={handleShow2}>Update</button>
+                    <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Do you really want to delete this question?</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={deleteItem}>
+                        Yes!
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        No!
+                    </Button>
+                    </Modal.Footer>
+                    </Modal>
+                    {/* You forgot something */}
+                    <Modal show={show2} onHide={handleClose2}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>You forgot something. Please fill in every field.</Modal.Body>
+                    </Modal>
+                    {/* Update Sucess */}
+                    <Modal show={show3} onHide={handleClose3}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>Your Update was sucessfull.</Modal.Body>
+                    <Modal.Footer>
+                    <Link>
+                        <Button variant="primary" onClick={editQuestion}> Back to Libary</Button>
+                    </Link>
+                    </Modal.Footer>
+                    </Modal>
                 </div>
                 </div>
             </div>
