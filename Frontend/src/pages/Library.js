@@ -3,22 +3,21 @@ import QuizView from "../components/QuizView";
 import QuestionView from "../components/QuestionView";
 //the Quizview with the quizcards are inserted into a container
 class Library extends Component {
-    render() {
-        return (
-                <div className="container">
-                <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
-                <h3 className="big-title">My Library</h3>
-                </div>
-                <div>
-                <QuizView />
-                </div>
-                <div>
-                    <QuestionView />
-                </div>
-            </div>
-
-        );
-    }
+  render() {
+    return (
+      <div className="container">
+        <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
+          <h3 className="big-title">My Library</h3>
+        </div>
+        <div>
+          <QuizView />
+        </div>
+        <div>
+          <QuestionView />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Library;
