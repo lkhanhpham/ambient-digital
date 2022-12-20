@@ -24,10 +24,13 @@ const QuestionForm = () => {
   const [answer_image, setAnswImage] = useState(null);
   const [answer_image_id, setAnswImageId] = useState(null);
 
+  const [isShown, setIsShown] = useState(false);
+
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
 
-  const handleShow = () => {
+  const handleShow = (event) => {
+    uploadAll(event);
     if (questionText.length !== 0 && defaultAnswer.length !== 0) {
       setShow(true);
     } else {
@@ -109,6 +112,11 @@ const QuestionForm = () => {
     createQuestionSC(event);
     window.location.reload();
   };
+
+  const handleClick = (event) => {
+    setIsShown((current) => !current);
+  };
+
   // the following is called when an image is added and safes it to a constant
   const onImageChange = (event) => {
     if (event.target.id === "question_image") {
@@ -118,40 +126,44 @@ const QuestionForm = () => {
     }
   };
 
-  //the following is called when the upload button is pressed
-  const onImageSubmit = (event) => {
-    event.preventDefault();
-    // the if is assigns an image containing a constant to the variable image depending on which button calls the function
-    if (event.target.id === "questionimagesubmitButton") {
-      var image = question_image;
-    } else if (event.target.id === "answerimagesubmitButton") {
-      var image = answer_image;
-    }
-    // creates formdata and adds all for images necessary variables to it
-    let data = new FormData();
-    data.append("picture", image);
-    data.append("name", image.name);
-    data.append("author", user.user_id);
-    // posts the formdata to images interface
-    axios({
-      method: "POST",
-      url: "http://localhost:8000/api/images/",
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-      data,
-    })
-      .then((res) => {
-        //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
-        if (event.target.id === "questionimagesubmitButton") {
-          setQuesImageId(res.data.id);
-        }
-        if (event.target.id === "answerimagesubmitButton") {
-          setAnswImageId(res.data.id);
-        }
+  function uploadAll(event) {
+    for (let image_nr = 0; image_nr < 2; image_nr++) {
+      event.preventDefault();
+      // the if assigns an image containing a constant to the variable image depending on which iteration
+      if (image_nr === 0) {
+        var image = question_image;
+      } else if (image_nr === 1) {
+        var image = answer_image;
+      }
+      if (image === null) {
+        return;
+      }
+      // creates formdata and adds all for images necessary variables to it
+      let data = new FormData();
+      data.append("picture", image);
+      data.append("name", image.name);
+      data.append("author", user.user_id);
+      // posts the formdata to images interface
+      axios({
+        method: "POST",
+        url: "http://localhost:8000/api/images/",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data,
       })
-      .catch((err) => console.log(err));
-  };
+        .then((res) => {
+          //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
+          if (image_nr === 0) {
+            setQuesImageId(res.data.id);
+          }
+          if (image_nr === 1) {
+            setAnswImageId(res.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   return (
     <>
@@ -197,24 +209,17 @@ const QuestionForm = () => {
               required="required"
             ></input>
 
-            <div style={{ paddingTop: "15px" }}>
-              <input
-                type="file"
-                id="question_image"
-                name="question_image"
-                accept="image/png, image/jpeg"
-                onChange={onImageChange}
-              ></input>
-
-              <button
-                id="questionimagesubmitButton"
-                type="submitImage"
-                onClick={onImageSubmit}
-                className="btn btn-primary"
-              >
-                Upload
-              </button>
-            </div>
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="question_image"
+                  name="question_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
 
             <label className="mb-2" htmlFor="exampleFormControlInput1">
               Answers{" "}
@@ -237,39 +242,39 @@ const QuestionForm = () => {
                 ></input>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="answer_image"
+                  name="answer_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
           </form>
-          <div style={{ paddingTop: "15px" }}>
-            <input
-              type="file"
-              id="answer_image"
-              name="answer_image"
-              accept="image/png, image/jpeg"
-              onChange={onImageChange}
-            ></input>
 
-            <button
-              id="answerimagesubmitButton"
-              type="submitImage"
-              onClick={onImageSubmit}
-              className="btn btn-primary"
-            >
-              Upload
+          <div className="justify-content-end py-4">
+            <button className="btn btn-secondary" onClick={handleClick}>
+              Assign Images
             </button>
-          </div>
-
-          <div className="d-flex justify-content-end p-3">
-            <Link to="/Library">
-              <button className="btn btn-secondary me-2">Cancel</button>
-            </Link>
 
             <button
               id="submitButton"
-              type="submit"
               onClick={handleShow}
-              className="btn btn-primary"
+              className="btn btn-primary float-end"
             >
               Create
             </button>
+
+            <Link to="/Library">
+              <button className="btn btn-secondary me-2 float-end">
+                Cancel
+              </button>
+            </Link>
+
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Woohoo, you created a question!</Modal.Body>

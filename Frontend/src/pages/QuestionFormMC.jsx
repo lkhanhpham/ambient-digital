@@ -21,7 +21,7 @@ const QuestionForm = () => {
   const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState("false");
   const { user } = useContext(AuthContext);
 
-  var visible = 0;
+  const [isShown, setIsShown] = useState(false);
 
   const [question_image, setQuesImage] = useState(null);
   const [question_image_id, setQuesImageId] = useState(null);
@@ -41,7 +41,8 @@ const QuestionForm = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleShow = (event) => {
+    uploadAll(event);
     if (
       questionText.length !== 0 &&
       defaultAnswer.length !== 0 &&
@@ -171,8 +172,10 @@ const QuestionForm = () => {
     createQuestionMC(event);
     window.location.reload();
   };
+  const handleClick = (event) => {
+    setIsShown((current) => !current);
+  };
 
-  //for comments look at QuestionForm its similar
   const onImageChange = (event) => {
     if (event.target.id === "question_image") {
       setQuesImage(event.target.files[0]);
@@ -186,48 +189,55 @@ const QuestionForm = () => {
       setAnsw4Image(event.target.files[0]);
     }
   };
-
-  const onImageSubmit = (event) => {
-    event.preventDefault();
-    if (event.target.id === "questionimagesubmitButton") {
-      var image = question_image;
-    } else if (event.target.id === "answer1imagesubmitButton") {
-      var image = answer1_image;
-    } else if (event.target.id === "answer2imagesubmitButton") {
-      var image = answer2_image;
-    } else if (event.target.id === "answer3imagesubmitButton") {
-      var image = answer3_image;
-    } else if (event.target.id === "answer4imagesubmitButton") {
-      var image = answer4_image;
-    }
-    //for comments look at QuestionForm its similar
-    let data = new FormData();
-    data.append("picture", image);
-    data.append("name", image.name);
-    data.append("author", user.user_id);
-    axios({
-      method: "POST",
-      url: "http://localhost:8000/api/images/",
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-      data,
-    })
-      .then((res) => {
-        if (event.target.id === "questionimagesubmitButton") {
-          setQuesImageId(res.data.id);
-        } else if (event.target.id === "answer1imagesubmitButton") {
-          setAnsw1ImageId(res.data.id);
-        } else if (event.target.id === "answer2imagesubmitButton") {
-          setAnsw2ImageId(res.data.id);
-        } else if (event.target.id === "answer3imagesubmitButton") {
-          setAnsw3ImageId(res.data.id);
-        } else if (event.target.id === "answer4imagesubmitButton") {
-          setAnsw4ImageId(res.data.id);
-        }
+  function uploadAll(event) {
+    for (let image_nr = 0; image_nr < 5; image_nr++) {
+      event.preventDefault();
+      // the if assigns an image containing a constant to the variable image depending on which iteration
+      if (image_nr === 0) {
+        var image = question_image;
+      } else if (image_nr === 1) {
+        var image = answer1_image;
+      } else if (image_nr === 2) {
+        var image = answer2_image;
+      } else if (image_nr === 3) {
+        var image = answer3_image;
+      } else if (image_nr === 4) {
+        var image = answer4_image;
+      }
+      if (image === null) {
+        return;
+      }
+      // creates formdata and adds all for images necessary variables to it
+      let data = new FormData();
+      data.append("picture", image);
+      data.append("name", image.name);
+      data.append("author", user.user_id);
+      // posts the formdata to images interface
+      axios({
+        method: "POST",
+        url: "http://localhost:8000/api/images/",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data,
       })
-      .catch((err) => console.log(err));
-  };
+        .then((res) => {
+          //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
+          if (image_nr === 0) {
+            setQuesImageId(res.data.id);
+          } else if (image_nr === 1) {
+            setAnsw1ImageId(res.data.id);
+          } else if (image_nr === 2) {
+            setAnsw2ImageId(res.data.id);
+          } else if (image_nr === 3) {
+            setAnsw3ImageId(res.data.id);
+          } else if (image_nr === 4) {
+            setAnsw4ImageId(res.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   return (
     <>
@@ -259,7 +269,11 @@ const QuestionForm = () => {
           </form>
 
           <form className="text-light">
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px" }}
+            >
               Question Text
             </label>
             <input
@@ -272,31 +286,27 @@ const QuestionForm = () => {
               onChange={(e) => setQuestionText(e.target.value)}
               required
             ></input>
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="question_image"
+                  name="question_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
 
-            <div style={{ paddingTop: "15px" }}>
-              <input
-                type="file"
-                id="question_image"
-                name="question_image"
-                accept="image/png, image/jpeg"
-                onChange={onImageChange}
-              ></input>
-
-              <button
-                id="questionimagesubmitButton"
-                type="submitImage"
-                onClick={onImageSubmit}
-                className="btn btn-primary"
-              >
-                Upload
-              </button>
-            </div>
-
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
-              Answers{" "}
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px" }}
+            >
+              Answers:
             </label>
 
-            <div className="container1">
+            <div className="container1" style={{ paddingTop: "15px" }}>
               <label htmlFor="exampleFormControlInput1">
                 Choice 1 (has to be true)
               </label>
@@ -314,26 +324,23 @@ const QuestionForm = () => {
               </div>
             </div>
 
-            <div style={{ paddingTop: "15px" }}>
-              <input
-                type="file"
-                id="answer1_image"
-                name="answer1_image"
-                accept="image/png, image/jpeg"
-                onChange={onImageChange}
-              ></input>
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="answer1_image"
+                  name="answer1_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
 
-              <button
-                id="answer1imagesubmitButton"
-                type="submitImage"
-                onClick={onImageSubmit}
-                className="btn btn-primary"
-              >
-                Upload
-              </button>
-            </div>
-
-            <div id="containerID2" className="container2">
+            <div
+              id="containerID2"
+              className="container2"
+              style={{ paddingTop: "35px" }}
+            >
               <label htmlFor="exampleFormControlInput2">Choice 2</label>
               <div>
                 <input
@@ -356,26 +363,23 @@ const QuestionForm = () => {
               </div>
             </div>
 
-            <div style={{ paddingTop: "15px" }}>
-              <input
-                type="file"
-                id="answer2_image"
-                name="answer2_image"
-                accept="image/png, image/jpeg"
-                onChange={onImageChange}
-              ></input>
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="answer2_image"
+                  name="answer2_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
 
-              <button
-                id="answer2imagesubmitButton"
-                type="submitImage"
-                onClick={onImageSubmit}
-                className="btn btn-primary"
-              >
-                Upload
-              </button>
-            </div>
-
-            <div id="containerID3" className="container3">
+            <div
+              id="containerID3"
+              className="container3"
+              style={{ paddingTop: "15px" }}
+            >
               <label htmlFor="exampleFormControlInput3">Choice 3</label>
               <div>
                 <input
@@ -398,26 +402,23 @@ const QuestionForm = () => {
               </div>
             </div>
 
-            <div style={{ paddingTop: "15px" }}>
-              <input
-                type="file"
-                id="answer3_image"
-                name="answer3_image"
-                accept="image/png, image/jpeg"
-                onChange={onImageChange}
-              ></input>
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="answer3_image"
+                  name="answer3_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
 
-              <button
-                id="answer3imagesubmitButton"
-                type="submitImage"
-                onClick={onImageSubmit}
-                className="btn btn-primary"
-              >
-                Upload
-              </button>
-            </div>
-
-            <div id="containerID4" className="container4">
+            <div
+              id="containerID4"
+              className="container4"
+              style={{ paddingTop: "15px" }}
+            >
               <label htmlFor="exampleFormControlInput4">Choice 4</label>
               <div>
                 <input
@@ -439,39 +440,38 @@ const QuestionForm = () => {
                 <label id="checkbox-value3">true</label>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  type="file"
+                  id="answer4_image"
+                  name="answer4_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
           </form>
 
-          <div style={{ paddingTop: "15px" }}>
-            <input
-              type="file"
-              id="answer4_image"
-              name="answer4_image"
-              accept="image/png, image/jpeg"
-              onChange={onImageChange}
-            ></input>
-
-            <button
-              id="answer4imagesubmitButton"
-              type="submitImage"
-              onClick={onImageSubmit}
-              className="btn btn-primary"
-            >
-              Upload
+          <div className="justify-content-end py-4">
+            <button className="btn btn-secondary" onClick={handleClick}>
+              Assign Images
             </button>
-          </div>
-
-          <div className="d-flex justify-content-end py-4">
-            <Link to="/Library">
-              <button className="btn btn-secondary me-2">Cancel</button>
-            </Link>
 
             <button
               id="submitButton"
               onClick={handleShow}
-              className="btn btn-primary"
+              className="btn btn-primary float-end"
             >
               Create
             </button>
+
+            <Link to="/Library">
+              <button className="btn btn-secondary me-2 float-end">
+                Cancel
+              </button>
+            </Link>
 
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton></Modal.Header>
