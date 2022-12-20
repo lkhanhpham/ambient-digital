@@ -21,6 +21,23 @@ const QuestionForm = () => {
   const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState("false");
   const { user } = useContext(AuthContext);
 
+  var visible = 0;
+
+  const [question_image, setQuesImage] = useState(null);
+  const [question_image_id, setQuesImageId] = useState(null);
+
+  const [answer1_image, setAnsw1Image] = useState(null);
+  const [answer1_image_id, setAnsw1ImageId] = useState(null);
+
+  const [answer2_image, setAnsw2Image] = useState(null);
+  const [answer2_image_id, setAnsw2ImageId] = useState(null);
+
+  const [answer3_image, setAnsw3Image] = useState(null);
+  const [answer3_image_id, setAnsw3ImageId] = useState(null);
+
+  const [answer4_image, setAnsw4Image] = useState(null);
+  const [answer4_image_id, setAnsw4ImageId] = useState(null);
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -54,24 +71,29 @@ const QuestionForm = () => {
       url: `${API_BASE_URL}/api/question/`,
       data: {
         question_text: questionText,
+        question_image: question_image_id,
         author: user.user_id,
         question_type: dropdownV,
         default_answer: {
           text: defaultAnswer,
           is_correct: true,
+          answer_image: answer1_image_id,
         },
         question_answer_option: [
           {
             text: questionAnswerOption1,
             is_correct: questionAnswerOption1b,
+            answer_image: answer2_image_id,
           },
           {
             text: questionAnswerOption2,
             is_correct: questionAnswerOption2b,
+            answer_image: answer3_image_id,
           },
           {
             text: questionAnswerOption3,
             is_correct: questionAnswerOption3b,
+            answer_image: answer4_image_id,
           },
         ],
       },
@@ -150,6 +172,63 @@ const QuestionForm = () => {
     window.location.reload();
   };
 
+  //for comments look at QuestionForm its similar
+  const onImageChange = (event) => {
+    if (event.target.id === "question_image") {
+      setQuesImage(event.target.files[0]);
+    } else if (event.target.id === "answer1_image") {
+      setAnsw1Image(event.target.files[0]);
+    } else if (event.target.id === "answer2_image") {
+      setAnsw2Image(event.target.files[0]);
+    } else if (event.target.id === "answer3_image") {
+      setAnsw3Image(event.target.files[0]);
+    } else if (event.target.id === "answer4_image") {
+      setAnsw4Image(event.target.files[0]);
+    }
+  };
+
+  const onImageSubmit = (event) => {
+    event.preventDefault();
+    if (event.target.id === "questionimagesubmitButton") {
+      var image = question_image;
+    } else if (event.target.id === "answer1imagesubmitButton") {
+      var image = answer1_image;
+    } else if (event.target.id === "answer2imagesubmitButton") {
+      var image = answer2_image;
+    } else if (event.target.id === "answer3imagesubmitButton") {
+      var image = answer3_image;
+    } else if (event.target.id === "answer4imagesubmitButton") {
+      var image = answer4_image;
+    }
+    //for comments look at QuestionForm its similar
+    let data = new FormData();
+    data.append("picture", image);
+    data.append("name", image.name);
+    data.append("author", user.user_id);
+    axios({
+      method: "POST",
+      url: "http://localhost:8000/api/images/",
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+      data,
+    })
+      .then((res) => {
+        if (event.target.id === "questionimagesubmitButton") {
+          setQuesImageId(res.data.id);
+        } else if (event.target.id === "answer1imagesubmitButton") {
+          setAnsw1ImageId(res.data.id);
+        } else if (event.target.id === "answer2imagesubmitButton") {
+          setAnsw2ImageId(res.data.id);
+        } else if (event.target.id === "answer3imagesubmitButton") {
+          setAnsw3ImageId(res.data.id);
+        } else if (event.target.id === "answer4imagesubmitButton") {
+          setAnsw4ImageId(res.data.id);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
@@ -161,7 +240,7 @@ const QuestionForm = () => {
           className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
         >
           <form className="text-light">
-            <label for="type">Choose a Type: </label>
+            <label htmlFor="type">Choose a Type: </label>
             <select
               id="selectOpt"
               name="typeSelection"
@@ -185,7 +264,7 @@ const QuestionForm = () => {
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="exampleFormControlInput1"
               placeholder="New Question"
               text={questionText}
@@ -193,6 +272,26 @@ const QuestionForm = () => {
               onChange={(e) => setQuestionText(e.target.value)}
               required
             ></input>
+
+            <div style={{ paddingTop: "15px" }}>
+              <input
+                type="file"
+                id="question_image"
+                name="question_image"
+                accept="image/png, image/jpeg"
+                onChange={onImageChange}
+              ></input>
+
+              <button
+                id="questionimagesubmitButton"
+                type="submitImage"
+                onClick={onImageSubmit}
+                className="btn btn-primary"
+              >
+                Upload
+              </button>
+            </div>
+
             <label className="mb-2" htmlFor="exampleFormControlInput1">
               Answers{" "}
             </label>
@@ -204,7 +303,7 @@ const QuestionForm = () => {
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="New Answer"
                   text={defaultAnswer}
@@ -214,12 +313,32 @@ const QuestionForm = () => {
                 ></input>
               </div>
             </div>
+
+            <div style={{ paddingTop: "15px" }}>
+              <input
+                type="file"
+                id="answer1_image"
+                name="answer1_image"
+                accept="image/png, image/jpeg"
+                onChange={onImageChange}
+              ></input>
+
+              <button
+                id="answer1imagesubmitButton"
+                type="submitImage"
+                onClick={onImageSubmit}
+                className="btn btn-primary"
+              >
+                Upload
+              </button>
+            </div>
+
             <div id="containerID2" className="container2">
               <label htmlFor="exampleFormControlInput2">Choice 2</label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput2"
                   placeholder="New Answer"
                   text={defaultAnswer}
@@ -236,12 +355,32 @@ const QuestionForm = () => {
                 <label id="checkbox-value1">true</label>
               </div>
             </div>
+
+            <div style={{ paddingTop: "15px" }}>
+              <input
+                type="file"
+                id="answer2_image"
+                name="answer2_image"
+                accept="image/png, image/jpeg"
+                onChange={onImageChange}
+              ></input>
+
+              <button
+                id="answer2imagesubmitButton"
+                type="submitImage"
+                onClick={onImageSubmit}
+                className="btn btn-primary"
+              >
+                Upload
+              </button>
+            </div>
+
             <div id="containerID3" className="container3">
               <label htmlFor="exampleFormControlInput3">Choice 3</label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput3"
                   placeholder="New Answer"
                   text={defaultAnswer}
@@ -258,12 +397,32 @@ const QuestionForm = () => {
                 <label id="checkbox-value2">true</label>
               </div>
             </div>
+
+            <div style={{ paddingTop: "15px" }}>
+              <input
+                type="file"
+                id="answer3_image"
+                name="answer3_image"
+                accept="image/png, image/jpeg"
+                onChange={onImageChange}
+              ></input>
+
+              <button
+                id="answer3imagesubmitButton"
+                type="submitImage"
+                onClick={onImageSubmit}
+                className="btn btn-primary"
+              >
+                Upload
+              </button>
+            </div>
+
             <div id="containerID4" className="container4">
               <label htmlFor="exampleFormControlInput4">Choice 4</label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput4"
                   placeholder="New Answer"
                   text={defaultAnswer}
@@ -282,7 +441,26 @@ const QuestionForm = () => {
             </div>
           </form>
 
-          <div className="d-flex justify-content-end p-3">
+          <div style={{ paddingTop: "15px" }}>
+            <input
+              type="file"
+              id="answer4_image"
+              name="answer4_image"
+              accept="image/png, image/jpeg"
+              onChange={onImageChange}
+            ></input>
+
+            <button
+              id="answer4imagesubmitButton"
+              type="submitImage"
+              onClick={onImageSubmit}
+              className="btn btn-primary"
+            >
+              Upload
+            </button>
+          </div>
+
+          <div className="d-flex justify-content-end py-4">
             <Link to="/Library">
               <button className="btn btn-secondary me-2">Cancel</button>
             </Link>

@@ -9,6 +9,7 @@ from .models import (
     DefaultAnswer,
     Team,
     TeamMember,
+    Image,
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
@@ -50,10 +51,16 @@ class CategorieSerializer(serializers.ModelSerializer):
         fields = ("id", "categorie_name", "author")
 
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = "__all__"
+
+
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = FurtherAnswer
-        fields = ("text", "is_correct")
+        fields = ("text", "is_correct", "answer_image")
 
 
 class DefaultAnswerSerializer(serializers.ModelSerializer):
@@ -74,6 +81,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "question_text",
+            "question_image",
             "pub_date",
             "author",
             "multiplayer",
@@ -93,6 +101,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         default_answer_instance = DefaultAnswer.objects.create(
             text=default_answer.get("text"),
             is_correct=default_answer.get("is_correct", True),
+            answer_image=default_answer.get("answer_image"),
         )
 
         validated_data["default_answer"] = default_answer_instance
@@ -105,6 +114,7 @@ class QuestionSerializer(serializers.ModelSerializer):
                 text=answer_option.get("text"),
                 is_correct=answer_option.get("is_correct", False),
                 question_id=created_question.id,
+                answer_image=answer_option.get("answer_image"),
             )
 
         return created_question
@@ -119,6 +129,9 @@ class QuestionSerializer(serializers.ModelSerializer):
             "question_text", instance.question_text
         )
         instance.author = validated_data.get("author", instance.author)
+        instance.question_image = validated_data.get(
+            "question_image", instance.question_image
+        )
         instance.multiplayer = validated_data.get("multiplayer", instance.multiplayer)
         instance.question_type = validated_data.get(
             "question_type", instance.question_type
@@ -128,6 +141,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         default_answer_orig = instance.default_answer
         default_answer_instance = DefaultAnswer.objects.get(id=default_answer_orig.id)
         default_answer_instance.text = default_answer.get("text")
+        default_answer_instance.answer_image = default_answer.get("answer_image")
         default_answer_instance.save()
         instance.default_answer = default_answer_instance
         # creates new answer options for multiple choice questions
@@ -140,6 +154,7 @@ class QuestionSerializer(serializers.ModelSerializer):
                 text=answer_option.get("text"),
                 is_correct=answer_option.get("is_correct", False),
                 question_id=instance.id,
+                answer_image=answer_option.get("answer_image"),
             )
         instance.save()
         return instance

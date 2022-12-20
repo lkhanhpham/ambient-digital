@@ -82,9 +82,29 @@ class Categorie(models.Model):
         return self.categorie_name
 
 
+class Image(models.Model):
+    picture = models.ImageField(upload_to="image")
+    name = models.CharField(blank=True, max_length=100)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="image_author",
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class DefaultAnswer(models.Model):
     text = models.CharField(max_length=500)
     is_correct = models.BooleanField(default=True)
+    answer_image = models.ForeignKey(
+        Image,
+        on_delete=models.SET_NULL,
+        related_name="image_answer",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.text
@@ -96,6 +116,13 @@ class Question(models.Model):
     SIMPLE = "SC"
     ESTIMATE = "EQ"
     question_text = models.CharField(max_length=500, default="")
+    question_image = models.ForeignKey(
+        Image,
+        on_delete=models.SET_NULL,
+        related_name="image_question",
+        null=True,
+        blank=True,
+    )
     pub_date = models.DateTimeField("date published", auto_now_add=True)
     last_edit = models.DateTimeField("date edited", auto_now=True)
     author = models.ForeignKey(
@@ -141,6 +168,13 @@ class FurtherAnswer(models.Model):
         Question, on_delete=models.CASCADE, related_name="question_answer_option"
     )
     is_correct = models.BooleanField(default=False)
+    answer_image = models.ForeignKey(
+        Image,
+        on_delete=models.SET_NULL,
+        related_name="image_answer_option",
+        null=True,
+        blank=True,
+    )
 
     def clean(self):
         from django.core.exceptions import ValidationError

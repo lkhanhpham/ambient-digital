@@ -20,6 +20,8 @@ from rest_framework import routers
 from quiz import api_views
 from quiz.api_views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+from django.conf.urls.static import static
+from django.conf import settings
 
 # The following registers api_views to a url
 # they can be accessed on http://localhost:8000/api/<apiName>
@@ -39,6 +41,7 @@ router.register(r"Teammates", api_views.TeammateView, "Teammates")
 router.register(r"AddTeammates", api_views.AddTeammateView, "AddTeammates")
 router.register(r"authorquestion", api_views.QuestionAuthorView, "authorquestion")
 router.register(r"authorcategorie", api_views.CategorieAuthorView, "authorcategorie")
+router.register(r"images", api_views.ImageView, "images")
 
 urlpatterns = [
     # manualy registers some views to urls. they can be reached at http://localhost:8000/<path>
@@ -48,4 +51,5 @@ urlpatterns = [
     path("api/token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# configures the interface for images by taking the root and url from the settings file
