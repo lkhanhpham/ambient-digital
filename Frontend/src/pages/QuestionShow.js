@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AnswerField from "../components/AnswerField";
+import QuestionImage from "../components/QuestionImage";
+import AnsweroptionImage from "../components/AnsweroptionImage";
 
 // For each created quiz one quizcard is rendered
 const QuestionShow = (props) => {
@@ -9,6 +11,7 @@ const QuestionShow = (props) => {
   const WholeQuestion = location.state.question;
   const points = location.state.points;
   const categorie = location.state.categorie;
+  const [isVisible, setIsVisible] = useState(false);
   var arr = [];
   arr[0] = WholeQuestion.default_answer;
   if (WholeQuestion.question_type === "MC") {
@@ -33,7 +36,6 @@ const QuestionShow = (props) => {
     return array;
   }
 
-  console.log(arr);
   function multipleChoice() {
     if (arr.length > 1) {
       return true;
@@ -41,39 +43,23 @@ const QuestionShow = (props) => {
       return false;
     }
   }
-
-  const eventListener = async () => {
+  //triggered when show solution is clicked
+  // for SC it reveals the answer for MC it colors the answers
+  const handleClick = (event) => {
     var answer = document.getElementsByClassName("AnswerOption");
-    console.log(answer);
-    console.log(answer[0]);
-    var button = document.getElementById("button");
-    button.addEventListener("click", function () {
-      if (WholeQuestion.question_type !== "MC") {
-        // var scanswer= <><AnswerField key={arr[0].id} answer={arr[0].text}/></>;
-        //  console.log(scanswer)
-        var div = document.getElementById("singlechoice");
-        //  div.after(scanswer)
-        let hidden = div.getAttribute("hidden");
-        console.log(hidden); //log muss bleiben
-        if (hidden) {
-          div.removeAttribute("hidden");
+    if (WholeQuestion.question_type !== "MC") {
+      setIsVisible((current) => !current);
+    } else {
+      for (var i = 0; i < answer.length; i++) {
+        if (arr[i].is_correct === true) {
+          answer[i].style.backgroundColor = "green";
         } else {
-          div.setAttribute("hidden", "hidden");
-        }
-      } else {
-        for (var i = 0; i < answer.length; i++) {
-          if (arr[i].is_correct === true) {
-            answer[i].style.backgroundColor = "green";
-          } else {
-            answer[i].style.backgroundColor = "red";
-          }
+          answer[i].style.backgroundColor = "red";
         }
       }
-    });
+    }
   };
-  useEffect(() => {
-    eventListener();
-  }, []);
+
   return (
     <div className="container">
       <p
@@ -87,17 +73,21 @@ const QuestionShow = (props) => {
       >
         Categorie {categorie} for {points} points!
       </p>
-      <p
+      <div
         style={{
           textAlign: "center",
           fontSize: "20px",
           fontWeight: "bold",
           overflowWrap: "break-word",
-          margin: "40px",
+          paddingTop: "20px",
+          paddingBottom: "20px",
         }}
       >
-        {WholeQuestion.question_text}
-      </p>
+        <div style={{ paddingBottom: "40px" }}>
+          {WholeQuestion.question_text}
+        </div>
+        <QuestionImage image={WholeQuestion.question_image} />
+      </div>
       <div className="d-flex justify-content-center">
         {multipleChoice() ? (
           <div className="d-flex w-100">
@@ -111,22 +101,42 @@ const QuestionShow = (props) => {
             ))}
           </div>
         ) : (
-          <div id="singlechoice" hidden="hidden">
+          <div
+            id="singlechoice"
+            style={{ display: isVisible ? "inline" : "none" }}
+          >
             <AnswerField
               key={arr[0].id}
               answer={arr[0].text}
               correct={arr[0].is_correct}
             />
+            <QuestionImage image={WholeQuestion.default_answer.answer_image} />
           </div>
         )}
       </div>
       <div>
-        <button className="btn btn-secondary my-4 btn-lg w-100" id="button">
+        {multipleChoice() ? (
+          <div className="d-flex w-100">
+            {arr.map((item) => (
+              <AnsweroptionImage image={item.answer_image} />
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+
+      <div>
+        <button
+          className="btn btn-secondary my-4 btn-lg w-100"
+          id="button"
+          onClick={handleClick}
+        >
           {" "}
           Show Solution
         </button>
       </div>
-      <div class="d-flex justify-content-center">
+      <div className="d-flex justify-content-center">
         <button
           className="btn btn-secondary my-4 btn-lg"
           onClick={() => navigate(-1)}
