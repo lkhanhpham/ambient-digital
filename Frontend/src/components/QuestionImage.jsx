@@ -10,7 +10,6 @@ const QuestionImage = (props) => {
     const data = await response.json();
     if (response.ok) {
       setImage(data);
-      console.log(image);
     } else {
       console.log("Failed Network request");
     }

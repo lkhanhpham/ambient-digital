@@ -26,7 +26,6 @@ const Quiz = (props) => {
     const status = new Array(fields.length).fill(0);
     const fieldStatus = JSON.stringify(status);
     localStorage.setItem(props.id, fieldStatus);
-    console.log(status);
     navigate("/Quiz/" + props.id + "/", {
       state: {
         id: props.id,

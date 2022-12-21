@@ -17,6 +17,7 @@ const QuestionForm = () => {
 
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [toLarge, setToLarge] = useState(false);
 
   const [question_image, setQuesImage] = useState(null);
   const [question_image_id, setQuesImageId] = useState(null);
@@ -28,6 +29,7 @@ const QuestionForm = () => {
 
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
+  const handleClose3 = () => setToLarge(false);
 
   const handleShow = (event) => {
     uploadAll(event);
@@ -120,7 +122,7 @@ const QuestionForm = () => {
   // the following is called when an image is added and safes it to a constant
   const onImageChange = (event) => {
     if (event.target.files[0].size > 5242880) {
-      alert("File is too big and will not be uploaded!");
+      setToLarge(true);
     } else {
       if (event.target.id === "question_image") {
         setQuesImage(event.target.files[0]);
@@ -140,7 +142,7 @@ const QuestionForm = () => {
         var image = answer_image;
       }
       if (image === null) {
-        return;
+        continue;
       }
       // creates formdata and adds all for images necessary variables to it
       let data = new FormData();
@@ -262,23 +264,21 @@ const QuestionForm = () => {
             )}
           </form>
 
-          <div className="justify-content-end py-4">
-            <button className="btn btn-secondary" onClick={handleClick}>
-              Assign Images
+          <div className="d-flex justify-content-end py-4">
+            <button className="btn btn-secondary me-2" onClick={handleClick}>
+              Toggle Images
             </button>
 
             <button
               id="submitButton"
               onClick={handleShow}
-              className="btn btn-primary float-end"
+              className="btn btn-primary me-2"
             >
               Create
             </button>
 
             <Link to="/Library">
-              <button className="btn btn-secondary me-2 float-end">
-                Cancel
-              </button>
+              <button className="btn btn-secondary me-2">Cancel</button>
             </Link>
 
             <Modal show={show} onHide={handleClose}>
@@ -298,6 +298,12 @@ const QuestionForm = () => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
                 You forgot something. Please fill in every field.
+              </Modal.Body>
+            </Modal>
+            <Modal show={toLarge} onHide={handleClose3}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>
+                This file is to large and will not be uploaded
               </Modal.Body>
             </Modal>
           </div>

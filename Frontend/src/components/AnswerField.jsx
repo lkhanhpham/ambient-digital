@@ -4,7 +4,7 @@ const AnswerField = (props) => {
       <div
         onClick={props.handleShow}
         className="custom-card d-flex justify-content-center AnswerOption"
-        style={{ margin: "10px" }}
+        style={{ marginBottom: "30px" }}
         id="AnswerOption"
       >
         <p

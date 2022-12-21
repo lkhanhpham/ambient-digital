@@ -13,7 +13,6 @@ const QuizView = () => {
     const response = await fetch(`${API_BASE_URL}/api/quiz/`);
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
       setQuizzes(data);
     } else {
       //console.log(response.status)

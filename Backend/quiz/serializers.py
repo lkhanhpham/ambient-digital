@@ -57,6 +57,14 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ImageAuthorSerializer(serializers.ModelSerializer):
+    image_author = ImageSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = MyUser
+        fields = ("id", "username", "image_author")
+
+
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = FurtherAnswer

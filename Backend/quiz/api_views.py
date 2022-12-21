@@ -13,6 +13,7 @@ from .serializers import (
     GuestSerializer,
     AddTeammateSerializer,
     ImageSerializer,
+    ImageAuthorSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
@@ -135,3 +136,11 @@ class ImageView(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     parser_classes = (MultiPartParser, FormParser)
     # required for form-data posts
+
+
+class ImageAuthorView(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
+):
+    serializer_class = ImageAuthorSerializer
+    queryset = MyUser.objects.all()
+    lookup_field = "id"
