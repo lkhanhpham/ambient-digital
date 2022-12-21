@@ -3,9 +3,6 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
 import axios from "axios";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-
 const AuthContext = createContext();
 
 export default AuthContext;

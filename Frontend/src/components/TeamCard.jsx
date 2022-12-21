@@ -7,11 +7,11 @@ const TeamCard = (props) => {
   //array that stores all user options to choose from
   const [userOptions, setUserOptions] = useState([]);
   //array that stores all selected users from dropdown menu
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUsers] = useState([]);
   //array that stores all members that were added to the team
   const [members, setMembers] = useState([]);
   //array that stores all users that were added to the team as default options
-  const [defaultOptions, setDefaultOptions] = useState([]);
+  const [defaultOptions] = useState([]);
   const teamId = props.teamId;
   const teamName = props.teamName;
 
@@ -23,6 +23,7 @@ const TeamCard = (props) => {
     }
     selectedUsers.push(value);
   };
+
   const getAllUser = async () => {
     const response = await fetch(`${API_BASE_URL}/api/user/`);
     const data = await response.json();
@@ -84,7 +85,13 @@ const TeamCard = (props) => {
         onClick={props.deleteItem}
         className="align-self-end p-2 delete-button"
       >
-        <img src="/XCircle.png" className="" width="32px" height="32px"></img>
+        <img
+          alt="delete"
+          src="/XCircle.png"
+          className=""
+          width="32px"
+          height="32px"
+        ></img>
       </div>
       <h1 className="small-title align-self-center text-light pb-3">
         {props.teamName}

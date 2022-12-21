@@ -1,8 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import React, { Component } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Modal } from "react-bootstrap";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import { API_BASE_URL } from "../constants.ts";
@@ -11,7 +10,6 @@ const QuizForm = () => {
   const [quizName, setQuizName] = useState("");
   const [nrOfRows, setNrOfRows] = useState(5);
   const [nrOfCols, setNrOfCols] = useState(5);
-  const [author, setAuthor] = useState("");
   const [quizId, setQuizId] = useState(0);
   const { user } = useContext(AuthContext);
 
@@ -45,7 +43,6 @@ const QuizForm = () => {
     setQuizName("");
     setNrOfRows(5);
     setNrOfCols(5);
-    setAuthor(user.user_id);
   };
   const [showWarning, setShowWarning] = useState(false);
   const handleShowWarning = () => setShowWarning(true);
