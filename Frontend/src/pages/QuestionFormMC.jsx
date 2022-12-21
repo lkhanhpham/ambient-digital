@@ -177,16 +177,21 @@ const QuestionForm = () => {
   };
 
   const onImageChange = (event) => {
-    if (event.target.id === "question_image") {
-      setQuesImage(event.target.files[0]);
-    } else if (event.target.id === "answer1_image") {
-      setAnsw1Image(event.target.files[0]);
-    } else if (event.target.id === "answer2_image") {
-      setAnsw2Image(event.target.files[0]);
-    } else if (event.target.id === "answer3_image") {
-      setAnsw3Image(event.target.files[0]);
-    } else if (event.target.id === "answer4_image") {
-      setAnsw4Image(event.target.files[0]);
+    console.log(event.target.files[0]);
+    if (event.target.files[0].size > 5242880) {
+      alert("File is too big and will not be uploaded!");
+    } else {
+      if (event.target.id === "question_image") {
+        setQuesImage(event.target.files[0]);
+      } else if (event.target.id === "answer1_image") {
+        setAnsw1Image(event.target.files[0]);
+      } else if (event.target.id === "answer2_image") {
+        setAnsw2Image(event.target.files[0]);
+      } else if (event.target.id === "answer3_image") {
+        setAnsw3Image(event.target.files[0]);
+      } else if (event.target.id === "answer4_image") {
+        setAnsw4Image(event.target.files[0]);
+      }
     }
   };
   function uploadAll(event) {
@@ -289,6 +294,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="question_image"
                   name="question_image"
@@ -327,6 +333,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="answer1_image"
                   name="answer1_image"
@@ -366,6 +373,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="answer2_image"
                   name="answer2_image"
@@ -405,6 +413,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="answer3_image"
                   name="answer3_image"
@@ -444,6 +453,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="answer4_image"
                   name="answer4_image"

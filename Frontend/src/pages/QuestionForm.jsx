@@ -119,10 +119,14 @@ const QuestionForm = () => {
 
   // the following is called when an image is added and safes it to a constant
   const onImageChange = (event) => {
-    if (event.target.id === "question_image") {
-      setQuesImage(event.target.files[0]);
-    } else if (event.target.id === "answer_image") {
-      setAnswImage(event.target.files[0]);
+    if (event.target.files[0].size > 5242880) {
+      alert("File is too big and will not be uploaded!");
+    } else {
+      if (event.target.id === "question_image") {
+        setQuesImage(event.target.files[0]);
+      } else if (event.target.id === "answer_image") {
+        setAnswImage(event.target.files[0]);
+      }
     }
   };
 
@@ -212,6 +216,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="question_image"
                   name="question_image"
@@ -246,6 +251,7 @@ const QuestionForm = () => {
             {isShown && (
               <div style={{ paddingTop: "15px" }}>
                 <input
+                  className="form-control"
                   type="file"
                   id="answer_image"
                   name="answer_image"
