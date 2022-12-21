@@ -130,19 +130,6 @@ const NewQuiz1 = () => {
       handleShowWarning();
     }
   };
-  const goToCategory = (event) => {
-    navigate("../../CategoryCreator", "_blank", {
-      state: {
-        quiz_name: quiz_name,
-        nr_of_rows: nr_of_rows,
-        nr_of_categories: nr_of_categories,
-        categories: cat_name,
-        quizId: quizId,
-        catIds: catIds,
-      },
-    });
-    event.preventDefault();
-  };
 
   useEffect(() => {
     getAllCats();

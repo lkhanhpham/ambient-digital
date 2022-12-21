@@ -11,25 +11,14 @@ import { API_BASE_URL } from "../constants.ts";
 const Teams = () => {
   const location = useLocation();
   const [teamName, setTeamName] = useState("");
-  const [teamPoints, setTeamPoints] = useState("");
   const quizId = location.state.quizId;
-  const [User, setUser] = useState([]);
-  const [UserId, setUserId] = useState([]);
-  const [userName, setUserName] = useState([]);
-  const [teamId, setTeamId] = useState(0);
-  const [teamIds, setTeamIds] = useState([]);
+  const [teamIds, setteamIds] = useState([]);
   const [teamNames, setTeamNames] = useState([]);
 
   const [showSuccess, setShowSuccess] = useState(false);
   const handleCloseSuccess = () => setShowSuccess(false);
   const handleShowSuccess = () => setShowSuccess(true);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const confirm = () => {
-    handleShow();
-  };
   const [showWarning, setShowwarning] = useState(false);
   const handleShowWarning = () => setShowwarning(true);
   const handleCloseWarning = () => setShowwarning(false);
@@ -60,7 +49,6 @@ const Teams = () => {
           }
         }
       });
-      console.log("unavail: ", selectedUsers);
       // refresh()
     } else {
       //console.log(response.status)
@@ -72,12 +60,10 @@ const Teams = () => {
     var valid = true;
     //for each member in the selected members (arr):
     arr[0].forEach((member) => {
-      console.log("check this: ", member);
       //iterates through the list of all users in all teams
       selectedUsers.map((user) => {
         //if memberid exists in another team
-        console.log("unavail: ", user);
-        if (user.team != teamId && user.member == member) {
+        if (user.team !== teamId && user.member === member) {
           //set valid = false do that member cannot be added
           valid = false;
         }
@@ -90,7 +76,6 @@ const Teams = () => {
         var element = { member: +arr[0][index] };
         teamMember.push(element);
       }
-      console.log("send this", teamMember);
       axios({
         method: "PUT",
         url: `${API_BASE_URL}/api/Teams/` + teamId + "/",
@@ -103,7 +88,6 @@ const Teams = () => {
         },
         headers: { "Content-Type": "application/json" },
       }).then((response) => {
-        console.log(response.data);
         getAllSelectedUsers();
         refresh();
       });
@@ -136,15 +120,22 @@ const Teams = () => {
     }
   };
 
-  const deleteItem = (teamId) => {
+  const deleteItem = async (teamId, teamName) => {
     axios({
       method: "DELETE",
       url: `${API_BASE_URL}/api/Teams/` + teamId + "/",
       headers: { "Content-Type": "application/json" },
-    }).then(() => {
-      window.location.reload();
+    }).then((response) => {
+      const test = teamIds.filter((id) => +id !== +teamId);
+      console.log("data", response.data);
+      const test1 = teamNames.filter((name) => name !== teamName);
+      setteamIds(test);
+      setTeamNames(test1);
+      // window.location.reload();
     });
-    // setTeamNames([]);
+    getAllTeams();
+    refresh();
+    console.log(teamNames);
   };
 
   const [value, setValue] = useState(0);
@@ -171,19 +162,17 @@ const Teams = () => {
         },
         headers: { "Content-Type": "application/json" },
       }).then((response) => {
-        // console.log(response.data);
-        //setTeamId(response.data.id);
-        //teamIds.push(response.data.id);
-        window.location.reload();
+        teamIds.push(response.data.id);
+        setTeams([]);
+        getAllTeams();
+        refresh();
       });
       //confirm();
-      refresh();
     }
     event.preventDefault();
   }
 
   function showTeams() {
-    // console.log("teams length", teamNames);
     while (teams.length) {
       teams.pop();
     }
@@ -196,7 +185,7 @@ const Teams = () => {
             <TeamCard
               teamName={teamNames[i]}
               teamId={teamIds[i]}
-              deleteItem={() => deleteItem(teamIds[i])}
+              deleteItem={() => deleteItem(teamIds[i], teamNames[i])}
               selectUser={selectUser}
               selectedUsers={selectedUsers}
             />
@@ -206,7 +195,7 @@ const Teams = () => {
             <TeamCard
               teamName={teamNames[i]}
               teamId={teamIds[i]}
-              deleteItem={() => deleteItem(teamIds[i])}
+              deleteItem={() => deleteItem(teamIds[i], teamNames[i])}
               selectUser={selectUser}
               selectedUsers={selectedUsers}
             />
@@ -285,13 +274,6 @@ const Teams = () => {
             body={
               " One or some players are already in another team. Remove them and try again."
             }
-          />
-          <ModalSuccess
-            showSuccess={show}
-            handleCloseSuccess={handleClose}
-            onclick={handleClose}
-            title={"New team created!"}
-            body={"Team created with name: " + teamName}
           />
           <ModalSuccess
             showSuccess={showSuccess}

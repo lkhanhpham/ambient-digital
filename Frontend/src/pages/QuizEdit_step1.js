@@ -33,8 +33,8 @@ const QuizEdit1 = () => {
 
   //all variables related to editing field
   const [fieldId, setFieldId] = useState(0);
-  var [ques, setQues] = useState(0);
-  var [point, setPoint] = useState(0);
+  var [ques] = useState(0);
+  var [point] = useState(0);
   const [show, setShow] = useState(false);
   //close the Question form
   const handleClose = () => setShow(false);
@@ -81,7 +81,7 @@ const QuizEdit1 = () => {
     setValue(value + 1);
     // createdGrid()
   };
-  const [question_text, setquestiontext] = useState([]);
+  const [question_text] = useState([]);
 
   function createGrid() {
     for (let i = 0; i < fields.length; i++) {
@@ -95,9 +95,9 @@ const QuizEdit1 = () => {
         tempfields.push(<CatField category_name={fields[i].categorie_name} />);
 
         for (let k = 0; k < fields.length; k++) {
-          if (fields[k].categorie_name == categorie_name) {
+          if (fields[k].categorie_name === categorie_name) {
             if (fields[k].question == null || fields[k].question == undefined) {
-              question_text[k] = "Please choose a question";
+              question_text[k] = "Choose a question";
             } else {
               question_text[k] = fields[k].question.question_text;
             }
@@ -167,7 +167,7 @@ const QuizEdit1 = () => {
     const id = select1.options[select1.selectedIndex].value;
     if (
       !question_text.includes(text) ||
-      fields.find(({ id }) => id == fieldId).question_id == id
+      fields.find(({ id }) => +id === fieldId).question_id === +id
     ) {
       ques = id;
       point = select2.options[select2.selectedIndex].value;

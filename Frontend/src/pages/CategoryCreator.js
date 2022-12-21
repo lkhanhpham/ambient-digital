@@ -46,7 +46,7 @@ const CategoryCreator = () => {
       </div>
       <div className="row justify-content-center">
         <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
-          <form className="text-light">
+          <form className="text-light" onSubmit={createCat}>
             <div className="form-group m-3">
               <label className="mb-2" htmlFor="exampleFormControlInput1">
                 Category Name
@@ -60,16 +60,18 @@ const CategoryCreator = () => {
                 onChange={(e) => setCatName(e.target.value)}
               ></input>
             </div>
-          </form>
 
-          <div className="d-flex justify-content-end p-3">
-            <Link to="/Library">
-              <button className="btn btn-secondary me-2">Cancel</button>
-            </Link>
-            <button onClick={createCat} className="btn btn-primary">
-              Create
-            </button>
-          </div>
+            <div className="d-flex justify-content-end p-3">
+              <Link to="/Library">
+                <button type="button" className="btn btn-secondary me-2">
+                  Cancel
+                </button>
+              </Link>
+              <button type="submit" className="btn btn-primary">
+                Create
+              </button>
+            </div>
+          </form>
         </div>
       </div>
       <ModalWarning

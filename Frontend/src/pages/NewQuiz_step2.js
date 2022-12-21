@@ -72,7 +72,7 @@ const NewQuiz2 = () => {
     var points = 100;
     const fields = [];
     for (let k = 0; k < nr_of_rows; k++) {
-      if (k % nr_of_rows == 0) {
+      if (k % nr_of_rows === 0) {
         points = 100;
       }
       if (!chosen[k + i * nr_of_rows]) {
@@ -129,7 +129,7 @@ const NewQuiz2 = () => {
         handleShowWarning1();
       }
     }
-    if (question_text[position] !== null && question_text[position] == text) {
+    if (question_text[position] !== null && question_text[position] === text) {
       chosen[position] = true;
       fieldPoints[position] = point;
     }
@@ -143,27 +143,17 @@ const NewQuiz2 = () => {
     //console.log(chosen)
     // console.log("cats",nr_of_categories,"length", chosen.length)
     //console.log(nr_of_categories * nr_of_rows)
-    if (chosen.length == nr_of_categories * nr_of_rows) {
+    if (chosen.length === nr_of_categories * nr_of_rows) {
       setValid(chosen.every((element) => element === true));
     }
     //console.log("valid", valid)
   };
 
-  // const nextStep = () => {
-  //     checkValid(chosen)
-  //     if (valid == true) {
-  //         handleShowSuccess()
-  //     } else {
-  //         handleShowWarning()
-  //     }
-
-  // }
-
   // After user edits all fields, the data is saved into fields
   const fillFields = () => {
     var k = -1;
     for (let i = 0; i < question_text.length; i++) {
-      if (i % nr_of_rows == 0) {
+      if (i % nr_of_rows === 0) {
         k += 1;
       }
       fields.push({
@@ -193,8 +183,6 @@ const NewQuiz2 = () => {
         //console.log(response.data)
       });
     }
-    // navigate back to library page
-    navigate("../../Library/");
   };
 
   //fetch all created questions
@@ -222,6 +210,7 @@ const NewQuiz2 = () => {
     checkValid(chosen);
     if (valid === true) {
       createBackendFields();
+      handleShowSuccess();
     } else {
       handleShowWarning();
     }
@@ -344,7 +333,7 @@ const NewQuiz2 = () => {
         showSuccess={showSuccess}
         title={"Finished!"}
         body={
-          "Your quiz is finished and ready to be played! Click on continue to create some teams for your quiz or go back to Library"
+          "Your quiz is finished! Continue and get ready to play by adding teams to your quiz or go back to Library"
         }
         onclick={goToTeams}
         goback={true}
