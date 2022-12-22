@@ -28,14 +28,43 @@ const QuestionFormEdit = (id) => {
   const [questionAnswerOption1b, setQuestionAnswerOption1b] = useState("");
   const [questionAnswerOption2b, setQuestionAnswerOption2b] = useState("");
   const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState("");
+  const [questionAnswerOption1c, setQuestionAnswerOption1c] = useState(null);
+  const [questionAnswerOption2c, setQuestionAnswerOption2c] = useState(null);
+  const [questionAnswerOption3c, setQuestionAnswerOption3c] = useState(null);
   const [show, setShow] = useState(false);
 
+  const [images, setImages] = useState([]);
+
+  const [isShown, setIsShown] = useState(false);
+
+  const [toLarge, setToLarge] = useState(false);
+  const handleClose4 = () => setToLarge(false);
+
+  const [questionImage, setQuestionImage] = useState(null);
+  const [answer1Image, setAnswer1Image] = useState(null);
+  const [answer2Image, setAnswer2Image] = useState(null);
+  const [answer3Image, setAnswer3Image] = useState(null);
+  const [answer4Image, setAnswer4Image] = useState(null);
+
+  const [question_image, setQuesImage] = useState(null);
+  const [question_image_id, setQuesImageId] = useState(null);
+
+  const [answer1_image, setAnsw1Image] = useState(null);
+  const [answer1_image_id, setAnsw1ImageId] = useState(null);
+  const [answer2_image, setAnsw2Image] = useState(null);
+  const [answer2_image_id, setAnsw2ImageId] = useState(null);
+  const [answer3_image, setAnsw3Image] = useState(null);
+  const [answer3_image_id, setAnsw3ImageId] = useState(null);
+  const [answer4_image, setAnsw4Image] = useState(null);
+  const [answer4_image_id, setAnsw4ImageId] = useState(null);
+  const [btnText, setBtnText] = useState("Add Images");
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
   };
   const handleClose2 = () => setShow2(false);
   const handleShow2 = (event) => {
+    uploadAll(event);
     if (
       questionText.length !== 0 &&
       defaultAnswer.length !== 0 &&
@@ -86,11 +115,56 @@ const QuestionFormEdit = (id) => {
       setQuestionAnswerOption1b(data.question_answer_option[0].is_correct);
       setQuestionAnswerOption2b(data.question_answer_option[1].is_correct);
       setQuestionAnswerOption3b(data.question_answer_option[2].is_correct);
+      setQuestionAnswerOption1c(data.question_answer_option[0].answer_image);
+      setQuestionAnswerOption2c(data.question_answer_option[1].answer_image);
+      setQuestionAnswerOption3c(data.question_answer_option[2].answer_image);
+
+      getAllImages();
     } else {
       //console.log(response.status)
       console.log("Failed Network request");
     }
   };
+
+  const getAllImages = async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/imageauthor/` + user.user_id + "/"
+    );
+    const data = await response.json();
+    if (response.ok) {
+      setImages(data.image_author);
+    } else {
+      console.log("Failed Network request");
+    }
+  };
+
+  function assignImages() {
+    if (images.length === 0) {
+      return;
+    }
+    for (let run = 0; run < images.length; run++) {
+      if (images[run].id === questions.question_image) {
+        setQuestionImage(images[run]);
+        setQuesImageId(images[run].id);
+      } else if (images[run].id === defaultAnswer.answer_image) {
+        setAnswer1Image(images[run]);
+        setAnsw1ImageId(images[run].id);
+      } else if (images[run].id === questionAnswerOption1c) {
+        setAnswer2Image(images[run]);
+        setAnsw2ImageId(images[run].id);
+      } else if (images[run].id === questionAnswerOption2c) {
+        setAnswer3Image(images[run]);
+        setAnsw3ImageId(images[run].id);
+      } else if (images[run].id === questionAnswerOption3c) {
+        setAnswer4Image(images[run]);
+        setAnsw4ImageId(images[run].id);
+      }
+    }
+  }
+  useEffect(() => {
+    assignImages(); // This will be executed when `images` state changes
+  }, [images]);
+
   useEffect(() => {
     getAllQuestions();
   }, []);
@@ -101,21 +175,29 @@ const QuestionFormEdit = (id) => {
       url: url,
       data: {
         question_text: questionText,
-        default_answer: defaultAnswer,
+        question_image: question_image_id,
+        default_answer: {
+          text: defaultAnswer.text,
+          is_correct: true,
+          answer_image: answer1_image_id,
+        },
         question_type: questiontype,
         author: user.user_id,
         question_answer_option: [
           {
             text: questionAnswerOption1,
             is_correct: questionAnswerOption1b,
+            answer_image: answer2_image_id,
           },
           {
             text: questionAnswerOption2,
             is_correct: questionAnswerOption2b,
+            answer_image: answer3_image_id,
           },
           {
             text: questionAnswerOption3,
             is_correct: questionAnswerOption3b,
+            answer_image: answer4_image_id,
           },
         ],
       },
@@ -197,6 +279,105 @@ const QuestionFormEdit = (id) => {
     eventListener();
   }, []);
 
+  const handleClick = (event) => {
+    setIsShown((current) => !current);
+    if (btnText === "Add Images") {
+      setBtnText("Hide Images");
+    } else {
+      setBtnText("Add Images");
+    }
+  };
+
+  function deleteQuestion(event) {
+    if (event === "delete_question_image") {
+      setQuesImageId(null);
+      setQuestionImage(null);
+    } else if (event === "delete_answer1_image") {
+      setAnsw1ImageId(null);
+      setAnswer1Image(null);
+    } else if (event === "delete_answer2_image") {
+      setAnsw2ImageId(null);
+      setAnswer2Image(null);
+    } else if (event === "delete_answer3_image") {
+      setAnsw3ImageId(null);
+      setAnswer3Image(null);
+    } else if (event === "delete_answer4_image") {
+      setAnsw4ImageId(null);
+      setAnswer4Image(null);
+    }
+  }
+
+  const onImageChange = (event) => {
+    if (event.target.files[0].size > 5242880) {
+      setToLarge(true);
+      var uploadField = document.getElementById(event.target.id);
+      uploadField.value = "";
+    } else {
+      if (event.target.id === "question_image") {
+        setQuesImage(event.target.files[0]);
+      } else if (event.target.id === "answer1_image") {
+        setAnsw1Image(event.target.files[0]);
+      } else if (event.target.id === "answer2_image") {
+        setAnsw2Image(event.target.files[0]);
+      } else if (event.target.id === "answer3_image") {
+        setAnsw3Image(event.target.files[0]);
+      } else if (event.target.id === "answer4_image") {
+        setAnsw4Image(event.target.files[0]);
+      }
+    }
+  };
+
+  function uploadAll(event) {
+    for (let image_nr = 0; image_nr < 5; image_nr++) {
+      event.preventDefault();
+      // the if assigns an image containing a constant to the variable image depending on which iteration
+      if (image_nr === 0) {
+        var image = question_image;
+      } else if (image_nr === 1) {
+        console.log("working");
+        var image = answer1_image;
+      } else if (image_nr === 2) {
+        var image = answer2_image;
+      } else if (image_nr === 3) {
+        var image = answer3_image;
+      } else if (image_nr === 4) {
+        var image = answer4_image;
+      }
+      if (image === null) {
+        continue;
+      }
+      // creates formdata and adds all for images necessary variables to it
+      let data = new FormData();
+      data.append("picture", image);
+      data.append("name", image.name);
+      data.append("author", user.user_id);
+      // posts the formdata to images interface
+      axios({
+        method: "POST",
+        url: "http://localhost:8000/api/images/",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data,
+      })
+        .then((res) => {
+          //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
+          if (image_nr === 0) {
+            setQuesImageId(res.data.id);
+          } else if (image_nr === 1) {
+            setAnsw1ImageId(res.data.id);
+          } else if (image_nr === 2) {
+            setAnsw2ImageId(res.data.id);
+          } else if (image_nr === 3) {
+            setAnsw3ImageId(res.data.id);
+          } else if (image_nr === 4) {
+            setAnsw4ImageId(res.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
   return (
     <>
       <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
@@ -208,7 +389,7 @@ const QuestionFormEdit = (id) => {
           className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
         >
           <form className="text-light">
-            <label for="type">Choose a Type: </label>
+            <label htmlFor="type">Choose a Type: </label>
             <select
               id="selectOpt"
               name="typeSelection"
@@ -221,12 +402,16 @@ const QuestionFormEdit = (id) => {
           </form>
 
           <form className="text-light">
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px" }}
+            >
               Question Text
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="exampleFormControlInput1"
               placeholder={questionText}
               text={questionText}
@@ -234,18 +419,58 @@ const QuestionFormEdit = (id) => {
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
             ></input>
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
-              Answers{" "}
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="question_image"
+                  name="question_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+            {questionImage && (
+              <div className="pt-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {questionImage.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_question_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px", fontWeight: "bold" }}
+            >
+              Answers:
             </label>
 
             <div className="container1">
-              <label htmlFor="exampleFormControlInput1">
+              <label
+                htmlFor="exampleFormControlInput1"
+                style={{ paddingTop: "15px" }}
+              >
                 Choice 1 (has to be true)
               </label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput1"
                   placeholder={defaultAnswer.text}
                   text={defaultAnswer.text}
@@ -255,12 +480,51 @@ const QuestionFormEdit = (id) => {
                 ></input>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer1_image"
+                  name="answer1_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            {answer1Image && (
+              <div className="pt-3">
+                <label
+                  className="mb-2 text-break"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {answer1Image.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_answer1_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+
             <div id="containerID2" className="container2">
-              <label htmlFor="exampleFormControlInput2">Choice 2</label>
+              <label
+                htmlFor="exampleFormControlInput2"
+                style={{ paddingTop: "15px" }}
+              >
+                Choice 2
+              </label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput2"
                   placeholder={questionAnswerOption1}
                   text={questionAnswerOption1}
@@ -268,25 +532,64 @@ const QuestionFormEdit = (id) => {
                   maxLength="500"
                   onChange={(e) => setQuestionAnswerOption1(e.target.value)}
                 ></input>
-                <input
-                  className="right"
-                  id="checkbox1"
-                  type="checkbox"
-                  value={questionAnswerOption1b}
-                  checked={questionAnswerOption1b}
-                  onChange={(e) =>
-                    setQuestionAnswerOption1b(!questionAnswerOption1b)
-                  }
-                ></input>
-                <label id="checkbox-value1">true</label>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer2_image"
+                  name="answer2_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            {answer2Image && (
+              <div className="pt-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {answer2Image.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_answer2_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+            <input
+              className="right"
+              id="checkbox1"
+              type="checkbox"
+              value={questionAnswerOption1b}
+              checked={questionAnswerOption1b}
+              onChange={(e) =>
+                setQuestionAnswerOption1b(!questionAnswerOption1b)
+              }
+            ></input>
+            <label id="checkbox-value1">Answer is correct</label>
+
             <div id="containerID3" className="container3">
-              <label htmlFor="exampleFormControlInput3">Choice 3</label>
+              <label
+                htmlFor="exampleFormControlInput3"
+                style={{ paddingTop: "15px" }}
+              >
+                Choice 3
+              </label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput3"
                   placeholder={questionAnswerOption2}
                   maxLength="500"
@@ -294,25 +597,64 @@ const QuestionFormEdit = (id) => {
                   value={questionAnswerOption2}
                   onChange={(e) => setQuestionAnswerOption2(e.target.value)}
                 ></input>
-                <input
-                  className="right"
-                  id="checkbox2"
-                  type="checkbox"
-                  value={questionAnswerOption2b}
-                  checked={questionAnswerOption2b}
-                  onChange={(e) =>
-                    setQuestionAnswerOption2b(!questionAnswerOption2b)
-                  }
-                ></input>
-                <label id="checkbox-value2">true</label>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer3_image"
+                  name="answer3_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            {answer3Image && (
+              <div className="pt-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {answer3Image.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_answer3_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+            <input
+              className="right"
+              id="checkbox2"
+              type="checkbox"
+              value={questionAnswerOption2b}
+              checked={questionAnswerOption2b}
+              onChange={(e) =>
+                setQuestionAnswerOption2b(!questionAnswerOption2b)
+              }
+            ></input>
+            <label id="checkbox-value2">Answer is correct</label>
+
             <div id="containerID4" className="container4">
-              <label htmlFor="exampleFormControlInput4">Choice 4</label>
+              <label
+                htmlFor="exampleFormControlInput4"
+                style={{ paddingTop: "15px" }}
+              >
+                Choice 4
+              </label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput4"
                   placeholder={questionAnswerOption3}
                   text={questionAnswerOption3}
@@ -320,22 +662,58 @@ const QuestionFormEdit = (id) => {
                   value={questionAnswerOption3}
                   onChange={(e) => setQuestionAnswerOption3(e.target.value)}
                 ></input>
-                <input
-                  className="right"
-                  id="checkbox3"
-                  type="checkbox"
-                  value={questionAnswerOption3b}
-                  checked={questionAnswerOption3b}
-                  onChange={(e) =>
-                    setQuestionAnswerOption3b(!questionAnswerOption3b)
-                  }
-                ></input>
-                <label id="checkbox-value3">true</label>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer4_image"
+                  name="answer4_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            {answer4Image && (
+              <div className="pt-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {answer4Image.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_answer4_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+            <input
+              className="right"
+              id="checkbox3"
+              type="checkbox"
+              value={questionAnswerOption3b}
+              checked={questionAnswerOption3b}
+              onChange={(e) =>
+                setQuestionAnswerOption3b(!questionAnswerOption3b)
+              }
+            ></input>
+            <label id="checkbox-value3">Answer is correct</label>
           </form>
 
-          <div className="d-flex justify-content-end p-3">
+          <div className="d-flex justify-content-end py-3">
+            <button className="btn btn-secondary me-2" onClick={handleClick}>
+              {btnText}
+            </button>
             <button className="btn btn-secondary me-2" onClick={handleShow}>
               Delete
             </button>
@@ -382,6 +760,12 @@ const QuestionFormEdit = (id) => {
                   </Button>
                 </Link>
               </Modal.Footer>
+            </Modal>
+            <Modal show={toLarge} onHide={handleClose4}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>
+                This file is too large and will not be uploaded
+              </Modal.Body>
             </Modal>
           </div>
         </div>

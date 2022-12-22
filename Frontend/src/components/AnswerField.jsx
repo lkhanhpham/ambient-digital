@@ -1,11 +1,10 @@
 const AnswerField = (props) => {
-  console.log(props);
   return (
     <>
       <div
         onClick={props.handleShow}
         className="custom-card d-flex justify-content-center AnswerOption"
-        style={{ margin: "20px" }}
+        style={{ marginBottom: "30px" }}
         id="AnswerOption"
       >
         <p

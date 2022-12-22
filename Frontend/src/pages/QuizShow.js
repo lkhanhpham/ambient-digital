@@ -19,7 +19,6 @@ const QuizShow = (props) => {
   const [cols] = useState([]);
   const statusString = localStorage.getItem(quizId);
   const status = JSON.parse(statusString);
-  console.log(status);
 
   for (let i = 0; i < fields.length; i++) {
     if (!cols.includes(fields[i].categorie_name)) {

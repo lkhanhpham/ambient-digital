@@ -21,10 +21,31 @@ const QuestionForm = () => {
   const [questionAnswerOption3b, setQuestionAnswerOption3b] = useState("false");
   const { user } = useContext(AuthContext);
 
+  const [isShown, setIsShown] = useState(false);
+  const [toLarge, setToLarge] = useState(false);
+  const handleClose3 = () => setToLarge(false);
+  const [btnText, setBtnText] = useState("Add Images");
+
+  const [question_image, setQuesImage] = useState(null);
+  const [question_image_id, setQuesImageId] = useState(null);
+
+  const [answer1_image, setAnsw1Image] = useState(null);
+  const [answer1_image_id, setAnsw1ImageId] = useState(null);
+
+  const [answer2_image, setAnsw2Image] = useState(null);
+  const [answer2_image_id, setAnsw2ImageId] = useState(null);
+
+  const [answer3_image, setAnsw3Image] = useState(null);
+  const [answer3_image_id, setAnsw3ImageId] = useState(null);
+
+  const [answer4_image, setAnsw4Image] = useState(null);
+  const [answer4_image_id, setAnsw4ImageId] = useState(null);
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleShow = (event) => {
+    uploadAll(event);
     if (
       questionText.length !== 0 &&
       defaultAnswer.length !== 0 &&
@@ -54,24 +75,29 @@ const QuestionForm = () => {
       url: `${API_BASE_URL}/api/question/`,
       data: {
         question_text: questionText,
+        question_image: question_image_id,
         author: user.user_id,
         question_type: dropdownV,
         default_answer: {
           text: defaultAnswer,
           is_correct: true,
+          answer_image: answer1_image_id,
         },
         question_answer_option: [
           {
             text: questionAnswerOption1,
             is_correct: questionAnswerOption1b,
+            answer_image: answer2_image_id,
           },
           {
             text: questionAnswerOption2,
             is_correct: questionAnswerOption2b,
+            answer_image: answer3_image_id,
           },
           {
             text: questionAnswerOption3,
             is_correct: questionAnswerOption3b,
+            answer_image: answer4_image_id,
           },
         ],
       },
@@ -149,6 +175,83 @@ const QuestionForm = () => {
     createQuestionMC(event);
     window.location.reload();
   };
+  const handleClick = (event) => {
+    setIsShown((current) => !current);
+    if (btnText === "Add Images") {
+      setBtnText("Hide Images");
+    } else {
+      setBtnText("Add Images");
+    }
+  };
+
+  const onImageChange = (event) => {
+    if (event.target.files[0].size > 5242880) {
+      setToLarge(true);
+      var uploadField = document.getElementById(event.target.id);
+      uploadField.value = "";
+    } else {
+      if (event.target.id === "question_image") {
+        setQuesImage(event.target.files[0]);
+      } else if (event.target.id === "answer1_image") {
+        setAnsw1Image(event.target.files[0]);
+      } else if (event.target.id === "answer2_image") {
+        setAnsw2Image(event.target.files[0]);
+      } else if (event.target.id === "answer3_image") {
+        setAnsw3Image(event.target.files[0]);
+      } else if (event.target.id === "answer4_image") {
+        setAnsw4Image(event.target.files[0]);
+      }
+    }
+  };
+  function uploadAll(event) {
+    for (let image_nr = 0; image_nr < 5; image_nr++) {
+      event.preventDefault();
+      // the if assigns an image containing a constant to the variable image depending on which iteration
+      if (image_nr === 0) {
+        var image = question_image;
+      } else if (image_nr === 1) {
+        var image = answer1_image;
+      } else if (image_nr === 2) {
+        var image = answer2_image;
+      } else if (image_nr === 3) {
+        var image = answer3_image;
+      } else if (image_nr === 4) {
+        var image = answer4_image;
+      }
+      if (image === null) {
+        continue;
+      }
+      // creates formdata and adds all for images necessary variables to it
+      let data = new FormData();
+      data.append("picture", image);
+      data.append("name", image.name);
+      data.append("author", user.user_id);
+      // posts the formdata to images interface
+      axios({
+        method: "POST",
+        url: "http://localhost:8000/api/images/",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data,
+      })
+        .then((res) => {
+          //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
+          if (image_nr === 0) {
+            setQuesImageId(res.data.id);
+          } else if (image_nr === 1) {
+            setAnsw1ImageId(res.data.id);
+          } else if (image_nr === 2) {
+            setAnsw2ImageId(res.data.id);
+          } else if (image_nr === 3) {
+            setAnsw3ImageId(res.data.id);
+          } else if (image_nr === 4) {
+            setAnsw4ImageId(res.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   return (
     <>
@@ -161,7 +264,7 @@ const QuestionForm = () => {
           className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
         >
           <form className="text-light">
-            <label for="type">Choose a Type: </label>
+            <label htmlFor="type">Choose a Type: </label>
             <select
               id="selectOpt"
               name="typeSelection"
@@ -180,12 +283,16 @@ const QuestionForm = () => {
           </form>
 
           <form className="text-light">
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px" }}
+            >
               Question Text
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="exampleFormControlInput1"
               placeholder="New Question"
               text={questionText}
@@ -193,18 +300,35 @@ const QuestionForm = () => {
               onChange={(e) => setQuestionText(e.target.value)}
               required
             ></input>
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
-              Answers{" "}
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="question_image"
+                  name="question_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px" }}
+            >
+              Answers:
             </label>
 
-            <div className="container1">
+            <div className="container1" style={{ paddingTop: "15px" }}>
               <label htmlFor="exampleFormControlInput1">
                 Choice 1 (has to be true)
               </label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="New Answer"
                   text={defaultAnswer}
@@ -214,86 +338,158 @@ const QuestionForm = () => {
                 ></input>
               </div>
             </div>
-            <div id="containerID2" className="container2">
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer1_image"
+                  name="answer1_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            <div
+              id="containerID2"
+              className="container2"
+              style={{ paddingTop: "35px" }}
+            >
               <label htmlFor="exampleFormControlInput2">Choice 2</label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput2"
                   placeholder="New Answer"
                   text={defaultAnswer}
                   maxLength="500"
                   onChange={(e) => setQuestionAnswerOption1(e.target.value)}
                 ></input>
-                <input
-                  className="right"
-                  id="checkbox1"
-                  type="checkbox"
-                  value={questionAnswerOption1b}
-                  required
-                ></input>
-                <label id="checkbox-value1">true</label>
               </div>
             </div>
-            <div id="containerID3" className="container3">
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer2_image"
+                  name="answer2_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+            <input
+              className="right"
+              id="checkbox1"
+              type="checkbox"
+              value={questionAnswerOption1b}
+              required
+            ></input>
+            <label id="checkbox-value1">Answer is correct</label>
+
+            <div
+              id="containerID3"
+              className="container3"
+              style={{ paddingTop: "15px" }}
+            >
               <label htmlFor="exampleFormControlInput3">Choice 3</label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput3"
                   placeholder="New Answer"
                   text={defaultAnswer}
                   maxLength="500"
                   onChange={(e) => setQuestionAnswerOption2(e.target.value)}
                 ></input>
-                <input
-                  className="right"
-                  id="checkbox2"
-                  type="checkbox"
-                  value={questionAnswerOption2b}
-                  required
-                ></input>
-                <label id="checkbox-value2">true</label>
               </div>
             </div>
-            <div id="containerID4" className="container4">
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer3_image"
+                  name="answer3_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            <input
+              className="right"
+              id="checkbox2"
+              type="checkbox"
+              value={questionAnswerOption2b}
+              required
+            ></input>
+            <label id="checkbox-value2">Answer is correct</label>
+
+            <div
+              id="containerID4"
+              className="container4"
+              style={{ paddingTop: "15px" }}
+            >
               <label htmlFor="exampleFormControlInput4">Choice 4</label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput4"
                   placeholder="New Answer"
                   text={defaultAnswer}
                   maxLength="500"
                   onChange={(e) => setQuestionAnswerOption3(e.target.value)}
                 ></input>
-                <input
-                  className="right"
-                  id="checkbox3"
-                  type="checkbox"
-                  value={questionAnswerOption3b}
-                  required
-                ></input>
-                <label id="checkbox-value3">true</label>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer4_image"
+                  name="answer4_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+            <input
+              className="right"
+              id="checkbox3"
+              type="checkbox"
+              value={questionAnswerOption3b}
+              required
+            ></input>
+            <label id="checkbox-value3">Answer is correct</label>
           </form>
 
-          <div className="d-flex justify-content-end p-3">
-            <Link to="/Library">
-              <button className="btn btn-secondary me-2">Cancel</button>
-            </Link>
+          <div className=" d-flex justify-content-end py-4">
+            <button className="btn btn-secondary me-2" onClick={handleClick}>
+              {btnText}
+            </button>
 
             <button
               id="submitButton"
               onClick={handleShow}
-              className="btn btn-primary"
+              className="btn btn-primary me-2"
             >
               Create
             </button>
+
+            <Link to="/Library">
+              <button className="btn btn-secondary me-2 ">Cancel</button>
+            </Link>
 
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton></Modal.Header>
@@ -313,6 +509,12 @@ const QuestionForm = () => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
                 You forgot something. Please fill in every field.
+              </Modal.Body>
+            </Modal>
+            <Modal show={toLarge} onHide={handleClose3}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>
+                This file is too large and will not be uploaded
               </Modal.Body>
             </Modal>
           </div>

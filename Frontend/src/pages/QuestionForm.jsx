@@ -14,15 +14,25 @@ const QuestionForm = () => {
 
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  const [author, setAuthorId] = useState("");
 
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [toLarge, setToLarge] = useState(false);
+
+  const [question_image, setQuesImage] = useState(null);
+  const [question_image_id, setQuesImageId] = useState(null);
+
+  const [answer_image, setAnswImage] = useState(null);
+  const [answer_image_id, setAnswImageId] = useState(null);
+
+  const [isShown, setIsShown] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
+  const handleClose3 = () => setToLarge(false);
 
-  const handleShow = () => {
+  const handleShow = (event) => {
+    uploadAll(event);
     if (questionText.length !== 0 && defaultAnswer.length !== 0) {
       setShow(true);
     } else {
@@ -42,18 +52,19 @@ const QuestionForm = () => {
       dropdownV = value;
     }
     event.preventDefault();
-    setAuthorId(user.user_id);
 
     axios({
       method: "POST",
       url: `${API_BASE_URL}/api/question/`,
       data: {
         question_text: questionText,
+        question_image: question_image_id,
         author: user.user_id,
         question_type: dropdownV,
         default_answer: {
           text: defaultAnswer,
           is_correct: true,
+          answer_image: answer_image_id,
         },
       },
       headers: { "Content-Type": "application/json" },
@@ -104,6 +115,70 @@ const QuestionForm = () => {
     window.location.reload();
   };
 
+  const [btnText, setBtnText] = useState("Add Images");
+  const handleClick = (event) => {
+    setIsShown((current) => !current);
+    if (btnText === "Add Images") {
+      setBtnText("Hide Images");
+    } else {
+      setBtnText("Add Images");
+    }
+  };
+
+  // the following is called when an image is added and safes it to a constant
+  const onImageChange = (event) => {
+    if (event.target.files[0].size > 5242880) {
+      setToLarge(true);
+      var uploadField = document.getElementById(event.target.id);
+      uploadField.value = "";
+    } else {
+      if (event.target.id === "question_image") {
+        setQuesImage(event.target.files[0]);
+      } else if (event.target.id === "answer_image") {
+        setAnswImage(event.target.files[0]);
+      }
+    }
+  };
+
+  function uploadAll(event) {
+    for (let image_nr = 0; image_nr < 2; image_nr++) {
+      event.preventDefault();
+      // the if assigns an image containing a constant to the variable image depending on which iteration
+      if (image_nr === 0) {
+        var image = question_image;
+      } else if (image_nr === 1) {
+        var image = answer_image;
+      }
+      if (image === null) {
+        continue;
+      }
+      // creates formdata and adds all for images necessary variables to it
+      let data = new FormData();
+      data.append("picture", image);
+      data.append("name", image.name);
+      data.append("author", user.user_id);
+      // posts the formdata to images interface
+      axios({
+        method: "POST",
+        url: "http://localhost:8000/api/images/",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data,
+      })
+        .then((res) => {
+          //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
+          if (image_nr === 0) {
+            setQuesImageId(res.data.id);
+          }
+          if (image_nr === 1) {
+            setAnswImageId(res.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
   return (
     <>
       <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
@@ -115,7 +190,7 @@ const QuestionForm = () => {
           className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
         >
           <form className="text-light">
-            <label for="type">Choose a Type: </label>
+            <label htmlFor="type">Choose a Type: </label>
             <select
               id="selectOpt"
               name="typeSelection"
@@ -139,7 +214,7 @@ const QuestionForm = () => {
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="exampleFormControlInput1"
               placeholder="New Question"
               text={questionText}
@@ -147,6 +222,19 @@ const QuestionForm = () => {
               onChange={(e) => setQuestionText(e.target.value)}
               required="required"
             ></input>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="question_image"
+                  name="question_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
 
             <label className="mb-2" htmlFor="exampleFormControlInput1">
               Answers{" "}
@@ -159,7 +247,7 @@ const QuestionForm = () => {
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="New Answer"
                   text={defaultAnswer}
@@ -169,21 +257,38 @@ const QuestionForm = () => {
                 ></input>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer_image"
+                  name="answer_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
           </form>
 
-          <div className="d-flex justify-content-end p-3">
+          <div className="d-flex justify-content-end py-4">
+            <button className="btn btn-secondary me-2" onClick={handleClick}>
+              {btnText}
+            </button>
+
+            <button
+              id="submitButton"
+              onClick={handleShow}
+              className="btn btn-primary me-2"
+            >
+              Create
+            </button>
+
             <Link to="/Library">
               <button className="btn btn-secondary me-2">Cancel</button>
             </Link>
 
-            <button
-              id="submitButton"
-              type="submit"
-              onClick={handleShow}
-              className="btn btn-primary"
-            >
-              Create
-            </button>
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Woohoo, you created a question!</Modal.Body>
@@ -201,6 +306,12 @@ const QuestionForm = () => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
                 You forgot something. Please fill in every field.
+              </Modal.Body>
+            </Modal>
+            <Modal show={toLarge} onHide={handleClose3}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>
+                This file is too large and will not be uploaded
               </Modal.Body>
             </Modal>
           </div>

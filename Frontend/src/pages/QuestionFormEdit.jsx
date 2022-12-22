@@ -21,6 +21,22 @@ const QuestionFormEdit = (id) => {
   const [author, setAuthorId] = useState("");
   const [questiontype, setQuestionType] = useState("");
   const [show, setShow] = useState(false);
+  const [btnText, setBtnText] = useState("Add Images");
+  const [toLarge, setToLarge] = useState(false);
+  const handleClose4 = () => setToLarge(false);
+
+  const [images, setImages] = useState([]);
+
+  const [isShown, setIsShown] = useState(false);
+
+  const [questionImage, setQuestionImage] = useState(null);
+  const [answerImage, setAnswerImage] = useState(null);
+
+  const [question_image, setQuesImage] = useState(null);
+  const [question_image_id, setQuesImageId] = useState(null);
+
+  const [answer_image, setAnswImage] = useState(null);
+  const [answer_image_id, setAnswImageId] = useState(null);
 
   const handleClose = () => setShow(false);
   const [show2, setShow2] = useState(false);
@@ -31,6 +47,7 @@ const QuestionFormEdit = (id) => {
   const { user } = useContext(AuthContext);
 
   const handleShow2 = (event) => {
+    uploadAll(event);
     if (questionText.length !== 0 && defaultAnswer.length !== 0) {
       //console.log("show2")
       setShow3(true);
@@ -69,11 +86,42 @@ const QuestionFormEdit = (id) => {
       setDefaultAnswer(data.default_answer);
       setQuestionType(data.question_type);
       setAuthorId(user.user_id);
+      getAllImages();
     } else {
-      //console.log(response.status)
       console.log("Failed Network request");
     }
   };
+
+  const getAllImages = async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/imageauthor/` + user.user_id + "/"
+    );
+    const data = await response.json();
+    if (response.ok) {
+      setImages(data.image_author);
+    } else {
+      console.log("Failed Network request");
+    }
+  };
+
+  function assignImages() {
+    if (images.length === 0) {
+      return;
+    }
+    for (let run = 0; run < images.length; run++) {
+      if (images[run].id === questions.question_image) {
+        setQuestionImage(images[run]);
+        setQuesImageId(images[run].id);
+      } else if (images[run].id === defaultAnswer.answer_image) {
+        setAnswerImage(images[run]);
+        setAnswImageId(images[run].id);
+      }
+    }
+  }
+  useEffect(() => {
+    assignImages(); // This will be executed when `images` state changes
+  }, [images]);
+
   useEffect(() => {
     getAllQuestions();
   }, []);
@@ -85,9 +133,11 @@ const QuestionFormEdit = (id) => {
       url: url,
       data: {
         question_text: questionText,
+        question_image: question_image_id,
         default_answer: {
           text: defaultAnswer.text,
           is_correct: true,
+          answer_image: answer_image_id,
         },
         question_type: questiontype,
         author: user.user_id,
@@ -144,6 +194,78 @@ const QuestionFormEdit = (id) => {
     eventListener();
   }, []);
 
+  const handleClick = (event) => {
+    setIsShown((current) => !current);
+    if (btnText === "Add Images") {
+      setBtnText("Hide Images");
+    } else {
+      setBtnText("Add Images");
+    }
+  };
+
+  function deleteQuestion(event) {
+    if (event === "delete_question_image") {
+      setQuesImageId(null);
+      setQuestionImage(null);
+    } else if (event === "delete_answer_image") {
+      setAnswImageId(null);
+      setAnswerImage(null);
+    }
+  }
+
+  const onImageChange = (event) => {
+    if (event.target.files[0].size > 5242880) {
+      setToLarge(true);
+      var uploadField = document.getElementById(event.target.id);
+      uploadField.value = "";
+    } else {
+      if (event.target.id === "question_image") {
+        setQuesImage(event.target.files[0]);
+      } else if (event.target.id === "answer_image") {
+        setAnswImage(event.target.files[0]);
+      }
+    }
+  };
+
+  function uploadAll(event) {
+    for (let image_nr = 0; image_nr < 2; image_nr++) {
+      event.preventDefault();
+      // the if assigns an image containing a constant to the variable image depending on which iteration
+      if (image_nr === 0) {
+        var image = question_image;
+      } else if (image_nr === 1) {
+        var image = answer_image;
+      }
+      if (image === null) {
+        continue;
+      }
+      // creates formdata and adds all for images necessary variables to it
+      let data = new FormData();
+      data.append("picture", image);
+      data.append("name", image.name);
+      data.append("author", user.user_id);
+      // posts the formdata to images interface
+      axios({
+        method: "POST",
+        url: "http://localhost:8000/api/images/",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data,
+      })
+        .then((res) => {
+          //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
+          if (image_nr === 0) {
+            setQuesImageId(res.data.id);
+          }
+          if (image_nr === 1) {
+            setAnswImageId(res.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
   return (
     <>
       <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
@@ -155,7 +277,7 @@ const QuestionFormEdit = (id) => {
           className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
         >
           <form className="text-light">
-            <label for="type">Choose a Type: </label>
+            <label htmlFor="type">Choose a Type: </label>
             <select
               id="selectOpt"
               name="typeSelection"
@@ -173,12 +295,16 @@ const QuestionFormEdit = (id) => {
           </form>
 
           <form className="text-light">
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px" }}
+            >
               Question Text
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="exampleFormControlInput1"
               placeholder={questionText}
               text={questionText}
@@ -187,18 +313,58 @@ const QuestionFormEdit = (id) => {
               onChange={(e) => setQuestionText(e.target.value)}
             ></input>
 
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
-              Answers{" "}
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="question_image"
+                  name="question_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            {questionImage && (
+              <div className="py-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {questionImage.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_question_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+
+            <label
+              className="mb-2"
+              htmlFor="exampleFormControlInput1"
+              style={{ paddingTop: "15px", fontWeight: "bold" }}
+            >
+              Answers:
             </label>
 
             <div className="container1">
-              <label htmlFor="exampleFormControlInput1">
+              <label
+                htmlFor="exampleFormControlInput1"
+                style={{ paddingTop: "15px" }}
+              >
                 Choice 1 (has to be true)
               </label>
               <div>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput1"
                   placeholder={defaultAnswer.text}
                   text={defaultAnswer.text}
@@ -208,9 +374,45 @@ const QuestionFormEdit = (id) => {
                 ></input>
               </div>
             </div>
+
+            {isShown && (
+              <div style={{ paddingTop: "15px" }}>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="answer_image"
+                  name="answer_image"
+                  accept="image/png, image/jpeg"
+                  onChange={onImageChange}
+                ></input>
+              </div>
+            )}
+
+            {answerImage && (
+              <div className="py-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Image: {answerImage.name}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_answer_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </form>
 
-          <div className="d-flex justify-content-end p-3">
+          <div className="d-flex justify-content-end py-3">
+            <button className="btn btn-secondary me-2" onClick={handleClick}>
+              {btnText}
+            </button>
             <button className="btn btn-secondary me-2" onClick={handleShow}>
               Delete
             </button>
@@ -259,6 +461,12 @@ const QuestionFormEdit = (id) => {
                   </Button>
                 </Link>
               </Modal.Footer>
+            </Modal>
+            <Modal show={toLarge} onHide={handleClose4}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>
+                This file is too large and will not be uploaded
+              </Modal.Body>
             </Modal>
           </div>
         </div>

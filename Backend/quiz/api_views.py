@@ -12,13 +12,16 @@ from .serializers import (
     MyTokenObtainPairSerializer,
     GuestSerializer,
     AddTeammateSerializer,
+    ImageSerializer,
+    ImageAuthorSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
-from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember
+from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember, Image
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.db.models import Prefetch
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 # The classes in api_views are connected to a url in urls.py and connect a serializer with a
@@ -126,3 +129,18 @@ class AddTeammateView(
 ):
     serializer_class = AddTeammateSerializer
     queryset = TeamMember.objects.all()
+
+
+class ImageView(viewsets.ModelViewSet):
+    serializer_class = ImageSerializer
+    queryset = Image.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
+    # required for form-data posts
+
+
+class ImageAuthorView(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
+):
+    serializer_class = ImageAuthorSerializer
+    queryset = MyUser.objects.all()
+    lookup_field = "id"
