@@ -24,6 +24,7 @@ const QuestionForm = () => {
   const [isShown, setIsShown] = useState(false);
   const [toLarge, setToLarge] = useState(false);
   const handleClose3 = () => setToLarge(false);
+  const [btnText, setBtnText] = useState("Add Images");
 
   const [question_image, setQuesImage] = useState(null);
   const [question_image_id, setQuesImageId] = useState(null);
@@ -176,11 +177,18 @@ const QuestionForm = () => {
   };
   const handleClick = (event) => {
     setIsShown((current) => !current);
+    if (btnText === "Add Images") {
+      setBtnText("Hide Images");
+    } else {
+      setBtnText("Add Images");
+    }
   };
 
   const onImageChange = (event) => {
     if (event.target.files[0].size > 5242880) {
       setToLarge(true);
+      var uploadField = document.getElementById(event.target.id);
+      uploadField.value = "";
     } else {
       if (event.target.id === "question_image") {
         setQuesImage(event.target.files[0]);
@@ -468,7 +476,7 @@ const QuestionForm = () => {
 
           <div className=" d-flex justify-content-end py-4">
             <button className="btn btn-secondary me-2" onClick={handleClick}>
-              Toggle Images
+              {btnText}
             </button>
 
             <button
@@ -506,7 +514,7 @@ const QuestionForm = () => {
             <Modal show={toLarge} onHide={handleClose3}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
-                This file is to large and will not be uploaded
+                This file is too large and will not be uploaded
               </Modal.Body>
             </Modal>
           </div>
