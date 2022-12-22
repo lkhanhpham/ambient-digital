@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
+import ModalWarning from "./ModalWarning";
+import { Modal, Button } from "react-bootstrap";
 
 // For each created quiz one quizcard is rendered
 const Quiz = (props) => {
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
+  const nr_of_categories = props.nr_of_categories;
+  const nr_of_rows = props.nr_of_rows;
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setShow(true);
+  };
+
+  const [showWarning, setShowWarning] = useState(false);
+  //close the Warning
+  const handleCloseWarning = () => setShowWarning(false);
+  //show the Warning
+  const handleShowWarning = () => setShowWarning(true);
+
   const getAllFields = async () => {
     const response = await fetch(
       `${API_BASE_URL}/api/wholequiz/` + props.id + "/"
@@ -22,19 +39,29 @@ const Quiz = (props) => {
 
   const display = (event) => {
     event.preventDefault();
-
     const status = new Array(fields.length).fill(0);
     const fieldStatus = JSON.stringify(status);
     localStorage.setItem(props.id, fieldStatus);
-    navigate("/Quiz/" + props.id + "/", {
-      state: {
-        id: props.id,
-        title: props.title,
-        nr_of_categories: props.nr_of_categories,
-        nr_of_rows: props.nr_of_rows,
-        fields: fields,
-      },
+    console.log(status);
+    var valid = true;
+    fields.map((field) => {
+      if (field.question_id === null) {
+        valid = false;
+      }
     });
+    if (!valid) {
+      handleShowWarning();
+    } else {
+      navigate("/Quiz/" + props.id + "/", {
+        state: {
+          id: props.id,
+          title: props.title,
+          nr_of_categories: nr_of_categories,
+          nr_of_rows: nr_of_rows,
+          fields: fields,
+        },
+      });
+    }
   };
 
   const addTeam = (event) => {
@@ -43,7 +70,6 @@ const Quiz = (props) => {
       state: {
         quizId: props.id,
         title: props.title,
-        nr_of_categories: props.nr_of_categories,
       },
     });
   };
@@ -57,8 +83,8 @@ const Quiz = (props) => {
       state: {
         id: props.id,
         title: props.title,
-        nr_of_categories: props.nr_of_categories,
-        nr_of_rows: props.nr_of_rows,
+        nr_of_categories: nr_of_categories,
+        nr_of_rows: nr_of_rows,
         fields: fields,
       },
     });
@@ -90,20 +116,42 @@ const Quiz = (props) => {
       <div className="d-flex justify-content-center">
         <p className="body-text text-muted"> Created: {props.pub_date}</p>
       </div>
-      <div className="d-flex justify-content-center my-div">
+      <div className="d-flex justify-content-center mt-3 my-div">
         <button className="col my-btn" onClick={addTeam}>
-          Add teams
+          Teams
         </button>
       </div>
-      <div className="d-flex justify-content-center p-3">
+      <div className="d-flex justify-content-center mb-3 p-3">
         <div className="row ">
-          <button className="col me-3 my-btn " onClick={editItem}>
+          <button className="col me-3 my-btn" onClick={editItem}>
             Edit
           </button>
-          <button className="col my-btn" onClick={props.deleteItem}>
+          <button className="col my-btn" onClick={handleShow}>
             Delete
           </button>
         </div>
+        <ModalWarning
+          showWarning={showWarning}
+          handleCloseWarning={handleCloseWarning}
+          title={"Ugh! You cannot play this quiz yet."}
+          body={
+            "Looks like your quiz is incomplete. Edit this quiz and try again."
+          }
+          onclick={handleCloseWarning}
+        />
+        {/* Confirm delete */}
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton></Modal.Header>
+          <Modal.Body>Do you really want to delete this quiz?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={props.deleteItem}>
+              Yes!
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              No!
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
       <style jsx="true">
         {`

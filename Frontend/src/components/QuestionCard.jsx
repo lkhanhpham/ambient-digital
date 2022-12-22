@@ -1,6 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
 
 // For each created question one questioncard is rendered
 

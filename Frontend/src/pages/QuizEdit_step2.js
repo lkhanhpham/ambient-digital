@@ -11,7 +11,7 @@ import ModalWarning from "../components/ModalWarning";
 import AuthContext from "../context/AuthContext";
 
 // For each created quiz one quizcard is rendered
-const QuizEdit2 = (props) => {
+const QuizEdit2 = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,6 +23,7 @@ const QuizEdit2 = (props) => {
   var [cats, setCats] = useState([]);
   var [cols, setCols] = useState([]);
   const [value, setValue] = useState(0);
+  const [NrOfCats, setNrOfCats] = useState(nr_of_categories);
 
   //-------------------------------------
   //all variables related to editing field
@@ -63,7 +64,7 @@ const QuizEdit2 = (props) => {
       var exist = false;
       for (let i = 0; i < fields.length; i++) {
         //check if question exits in old columns
-        if (fields[i].question_id == id) {
+        if (fields[i].question_id === +id) {
           handleShowWarningQues();
           exist = true;
           break;
@@ -121,10 +122,10 @@ const QuizEdit2 = (props) => {
   //--------------------------------------
   //variables related to choosing categories
   //store all newly created columns (FRONTEND)
-  var [newcats, setNewcats] = useState([]);
+  var [newcats] = useState([]);
   const [nr_of_newcats, setNrOfNewcats] = useState(0);
   var [cats1, setCats1] = useState([]);
-  const [cat_name, setCatName] = useState([]);
+  const [cat_name] = useState([]);
   const [catIds] = useState([]);
   const [chosen] = useState([false]);
   //fetch all created categories
@@ -189,15 +190,18 @@ const QuizEdit2 = (props) => {
   //show the remove form
   const handleShow1 = () => setShowRemove(true);
 
+  const [showWarning2, setShowWarning2] = useState(false);
+  const handleCloseWarning2 = () => setShowWarning2(false);
+  const handleShowWarning2 = () => setShowWarning2(true);
+
   //boolean indicates whether user want to remove a category
-  var [confirm, setConfirm] = useState(false);
+  var [confirm] = useState(false);
   //name of the to-be-removed category
   const [confirmName, setConfirmName] = useState("");
   var [removedfields] = useState([]);
 
   const removeCat = (name) => {
     //newly created columns can be removed immediately
-    // console.log(name)
     if (cat_name.includes(name)) {
       // console.log("can delete", name.includes("Dummy"))
       setNrOfNewcats((nr_of_newcats) => nr_of_newcats - 1);
@@ -207,22 +211,30 @@ const QuizEdit2 = (props) => {
       showNewCat(cat_name);
       // refresh()
     } else {
-      //check if user confirms to delete
-      //if already confirmed, proceed to delete
-      if (confirm) {
-        removedfields = fields.filter((field) => field.categorie_name === name);
-        const test = fields.filter((field) => field.categorie_name !== name);
-        // console.log(test)
-        setCols([]);
-        setCats([]);
-        setFields(test);
-        putQuiz();
-        refresh();
-      }
-      //otherwise (user canceled) show a warning
-      else {
-        setConfirmName(name);
-        handleShow1();
+      //there must be at least 1 column
+      if (cols.length === 1) {
+        handleShowWarning2();
+      } else {
+        //check if user confirms to delete
+        //if already confirmed, proceed to delete
+        if (confirm) {
+          removedfields = fields.filter(
+            (field) => field.categorie_name === name
+          );
+          const test = fields.filter((field) => field.categorie_name !== name);
+          // console.log(test)
+          setNrOfCats(NrOfCats - 1);
+          setCols([]);
+          setCats([]);
+          setFields(test);
+          putQuiz();
+          refresh();
+        }
+        //otherwise (user canceled) show a warning
+        else {
+          setConfirmName(name);
+          handleShow1();
+        }
       }
     }
   };
@@ -321,7 +333,7 @@ const QuizEdit2 = (props) => {
   }
   // showNewCat()
 
-  const [old_question_text, setquestiontext] = useState([]);
+  const [old_question_text] = useState([]);
 
   function createGrid() {
     for (let i = 0; i < fields.length; i++) {
@@ -342,9 +354,9 @@ const QuizEdit2 = (props) => {
         tempfields.push(<CatField category_name={fields[i].categorie_name} />);
 
         for (let k = 0; k < fields.length; k++) {
-          if (fields[k].categorie_name == categorie_name) {
+          if (fields[k].categorie_name === categorie_name) {
             if (fields[k].question == null || fields[k].question == undefined) {
-              old_question_text[k] = "Please choose a question";
+              old_question_text[k] = "Choose a question";
             } else {
               old_question_text[k] = fields[k].question.question_text;
             }
@@ -375,7 +387,7 @@ const QuizEdit2 = (props) => {
   const fillFields = () => {
     var k = -1;
     for (let i = 0; i < question_text.length; i++) {
-      if (i % nr_of_rows == 0) {
+      if (i % nr_of_rows === 0) {
         k += 1;
       }
       newfields.push({
@@ -430,6 +442,7 @@ const QuizEdit2 = (props) => {
       }).then((response) => {
         //console.log(response.data)
         refresh();
+        setNrOfCats(cols.length + nr_of_newcats);
       });
       handleShowSuccess();
     }
@@ -440,7 +453,7 @@ const QuizEdit2 = (props) => {
       state: {
         id: quizId,
         title: title,
-        nr_of_categories: nr_of_categories + nr_of_newcats,
+        nr_of_categories: NrOfCats,
         nr_of_rows: nr_of_rows,
         fields: fields,
       },
@@ -451,7 +464,7 @@ const QuizEdit2 = (props) => {
       state: {
         id: quizId,
         title: title,
-        nr_of_categories: nr_of_categories,
+        nr_of_categories: NrOfCats,
         nr_of_rows: nr_of_rows,
       },
     });
@@ -575,7 +588,7 @@ const QuizEdit2 = (props) => {
               ))}
             </select>
           </form>
-          <Link to="CategoryCreator" target="_blank">
+          <Link to="../../CategoryCreator" target="_blank">
             <button className="small-button mt-3">Create category</button>
           </Link>
         </Modal.Body>
@@ -629,6 +642,12 @@ const QuizEdit2 = (props) => {
         body={"You can proceed to next step"}
         handleCloseSuccess={handleCloseSuccess}
         onclick={handleCloseSuccess}
+      />
+      <ModalWarning
+        showWarning={showWarning2}
+        handleCloseWarning={handleCloseWarning2}
+        title={"Cannot delete this category."}
+        body={"Your quiz must have at least one category"}
       />
     </div>
   );

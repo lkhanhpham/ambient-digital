@@ -121,7 +121,7 @@ const QuizEdit3 = () => {
   //--------------------------------------
   //variables related to choosing rows
   //store all newly created rows (FRONTEND)
-  const [newrows, setNewrows] = useState([]);
+  const [newrows] = useState([]);
   const [nr_of_newrows, setNrOfNewrows] = useState(0);
 
   // this function re-renders the component
@@ -137,8 +137,14 @@ const QuizEdit3 = () => {
   //show the remove form
   const handleShow1 = () => setShowRemove(true);
 
+  const [showWarning1, setShowWarning1] = useState(false);
+  //close the remove form
+  const handleCloseWarning1 = () => setShowWarning1(false);
+  //show the remove form
+  const handleShowWarning1 = () => setShowWarning1(true);
+
   //boolean indicates whether user want to remove a category
-  var [confirm, setConfirm] = useState(false);
+  var [confirm] = useState(false);
   //name of the to-be-removed category
   const [confirmId, setConfirmId] = useState(-1);
   var [removedfields] = useState([]);
@@ -147,43 +153,46 @@ const QuizEdit3 = () => {
   const removeRow = (rowId) => {
     //console.log(rowId)
     if (rowId > nrOfRows - 1) {
-      //console.log("can be removed immediately")
+      //can be removed immediately
       setNrOfNewrows((nr_of_newrows) => nr_of_newrows - 1);
-      //console.log("rows before delete", rows)
       rows[rowId - nrOfRows] = null;
       const test = rows.filter((item) => item != null);
       setRows(test);
-      //console.log("rows after delete", test)
       showNewRow(test);
     } else {
-      //check if user confirms to delete
-      //if already confirmed, proceed to delete
-      if (confirm) {
-        for (let i = 0; i < fieldIds.length; i++) {
-          let id = fieldIds[i].id;
-          if (fieldIds[i].row === confirmId) removedfields.push(id);
-        }
-        //console.log("removed fields", removedfields)
-        var test = [];
-        test = fields.map((field) => {
-          if (removedfields.includes(field.id)) {
-            return null;
+      //check if there's only 1 row left
+      if (nrOfRows === 1) {
+        handleShowWarning1();
+      } else {
+        //check if user confirms to delete
+        //if already confirmed, proceed to delete
+        if (confirm) {
+          for (let i = 0; i < fieldIds.length; i++) {
+            let id = fieldIds[i].id;
+            if (fieldIds[i].row === confirmId) removedfields.push(id);
           }
-          return field;
-        });
-        test = test.filter((el) => el !== null);
-        //console.log("test removed", test)
-        setCols([]);
-        setCats([]);
-        setNrOfRows(nrOfRows - 1);
-        setFields(test);
-        putQuiz();
-        refresh();
-      }
-      //otherwise (user canceled) show a warning
-      else {
-        setConfirmId(rowId);
-        handleShow1();
+          //console.log("removed fields", removedfields)
+          var test = [];
+          test = fields.map((field) => {
+            if (removedfields.includes(field.id)) {
+              return null;
+            }
+            return field;
+          });
+          test = test.filter((el) => el !== null);
+          //console.log("test removed", test)
+          setCols([]);
+          setCats([]);
+          setNrOfRows(nrOfRows - 1);
+          setFields(test);
+          putQuiz();
+          refresh();
+        }
+        //otherwise (user canceled) show a warning
+        else {
+          setConfirmId(rowId);
+          handleShow1();
+        }
       }
     }
   };
@@ -267,7 +276,7 @@ const QuizEdit3 = () => {
   const [fieldIds] = useState([]);
   const [Ids] = useState([]);
 
-  const [old_question_text, setquestiontext] = useState([]);
+  const [old_question_text] = useState([]);
 
   function createGrid() {
     for (let i = 0; i < fields.length; i++) {
@@ -283,7 +292,7 @@ const QuizEdit3 = () => {
 
         var rowId = 0;
         for (let k = 0; k < fields.length; k++) {
-          if (fields[k].categorie_name == categorie_name) {
+          if (fields[k].categorie_name === categorie_name) {
             const id = fields[k].id;
             if (!Ids.includes(id)) {
               Ids.push(id);
@@ -292,7 +301,7 @@ const QuizEdit3 = () => {
               rowId = rowId + 1;
             }
             if (fields[k].question == null || fields[k].question == undefined) {
-              old_question_text[k] = "Please choose a question";
+              old_question_text[k] = "Choose a question";
             } else {
               old_question_text[k] = fields[k].question.question_text;
             }
@@ -360,7 +369,6 @@ const QuizEdit3 = () => {
   const saveStep3 = (event) => {
     event.preventDefault();
     if (question_text.length !== nr_of_newrows * nr_of_categories) {
-      console.log(nr_of_newrows * nr_of_categories);
       handleShowWarning();
     } else {
       fillFields();
@@ -533,6 +541,12 @@ const QuizEdit3 = () => {
         body={
           "Looks like this question exists in your quiz. Please choose another question."
         }
+      />
+      <ModalWarning
+        showWarning={showWarning1}
+        handleCloseWarning={handleCloseWarning1}
+        title={"Cannot delete this row."}
+        body={"Your quiz must have at least one row."}
       />
       <ModalSuccess
         showSuccess={showSuccess}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Question from "./QuestionCard";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";

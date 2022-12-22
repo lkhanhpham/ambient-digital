@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import CatField from "../components/CatField";
@@ -10,17 +10,12 @@ const QuizShow = (props) => {
   const location = useLocation();
   const quiz_name = location.state.title;
   const quizId = location.state.id;
-  const nr_of_rows = location.state.nr_of_rows;
-  const nr_of_categories = location.state.nr_of_categories;
-  const categories = location.state.categories;
-  const catIds = location.state.catIds;
 
   //array that stores all the question texts (index = row_index + col_index*nr_of_row)
   //array that stores the points of all the fields
   const fields = location.state.fields;
-  const [cats, setCats] = useState([]);
+  const [cats] = useState([]);
   const [myFields] = useState([]);
-  const [question_text, setquestiontext] = useState([]);
   const [cols] = useState([]);
   const statusString = localStorage.getItem(quizId);
   const status = JSON.parse(statusString);
@@ -37,7 +32,7 @@ const QuizShow = (props) => {
   for (let i = 0; i < cols.length; i++) {
     let rows = [];
     for (let k = 0; k < fields.length; k++) {
-      if (fields[k].categorie_name == cols[i]) {
+      if (fields[k].categorie_name === cols[i]) {
         rows.push(
           <PlayingField
             points={fields[k].point}
