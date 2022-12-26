@@ -4,6 +4,8 @@ import Select from "react-select";
 
 // For each created quiz one quizcard is rendered
 const TeamCard = (props) => {
+  //a state that follows if the tab is in focus or not
+  const [tabHasFocus, setTabHasFocus] = useState(true);
   //array that stores all user options to choose from
   const [userOptions, setUserOptions] = useState([]);
   //array that stores all selected users from dropdown menu
@@ -78,7 +80,28 @@ const TeamCard = (props) => {
   useEffect(() => {
     getAllUser();
     getAllMembers();
+
+    const handleFocus = () => {
+      getAllUser();
+      getAllMembers();
+      setTabHasFocus(true);
+    };
+
+    const handleBlur = () => {
+      getAllUser();
+      getAllMembers();
+      setTabHasFocus(false);
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleBlur);
+    };
   }, []);
+
   return (
     <div className="team-card d-flex flex-column justify-content-center m-2">
       <div
@@ -103,7 +126,6 @@ const TeamCard = (props) => {
             defaultValue={defaultOptions}
             options={userOptions}
             onChange={handleTypeSelect}
-            onClick={getAllUser}
             isMulti
             noOptionsMessage={() => "No such user found"}
           />
