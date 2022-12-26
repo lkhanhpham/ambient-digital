@@ -163,7 +163,12 @@ const NewQuiz1 = () => {
         </Modal.Header>
         <Modal.Body>
           <form>
-            <select className="form-control" id="categories" onChange={update}>
+            <select
+              className="form-control"
+              id="categories"
+              onChange={update}
+              onClick={getAllCats}
+            >
               {cats.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.categorie_name}

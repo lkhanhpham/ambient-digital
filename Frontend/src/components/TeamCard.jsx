@@ -103,6 +103,7 @@ const TeamCard = (props) => {
             defaultValue={defaultOptions}
             options={userOptions}
             onChange={handleTypeSelect}
+            onClick={getAllUser}
             isMulti
             noOptionsMessage={() => "No such user found"}
           />

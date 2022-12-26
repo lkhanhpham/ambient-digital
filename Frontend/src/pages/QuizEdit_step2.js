@@ -531,7 +531,11 @@ const QuizEdit2 = () => {
         <Modal.Body>
           <form>
             <h1 className="small-title mb-2">Question</h1>
-            <select className="form-control mb-4" id="questions">
+            <select
+              className="form-control mb-4"
+              id="questions"
+              onClick={getAllQues}
+            >
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.question_text}
@@ -580,7 +584,11 @@ const QuizEdit2 = () => {
         </Modal.Header>
         <Modal.Body>
           <form>
-            <select className="form-control" id="categories">
+            <select
+              className="form-control"
+              id="categories"
+              onClick={getAllCats}
+            >
               {cats1.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.categorie_name}

@@ -269,6 +269,7 @@ const NewQuiz2 = () => {
               className="form-control mb-4"
               id="questions"
               onChange={update}
+              onClick={getAllQues}
             >
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>

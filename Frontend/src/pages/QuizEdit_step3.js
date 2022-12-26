@@ -485,7 +485,11 @@ const QuizEdit3 = () => {
         <Modal.Body>
           <form>
             <h1 className="small-title mb-2">Question</h1>
-            <select className="form-control mb-4" id="questions">
+            <select
+              className="form-control mb-4"
+              id="questions"
+              onClick={getAllQues}
+            >
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.question_text}
