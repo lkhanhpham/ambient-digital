@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
@@ -21,23 +21,45 @@ const Navbar = () => {
           navActive ? "active" : ""
         } nav__menu-list bg-light center`}
       >
-        <Link to="/">Home</Link>
+        <Link to="/" onClick={() => setNavActive(!navActive)}>
+          Home
+        </Link>
 
         {user ? (
           <>
-            <Link to="/Library">My Library</Link>
-            <Link to="/">Quiz-Room</Link>
-            <Link to="/QuizCreator">Create Quiz</Link>
-            <Link to="/QuestionCreator/SC">Create Question</Link>
-            <Link to="/CategoryCreator">Create Categories</Link>
+            <Link to="/Library" onClick={() => setNavActive(!navActive)}>
+              My Library
+            </Link>
+            <Link to="/" onClick={() => setNavActive(!navActive)}>
+              Quiz-Room
+            </Link>
+            <Link to="/QuizCreator" onClick={() => setNavActive(!navActive)}>
+              Create Quiz
+            </Link>
+            <Link
+              to="/QuestionCreator/SC"
+              onClick={() => setNavActive(!navActive)}
+            >
+              Create Question
+            </Link>
+            <Link
+              to="/CategoryCreator"
+              onClick={() => setNavActive(!navActive)}
+            >
+              Create Categories
+            </Link>
             <Link to="/" onClick={logoutUser}>
               Logout
             </Link>
           </>
         ) : (
           <>
-            <Link to="/Login">Login</Link>
-            <Link to="/Registration">Registration</Link>
+            <Link to="/Login" onClick={() => setNavActive(!navActive)}>
+              Login
+            </Link>
+            <Link to="/Registration" onClick={() => setNavActive(!navActive)}>
+              Registration
+            </Link>
           </>
         )}
       </div>
@@ -60,17 +82,18 @@ const Navbar = () => {
             text-decoration: none;
             color: inherit;
           }
-          header {
-            position: sticky;
-            z-index: 30;
-            top: 0;
-          }
-          nav {
+          .hidden {
             display: flex;
-            padding-left: 16px;
-            justify-content: space-between;
-            align-items: center;
-            background-color: inherit;
+            flex-direction: column;
+            position: fixed;
+            z-index: 1;
+            top: 70px;
+            width: 288px;
+            row-gap: 36px;
+            right: -288px;
+            padding-right: 16px;
+            transition: all 0.2s;
+            height: 100vh;
           }
           .nav__menu-bar {
             width: 40px;
@@ -102,15 +125,6 @@ const Navbar = () => {
           .nav__menu-list.active {
             right: 0;
           }
-          .nav__link {
-            font-size: 18px;
-            position: relative;
-            transition: all 0.2s;
-          }
-
-          .nav__link:hover {
-            font-weight: bold;
-          }
 
           .center {
             min-height: 600px;
@@ -130,20 +144,6 @@ const Navbar = () => {
             width: fit-content;
             column-gap: 24px;
             align-items: center;
-          }
-          .nav__link::before {
-            content: "";
-            position: absolute;
-            width: 0%;
-            height: 6px;
-            bottom: -16px;
-            left: 0;
-            background-color: black;
-            transition: all 0.2s;
-          }
-
-          .nav__link:hover:before {
-            width: 100%;
           }
           h1 {
             color: #f2f2f2;
