@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import CatField from "../components/CatField";
 import PlayingField from "../components/PlayingField";
+import TeamView from "../components/TeamView";
 
 // For each created quiz one quizcard is rendered
 const QuizShow = (props) => {
@@ -10,12 +11,12 @@ const QuizShow = (props) => {
   const location = useLocation();
   const quiz_name = location.state.title;
   const quizId = location.state.id;
-
-  //array that stores all the question texts (index = row_index + col_index*nr_of_row)
-  //array that stores the points of all the fields
   const fields = location.state.fields;
+  const teams = location.state.teams;
+
   const [cats] = useState([]);
   const [myFields] = useState([]);
+  const [myTeams] = useState([]);
   const [cols] = useState([]);
   const statusString = localStorage.getItem(quizId);
   const status = JSON.parse(statusString);
@@ -52,6 +53,13 @@ const QuizShow = (props) => {
     myFields.push(<div className="d-flex flex-column">{rows}</div>);
   }
 
+  function showTeams() {
+    teams.map((team) => {
+      myTeams.push(<TeamView teamName={team.team_name} />);
+    });
+  }
+  showTeams();
+
   return (
     <div className="container">
       <p style={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}>
@@ -59,6 +67,10 @@ const QuizShow = (props) => {
       </p>
       <div className="d-sm-flex justify-content-center">{cats}</div>
       <div className="d-sm-flex justify-content-center">{myFields}</div>
+      <div className="mt-5 pt-5 d-flex flex-column justify-content-center">
+        <h3 className="big-title align-self-center">Teams</h3>
+        <div>{myTeams}</div>
+      </div>
       <button
         className="btn btn-secondary my-4 float-end"
         onClick={() => navigate(-1)}

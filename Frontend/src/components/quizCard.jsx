@@ -37,6 +37,21 @@ const Quiz = (props) => {
     }
   };
 
+  const [teams, setTeams] = useState([]);
+  const getAllTeams = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/Teams/`);
+    const data = await response.json();
+    // var arr = []
+    if (response.ok) {
+      //console.log(data)
+      setTeams(data);
+      // refresh();
+    } else {
+      //console.log(response.status)
+      console.log("Failed Network request");
+    }
+  };
+
   const display = (event) => {
     event.preventDefault();
     const status = new Array(fields.length).fill(0);
@@ -59,6 +74,7 @@ const Quiz = (props) => {
           nr_of_categories: nr_of_categories,
           nr_of_rows: nr_of_rows,
           fields: fields,
+          teams: teams,
         },
       });
     }
@@ -76,6 +92,7 @@ const Quiz = (props) => {
 
   useEffect(() => {
     getAllFields();
+    getAllTeams();
   }, []);
   const editItem = async (event) => {
     event.preventDefault();
