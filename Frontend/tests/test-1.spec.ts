@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+var username = Math.random().toString(36).slice(-8);
+var password = Math.random().toString(36).slice(-8);
+var email= username+ "@ex.com"
+
 test('Registration_Create_Question', async ({ page }) => {
 
   await page.goto('/');
@@ -13,19 +17,19 @@ test('Registration_Create_Question', async ({ page }) => {
 
   await page.getByPlaceholder('Username').click();
 
-  await page.getByPlaceholder('Username').fill('Test12345678');
+  await page.getByPlaceholder('Username').fill(username);
 
   await page.getByPlaceholder('Username').press('Tab');
 
-  await page.getByPlaceholder('E-Mail').fill('Test12345678@ex.com');
+  await page.getByPlaceholder('E-Mail').fill(email);
 
   await page.getByPlaceholder('E-Mail').press('Tab');
 
-  await page.locator('#password').fill('Test123456789Test12345678');
+  await page.locator('#password').fill(password);
 
   await page.locator('#password').press('Tab');
 
-  await page.getByPlaceholder('Confirm Password').fill('Test123456789Test12345678');
+  await page.getByPlaceholder('Confirm Password').fill(password);
 
   await page.getByRole('button', { name: 'Submit' }).click();
 
@@ -35,11 +39,11 @@ test('Registration_Create_Question', async ({ page }) => {
 
   await page.getByPlaceholder('Enter Username').click();
 
-  await page.getByPlaceholder('Enter Username').fill('Test12345678');
+  await page.getByPlaceholder('Enter Username').fill(username);
 
   await page.getByPlaceholder('Enter Username').press('Tab');
 
-  await page.getByPlaceholder('Enter Password').fill('Test123456789Test12345678');
+  await page.getByPlaceholder('Enter Password').fill(password);
 
   await page.getByRole('button', { name: 'Login' }).click();
   await expect(page).toHaveURL('http://localhost:3000/Library');
