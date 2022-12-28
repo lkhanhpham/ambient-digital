@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 var username = Math.random().toString(36).slice(-8);
-var password = Math.random().toString(36).slice(-8);
+var password = Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
 var email= username+ "@ex.com"
 
 test('Registration_Create_Question', async ({ page }) => {
