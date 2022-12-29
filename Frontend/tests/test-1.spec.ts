@@ -27,8 +27,9 @@ test('Registration_Create_Question', async ({ page }) => {
   
   let password= generatePassword(12)
   let username= generatePassword(12)
-
   let email=  username+ "@ex.com"
+
+  await expect(page).toHaveURL(password+" "+ username+ " "+ email);
 
   await page.goto('/');
 
