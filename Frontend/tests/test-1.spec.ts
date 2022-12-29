@@ -33,7 +33,12 @@ test('Registration_Create_Question', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Submit' }).click();
 
-  await(10)
+  await  page.on('dialog', async dialog => {
+    console.log(dialog.message());
+    await dialog.dismiss();
+  });
+
+  await page.goto('http://localhost:3000/login');
 
   await expect(page).toHaveURL('http://localhost:3000/login');
 
