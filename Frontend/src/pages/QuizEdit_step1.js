@@ -221,6 +221,19 @@ const QuizEdit1 = () => {
   useEffect(() => {
     getAllFields();
     getAllQues();
+
+    const handleFocus = () => {
+      getAllFields();
+      getAllQues();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleFocus);
+    };
   }, []);
 
   return (
@@ -274,11 +287,7 @@ const QuizEdit1 = () => {
         <Modal.Body>
           <form>
             <h1 className="small-title mb-2">Question</h1>
-            <select
-              className="form-control mb-4"
-              id="questions"
-              onClick={getAllQues}
-            >
+            <select className="form-control mb-4" id="questions">
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.question_text}

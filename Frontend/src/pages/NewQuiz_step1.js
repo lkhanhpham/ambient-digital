@@ -133,6 +133,18 @@ const NewQuiz1 = () => {
 
   useEffect(() => {
     getAllCats();
+
+    const handleFocus = () => {
+      getAllCats();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleFocus);
+    };
   }, []);
 
   return (
@@ -163,12 +175,7 @@ const NewQuiz1 = () => {
         </Modal.Header>
         <Modal.Body>
           <form>
-            <select
-              className="form-control"
-              id="categories"
-              onChange={update}
-              onClick={getAllCats}
-            >
+            <select className="form-control" id="categories" onChange={update}>
               {cats.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.categorie_name}

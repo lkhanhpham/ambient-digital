@@ -231,6 +231,18 @@ const NewQuiz2 = () => {
 
   useEffect(() => {
     getAllQues();
+
+    const handleFocus = () => {
+      getAllQues();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleFocus);
+    };
   }, []);
 
   return (
@@ -269,7 +281,6 @@ const NewQuiz2 = () => {
               className="form-control mb-4"
               id="questions"
               onChange={update}
-              onClick={getAllQues}
             >
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>

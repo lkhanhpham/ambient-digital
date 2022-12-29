@@ -91,16 +91,12 @@ const TeamCard = (props) => {
       updateUserAndMember(teamId);
     };
 
-    const handleBlur = () => {
-      updateUserAndMember(teamId);
-    };
-
     window.addEventListener("focus", handleFocus);
-    window.addEventListener("blur", handleBlur);
+    window.addEventListener("blur", handleFocus);
 
     return () => {
       window.removeEventListener("focus", handleFocus);
-      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("blur", handleFocus);
     };
   }, [teamId]);
 
