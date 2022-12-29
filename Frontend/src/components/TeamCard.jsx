@@ -2,10 +2,39 @@ import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import Select from "react-select";
 
+const getAllUser = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/user/`);
+  const data = await response.json();
+  var arr = [];
+  if (response.ok) {
+    //console.log(data)
+    data.map((user) => {
+      return arr.push({ value: user.id, label: user.username });
+    });
+    return arr;
+    // console.log(arr)
+    // setUser(data)
+  } else {
+    //console.log(response.status)
+    console.log("Failed Network request");
+  }
+};
+
+const getAllMembers = async (teamId) => {
+  const response = await fetch(`${API_BASE_URL}/api/Teams/` + teamId + "/");
+  const data = await response.json();
+  if (response.ok) {
+    return data.teamMember_team;
+    // console.log(data.teamMember_team)
+    // setUser(data)
+  } else {
+    //console.log(response.status)
+    console.log("Failed Network request");
+  }
+};
+
 // For each created quiz one quizcard is rendered
 const TeamCard = (props) => {
-  //a state that follows if the tab is in focus or not
-  const [tabHasFocus, setTabHasFocus] = useState(true);
   //array that stores all user options to choose from
   const [userOptions, setUserOptions] = useState([]);
   //array that stores all selected users from dropdown menu
@@ -16,46 +45,6 @@ const TeamCard = (props) => {
   const [defaultOptions] = useState([]);
   const teamId = props.teamId;
   const teamName = props.teamName;
-
-  const handleTypeSelect = (e) => {
-    let value = Array.from(e, (option) => option.value);
-    console.log(value);
-    while (selectedUsers.length) {
-      selectedUsers.pop();
-    }
-    selectedUsers.push(value);
-  };
-
-  const getAllUser = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/user/`);
-    const data = await response.json();
-    var arr = [];
-    if (response.ok) {
-      //console.log(data)
-      data.map((user) => {
-        return arr.push({ value: user.id, label: user.username });
-      });
-      setUserOptions(arr);
-      // console.log(arr)
-      // setUser(data)
-    } else {
-      //console.log(response.status)
-      console.log("Failed Network request");
-    }
-  };
-
-  const getAllMembers = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/Teams/` + teamId + "/");
-    const data = await response.json();
-    if (response.ok) {
-      setMembers(data.teamMember_team);
-      // console.log(data.teamMember_team)
-      // setUser(data)
-    } else {
-      //console.log(response.status)
-      console.log("Failed Network request");
-    }
-  };
 
   const setDefaultValue = () => {
     while (defaultOptions.length) {
@@ -73,24 +62,37 @@ const TeamCard = (props) => {
     // console.log("defaults",defaultOptions)
   };
 
+  const handleTypeSelect = (e) => {
+    let value = Array.from(e, (option) => option.value);
+    console.log(value);
+    while (selectedUsers.length) {
+      selectedUsers.pop();
+    }
+    selectedUsers.push(value);
+  };
+
   if (userOptions.length > 0 && members.length > 0) {
     setDefaultValue();
   }
 
+  const updateUserAndMember = (teamId) => {
+    getAllUser().then((userArr) => {
+      setUserOptions(userArr);
+    });
+    getAllMembers(teamId).then((memberArr) => {
+      setMembers(memberArr);
+    });
+  };
+
   useEffect(() => {
-    getAllUser();
-    getAllMembers();
+    updateUserAndMember(teamId);
 
     const handleFocus = () => {
-      getAllUser();
-      getAllMembers();
-      setTabHasFocus(true);
+      updateUserAndMember(teamId);
     };
 
     const handleBlur = () => {
-      getAllUser();
-      getAllMembers();
-      setTabHasFocus(false);
+      updateUserAndMember(teamId);
     };
 
     window.addEventListener("focus", handleFocus);
@@ -100,7 +102,7 @@ const TeamCard = (props) => {
       window.removeEventListener("focus", handleFocus);
       window.removeEventListener("blur", handleBlur);
     };
-  }, []);
+  }, [teamId]);
 
   return (
     <div className="team-card d-flex flex-column justify-content-center m-2">
