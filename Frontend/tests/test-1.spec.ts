@@ -1,11 +1,34 @@
 import { test, expect } from '@playwright/test';
 
 test('Registration_Create_Question', async ({ page }) => {
-  //var username = Math.random().toString(36).slice(-8);
-  var username="Admin12"
-  //var password = Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
-  var password ="AdminAdmin12"
-  var email= "AdminAdmin12"+ "@ex.com"
+
+  function generatePassword(passwordLength) {
+    var numberChars = "0123456789";
+    var upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var lowerChars = "abcdefghijklmnopqrstuvwxyz";
+    var allChars = numberChars + upperChars + lowerChars;
+    var randPasswordArray = Array(passwordLength);
+    randPasswordArray[0] = numberChars;
+    randPasswordArray[1] = upperChars;
+    randPasswordArray[2] = lowerChars;
+    randPasswordArray = randPasswordArray.fill(allChars, 3);
+    return shuffleArray(randPasswordArray.map(function(x) { return x[Math.floor(Math.random() * x.length)] })).join('');
+  }
+  
+  function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array;
+  }
+  
+  let password= generatePassword(12)
+  let username= generatePassword(12)
+
+  let email=  username+ "@ex.com"
 
   await page.goto('/');
 
@@ -38,7 +61,7 @@ test('Registration_Create_Question', async ({ page }) => {
     console.log(dialog.message());
     await dialog.dismiss();
   });
-
+ 
   await page.goto('http://localhost:3000/login');
 
   await expect(page).toHaveURL('http://localhost:3000/login');
@@ -131,6 +154,6 @@ test('Registration_Create_Question', async ({ page }) => {
   await page.locator('.nav__menu-bar').click();
 
   await page.getByRole('link', { name: 'Registration' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Registration');
+  await expect(page).toHaveURL('http://localhost:3000/Registration'); 
 
 });
