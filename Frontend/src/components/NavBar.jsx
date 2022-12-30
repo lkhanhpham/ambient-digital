@@ -9,6 +9,19 @@ const Navbar = () => {
   const [navActive, setNavActive] = useState(null);
   const { user, logoutUser } = useContext(AuthContext);
 
+  //enable hidden navbar
+  {
+    const nav = document.querySelector('nav_menu-bar');
+    let lastScrollY = window.scrollY;
+  
+    window.addEventListener("scroll", () => {
+      if (lastScrollY < window.scrollY) {
+        setNavActive(!navActive)
+      }  
+      lastScrollY = window.scrollY;
+    });
+  }
+
   return (
     <>
       <div onClick={() => setNavActive(!navActive)} className={`nav__menu-bar`}>
@@ -16,6 +29,8 @@ const Navbar = () => {
         <div></div>
         <div></div>
       </div>
+
+     
       <div
         className={`${
           navActive ? "active" : ""
