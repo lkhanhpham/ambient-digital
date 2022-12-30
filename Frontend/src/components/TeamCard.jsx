@@ -17,7 +17,6 @@ const TeamCard = (props) => {
 
   const handleTypeSelect = (e) => {
     let value = Array.from(e, (option) => option.value);
-    console.log(value);
     while (selectedUsers.length) {
       selectedUsers.pop();
     }
@@ -49,6 +48,7 @@ const TeamCard = (props) => {
       setMembers(data.teamMember_team);
       // console.log(data.teamMember_team)
       // setUser(data)
+      console.log(teamId, data.teamMember_team);
     } else {
       //console.log(response.status)
       console.log("Failed Network request");

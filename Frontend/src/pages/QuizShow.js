@@ -54,9 +54,35 @@ const QuizShow = (props) => {
   }
 
   function showTeams() {
-    teams.map((team) => {
-      myTeams.push(<TeamView teamName={team.team_name} />);
-    });
+    const temp1 = [];
+    const temp2 = [];
+    for (let i = 0; i < teams.length; i++) {
+      const team = teams[i];
+      if (i < teams.length / 2) {
+        temp1.push(
+          <TeamView
+            teamName={team.team_name}
+            teamPoint={team.team_points}
+            teamId={team.id}
+          />
+        );
+      } else {
+        temp2.push(
+          <TeamView
+            teamName={team.team_name}
+            teamPoint={team.team_points}
+            teamId={team.id}
+          />
+        );
+      }
+    }
+
+    myTeams.push(
+      <div className="d-flex">
+        <div className="d-flex flex-column">{temp1}</div>
+        <div className="d-flex flex-column"> {temp2}</div>
+      </div>
+    );
   }
   showTeams();
 
@@ -69,7 +95,7 @@ const QuizShow = (props) => {
       <div className="d-sm-flex justify-content-center">{myFields}</div>
       <div className="mt-5 pt-5 d-flex flex-column justify-content-center">
         <h3 className="big-title align-self-center">Teams</h3>
-        <div>{myTeams}</div>
+        <div className="align-self-center">{myTeams}</div>
       </div>
       <button
         className="btn btn-secondary my-4 float-end"
