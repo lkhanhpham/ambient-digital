@@ -14,6 +14,7 @@ from .serializers import (
     AddTeammateSerializer,
     ImageSerializer,
     ImageAuthorSerializer,
+    AddPointSerializer
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
@@ -129,6 +130,12 @@ class AddTeammateView(
 ):
     serializer_class = AddTeammateSerializer
     queryset = TeamMember.objects.all()
+
+class AddPointView(
+    viewsets.ModelViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
+):
+    serializer_class = AddPointSerializer
+    queryset = Team.objects.all()
 
 
 class ImageView(viewsets.ModelViewSet):

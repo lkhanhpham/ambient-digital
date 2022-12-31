@@ -27,6 +27,7 @@ const PlayingField = (props) => {
       localStorage.setItem(props.quizid, JSON.stringify(status));
       navigate(props.quizid + "/Question/" + props.id + "/", {
         state: {
+          quizId: props.quizid,
           id: props.id,
           question: question,
           position: props.position,

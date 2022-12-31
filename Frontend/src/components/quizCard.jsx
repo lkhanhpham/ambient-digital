@@ -38,13 +38,21 @@ const Quiz = (props) => {
   };
 
   const [teams, setTeams] = useState([]);
+  const [teamNames] = useState([]);
   const getAllTeams = async () => {
     const response = await fetch(`${API_BASE_URL}/api/Teams/`);
     const data = await response.json();
     // var arr = []
     if (response.ok) {
       //console.log(data)
-      setTeams(data);
+      data.map((team) => {
+        if (team.quiz === props.id) {
+          if (!teamNames.includes(team.team_name)) {
+            teamNames.push(team.team_name);
+            teams.push(team);
+          }
+        }
+      });
       // refresh();
     } else {
       //console.log(response.status)
@@ -57,7 +65,6 @@ const Quiz = (props) => {
     const status = new Array(fields.length).fill(0);
     const fieldStatus = JSON.stringify(status);
     localStorage.setItem(props.id, fieldStatus);
-    console.log(status);
     var valid = true;
     fields.map((field) => {
       if (field.question_id === null) {

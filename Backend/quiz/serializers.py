@@ -405,3 +405,19 @@ class AddTeammateSerializer(serializers.ModelSerializer):
             quiz=team_instance.quiz,
         )
         return created_member
+
+
+class AddPointSerializer(serializers.ModelSerializer):
+    # team_id = TeamSerializer(read_only = True)
+
+    class Meta:
+        model = Team
+        fields = ("id","team_points", "quiz")
+        read_only_fields = ("id", "quiz")
+
+    def update(self, instance, validated_data):
+        instance.team_points = validated_data.get("team_points", instance.team_points)
+        instance.team_name = validated_data.get("team_name", instance.team_name)
+        instance.quiz = validated_data.get("quiz", instance.quiz)
+        instance.save()
+        return instance
