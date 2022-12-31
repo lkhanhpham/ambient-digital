@@ -133,6 +133,18 @@ const NewQuiz1 = () => {
 
   useEffect(() => {
     getAllCats();
+
+    const handleFocus = () => {
+      getAllCats();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleFocus);
+    };
   }, []);
 
   return (
