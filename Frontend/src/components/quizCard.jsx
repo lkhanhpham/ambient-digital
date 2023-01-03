@@ -12,6 +12,8 @@ const Quiz = (props) => {
   const nr_of_rows = props.nr_of_rows;
 
   const [show, setShow] = useState(false);
+  const [showWarningNoTeams, setShowNoTeams] = useState(false);
+  const handleCloseNoTeams = () => setShowNoTeams(false);
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -53,6 +55,7 @@ const Quiz = (props) => {
           }
         }
       });
+      console.log(teams);
       // refresh();
     } else {
       //console.log(response.status)
@@ -61,29 +64,33 @@ const Quiz = (props) => {
   };
 
   const display = (event) => {
-    event.preventDefault();
-    const status = new Array(fields.length).fill(0);
-    const fieldStatus = JSON.stringify(status);
-    localStorage.setItem(props.id, fieldStatus);
-    var valid = true;
-    fields.map((field) => {
-      if (field.question_id === null) {
-        valid = false;
-      }
-    });
-    if (!valid) {
-      handleShowWarning();
-    } else {
-      navigate("/Quiz/" + props.id + "/", {
-        state: {
-          id: props.id,
-          title: props.title,
-          nr_of_categories: nr_of_categories,
-          nr_of_rows: nr_of_rows,
-          fields: fields,
-          teams: teams,
-        },
+    if (teams.length > 1) {
+      event.preventDefault();
+      const status = new Array(fields.length).fill(0);
+      const fieldStatus = JSON.stringify(status);
+      localStorage.setItem(props.id, fieldStatus);
+      var valid = true;
+      fields.map((field) => {
+        if (field.question_id === null) {
+          valid = false;
+        }
       });
+      if (!valid) {
+        handleShowWarning();
+      } else {
+        navigate("/Quiz/" + props.id + "/", {
+          state: {
+            id: props.id,
+            title: props.title,
+            nr_of_categories: nr_of_categories,
+            nr_of_rows: nr_of_rows,
+            fields: fields,
+            teams: teams,
+          },
+        });
+      }
+    } else {
+      setShowNoTeams(true);
     }
   };
 
@@ -175,6 +182,13 @@ const Quiz = (props) => {
               No!
             </Button>
           </Modal.Footer>
+        </Modal>
+        <Modal show={showWarningNoTeams} onHide={handleCloseNoTeams}>
+          <Modal.Header closeButton></Modal.Header>
+          <Modal.Body>
+            Looks like there are not teams assigned to this quiz! Please assign
+            at least two to play this quiz.
+          </Modal.Body>
         </Modal>
       </div>
       <style jsx="true">
