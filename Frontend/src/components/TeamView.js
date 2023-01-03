@@ -1,65 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { API_BASE_URL } from "../constants.ts";
+import axios from "axios";
+
+const getAllMembers = async (id) => {
+  let tmpMemberArr = [];
+  await axios
+    .get(`${API_BASE_URL}/api/Teams/` + id + "/")
+    .then((response) => {
+      for (let i = 0; i < response.data.teamMember_team.length; i++) {
+        if (!tmpMemberArr.includes(response.data.teamMember_team[i])) {
+          tmpMemberArr.push(response.data.teamMember_team[i].username);
+        }
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return tmpMemberArr;
+};
+
 const TeamView = (props) => {
   const teamId = props.teamId;
-  const [members] = useState([]);
-  const [memberNames] = useState([]);
-  const [value, setValue] = useState(0);
-  const refresh = () => {
-    // it re-renders the component
-    setValue(value + 1);
-  };
-
-  const getAllMembers = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/Teams/` + teamId + "/");
-    const data = await response.json();
-    if (response.ok) {
-      data.teamMember_team.map((member) => {
-        if (!members.includes(member.member)) {
-          members.push(member.member);
-        }
-      });
-      getAllNames();
-    } else {
-      console.log("Failed Network request");
-    }
-  };
-
-  const getAllNames = () => {
-    console.log("id", teamId, members);
-    members.forEach((member) => {
-      getUserName(member);
-    });
-    console.log("names", teamId, memberNames);
-    // refresh();
-  };
-
-  const getUserName = async (id) => {
-    const response = await fetch(`${API_BASE_URL}/api/user/` + id + "/");
-    const data = await response.json();
-    if (response.ok) {
-      if (!memberNames.includes(data.username)) {
-        memberNames.push(data.username);
-      }
-      refresh();
-    } else {
-      console.log("Failed Network request");
-    }
-    // console.log("Names:", memberNames);
-  };
+  const [memberNames, setMemberNames] = useState([]);
 
   useEffect(() => {
-    getAllMembers();
-  }, []);
+    getAllMembers(teamId).then((memberArr) => {
+      setMemberNames(memberArr);
+    });
+  }, [teamId]);
 
   return (
     <>
       <div className="team-card d-flex flex-column justify-content-center m-3">
         <div className="text-dark d-flex flex-column justify-content-start align-self-center pt-3 pb-3 m-3">
           <div className="d-flex  justify-content-center">
-            <h3 className="big-title text-light">
-              {props.teamName.toUpperCase()}
-            </h3>
+            <h3 className="big-title text-light">{props.teamName}</h3>
           </div>
           <div className="d-flex mt-3 mb-2">
             <div>
@@ -68,9 +43,7 @@ const TeamView = (props) => {
               </span>
             </div>
             <div>
-              {memberNames.map((username) => (
-                <span className="m-2">{username.toString()}</span>
-              ))}
+              <span className="m-2">{memberNames.join(", ")}</span>
             </div>
           </div>
           <div>

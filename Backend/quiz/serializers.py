@@ -336,8 +336,17 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         read_only_fields = ("team", "quiz", "id")
 
 
+class TeamNameMemberSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source="member.username")
+
+    class Meta:
+        model = TeamMember
+        fields = ("id", "team", "member", "quiz", "username")
+        read_only_fields = ("team", "quiz", "id", "username")
+
+
 class TeamSerializer(serializers.ModelSerializer):
-    teamMember_team = TeamMemberSerializer(many=True, required=False)
+    teamMember_team = TeamNameMemberSerializer(many=True, required=False)
 
     class Meta:
         model = Team
@@ -412,7 +421,7 @@ class AddPointSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ("id","team_points", "quiz")
+        fields = ("id", "team_points", "quiz")
         read_only_fields = ("id", "quiz")
 
     def update(self, instance, validated_data):

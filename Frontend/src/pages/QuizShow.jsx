@@ -5,6 +5,7 @@ import CatField from "../components/CatField";
 import PlayingField from "../components/PlayingField";
 import TeamView from "../components/TeamView";
 import ModalSuccess from "../components/ModalSuccess";
+
 // For each created quiz one quizcard is rendered
 const QuizShow = (props) => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const QuizShow = (props) => {
     if (!cols.includes(fields[i].categorie_name)) {
       //console.log(fields[i].categorie_name)
       cols.push(fields[i].categorie_name);
-      cats.push(<CatField category_name={fields[i].categorie_name} />);
+      cats.push(<CatField key={i} category_name={fields[i].categorie_name} />);
     }
   }
 
@@ -57,6 +58,7 @@ const QuizShow = (props) => {
       if (fields[k].categorie_name === cols[i]) {
         rows.push(
           <PlayingField
+            key={k}
             points={fields[k].point}
             id={fields[k].question.id}
             quizid={quizId}
@@ -68,7 +70,11 @@ const QuizShow = (props) => {
         );
       }
     }
-    myFields.push(<div className="d-flex flex-column">{rows}</div>);
+    myFields.push(
+      <div key={i} className="d-flex flex-column">
+        {rows}
+      </div>
+    );
   }
   const button = useState([]);
   function showTeams() {
@@ -87,6 +93,7 @@ const QuizShow = (props) => {
       if (i < teams.length / 2) {
         temp1.push(
           <TeamView
+            key={team.id}
             teamName={team.team_name}
             teamPoint={team.team_points}
             teamId={team.id}
@@ -95,6 +102,7 @@ const QuizShow = (props) => {
       } else {
         temp2.push(
           <TeamView
+            key={team.id}
             teamName={team.team_name}
             teamPoint={team.team_points}
             teamId={team.id}
