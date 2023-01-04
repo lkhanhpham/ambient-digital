@@ -74,7 +74,9 @@ class QuizAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = QuizAuthorSerializer
-    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.prefetch_related(
+        Prefetch("quiz_author", queryset=Quiz.objects.order_by("-last_edit"))
+    )
     lookup_field = "id"
 
 
@@ -82,7 +84,9 @@ class QuestionAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = QuestionAuthorSerializer
-    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.prefetch_related(
+        Prefetch("question_author", queryset=Question.objects.order_by("-last_edit"))
+    )
     lookup_field = "id"
 
 
@@ -90,7 +94,11 @@ class CategorieAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = CategorieAuthorSerializer
-    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.prefetch_related(
+        Prefetch(
+            "categorie_author", queryset=Categorie.objects.order_by("categorie_name")
+        )
+    )
     lookup_field = "id"
 
 
