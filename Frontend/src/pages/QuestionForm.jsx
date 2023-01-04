@@ -18,6 +18,10 @@ const QuestionForm = () => {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   const [toLarge, setToLarge] = useState(false);
+  const [invalidInput, setinvalid] = useState(false);
+
+  const [vidSoundAnswerOption1, setVidSoundAO] = useState(false);
+  const [vidSoundQuestion, setVidSoundQues] = useState(false);
 
   const [question_image, setQuesImage] = useState(null);
   const [question_image_id, setQuesImageId] = useState(null);
@@ -25,21 +29,34 @@ const QuestionForm = () => {
   const [answer_image, setAnswImage] = useState(null);
   const [answer_image_id, setAnswImageId] = useState(null);
 
+  const [question_video_id, setQuesVideoId] = useState(null);
+
+  const [answer_video_id, setAnswVideoId] = useState(null);
+
   const [isShown, setIsShown] = useState(false);
+  const [videoisShown, setVideoIsShown] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
   const handleClose3 = () => setToLarge(false);
+  const handleClose5 = () => {
+    setinvalid(false);
+    setShow2(false);
+  };
 
   const handleShow = (event) => {
     uploadAll(event);
-    if (questionText.length !== 0 && defaultAnswer.length !== 0) {
+    if (
+      questionText.length !== 0 &&
+      defaultAnswer.length !== 0 &&
+      validate(event)
+    ) {
       setShow(true);
+      uploadVideoLinks(event);
     } else {
       setShow2(true);
     }
   };
-
   const $ = require("jquery");
   const navigate = useNavigate();
 
@@ -59,12 +76,14 @@ const QuestionForm = () => {
       data: {
         question_text: questionText,
         question_image: question_image_id,
+        question_video: question_video_id,
         author: user.user_id,
         question_type: dropdownV,
         default_answer: {
           text: defaultAnswer,
           is_correct: true,
           answer_image: answer_image_id,
+          answer_video: answer_video_id,
         },
       },
       headers: { "Content-Type": "application/json" },
@@ -125,6 +144,16 @@ const QuestionForm = () => {
     }
   };
 
+  const [videobtnText, setvideoBtnText] = useState("Add Videos");
+  const handleVideoClick = (event) => {
+    setVideoIsShown((current) => !current);
+    if (videobtnText === "Add Videos") {
+      setvideoBtnText("Hide Videos");
+    } else {
+      setvideoBtnText("Add Videos");
+    }
+  };
+
   // the following is called when an image is added and safes it to a constant
   const onImageChange = (event) => {
     if (event.target.files[0].size > 5242880) {
@@ -160,7 +189,7 @@ const QuestionForm = () => {
       // posts the formdata to images interface
       axios({
         method: "POST",
-        url: "http://localhost:8000/api/images/",
+        url: `${API_BASE_URL}/api/images/`,
         headers: {
           "content-type": "multipart/form-data",
         },
@@ -176,6 +205,76 @@ const QuestionForm = () => {
           }
         })
         .catch((err) => console.log(err));
+    }
+  }
+  function validate(event) {
+    var valid = true;
+    var input;
+    for (let run = 0; run < 2; run++) {
+      if (run === 0) {
+        input = document.getElementById("question_vid");
+      } else {
+        input = document.getElementById("answer_vid");
+      }
+      if (input === null) {
+      } else if (input.value === "") {
+      } else if (
+        input.value.includes("https://youtu.be/") ||
+        input.value.includes("http://youtu.be/")
+      ) {
+      } else if (
+        input.value.includes("https://www.youtube.com/watch?v=") ||
+        input.value.includes("http://www.youtube.com/watch?v=")
+      ) {
+      } else {
+        event.preventDefault();
+        input.value = "";
+        valid = false;
+        setinvalid(true);
+      }
+    }
+    return valid;
+  }
+
+  function uploadVideoLinks(event) {
+    for (let vid = 0; vid < 2; vid++) {
+      event.preventDefault();
+      var soundonly = false;
+      var vidurl = null;
+      if (vid === 0 && document.getElementById("question_vid") !== null) {
+        vidurl = document.getElementById("question_vid").value;
+        soundonly = vidSoundQuestion;
+      } else if (vid === 1 && document.getElementById("answer_vid") !== null) {
+        vidurl = document.getElementById("answer_vid").value;
+        soundonly = vidSoundAnswerOption1;
+      }
+      console.log(vidurl);
+      if (vidurl === null || vidurl === "") {
+        continue;
+      }
+
+      axios({
+        method: "POST",
+        url: `${API_BASE_URL}/api/video/`,
+        data: {
+          link: vidurl,
+          author: user.user_id,
+          sound_only: soundonly,
+        },
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          console.log(response.data);
+          if (vid === 0) {
+            setQuesVideoId(response.data.id);
+          }
+          if (vid === 1) {
+            setAnswVideoId(response.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+
+      event.preventDefault();
     }
   }
 
@@ -235,6 +334,35 @@ const QuestionForm = () => {
                 ></input>
               </div>
             )}
+            {videoisShown && (
+              <div>
+                <div
+                  className="input-group mb-3"
+                  style={{ paddingTop: "15px" }}
+                >
+                  <span className="input-group-text" id="basic-addon3">
+                    Add Youtube link:
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="question_vid"
+                    name="question_vid"
+                    aria-describedby="basic-addon3"
+                  ></input>
+                </div>
+                <input
+                  className="soundOnly"
+                  id="soundbox1"
+                  type="checkbox"
+                  default={vidSoundQuestion}
+                  value={vidSoundQuestion}
+                  onChange={(e) => setVidSoundQues(!vidSoundQuestion)}
+                  required
+                ></input>
+                <label id="checkbox-value3">Sound only</label>
+              </div>
+            )}
 
             <label className="mb-2" htmlFor="exampleFormControlInput1">
               Answers{" "}
@@ -270,9 +398,45 @@ const QuestionForm = () => {
                 ></input>
               </div>
             )}
+            {videoisShown && (
+              <div>
+                <div
+                  className="input-group mb-3"
+                  style={{ paddingTop: "15px" }}
+                >
+                  <span className="input-group-text" id="basic-addon3">
+                    Add Youtube link:
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="answer_vid"
+                    name="answer_vid"
+                    aria-describedby="basic-addon3"
+                  ></input>
+                </div>
+                <input
+                  className="soundOnly"
+                  id="soundbox2"
+                  type="checkbox"
+                  value={vidSoundAnswerOption1}
+                  default={vidSoundAnswerOption1}
+                  onChange={(e) => setVidSoundAO(!vidSoundAnswerOption1)}
+                  required
+                ></input>
+                <label id="checkbox-value3">Sound only</label>
+              </div>
+            )}
           </form>
 
           <div className="d-flex justify-content-end py-4">
+            <button
+              className="btn btn-secondary me-2"
+              onClick={handleVideoClick}
+            >
+              {videobtnText}
+            </button>
+
             <button className="btn btn-secondary me-2" onClick={handleClick}>
               {btnText}
             </button>
@@ -313,6 +477,10 @@ const QuestionForm = () => {
               <Modal.Body>
                 This file is too large and will not be uploaded
               </Modal.Body>
+            </Modal>
+            <Modal show={invalidInput} onHide={handleClose5}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
           </div>
         </div>

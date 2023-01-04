@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AnswerField from "../components/AnswerField";
 import QuestionImage from "../components/QuestionImage";
 import AnsweroptionImage from "../components/AnsweroptionImage";
+import QuestionVideo from "../components/QuestionVideo";
+import Answeroptionvideo from "../components/Answeroptionvideo";
 
 // For each created quiz one quizcard is rendered
 const QuestionShow = (props) => {
@@ -12,6 +14,7 @@ const QuestionShow = (props) => {
   const points = location.state.points;
   const categorie = location.state.categorie;
   const [isVisible, setIsVisible] = useState(false);
+  const [vid] = useState([])
   var arr = [];
   arr[0] = WholeQuestion.default_answer;
   if (WholeQuestion.question_type === "MC") {
@@ -43,6 +46,8 @@ const QuestionShow = (props) => {
       return false;
     }
   }
+
+
   //triggered when show solution is clicked
   // for SC it reveals the answer for MC it colors the answers
   const handleClick = (event) => {
@@ -59,6 +64,22 @@ const QuestionShow = (props) => {
       }
     }
   };
+
+
+  function AddQuestionVideos(){
+    if (WholeQuestion.question_video != null) {
+      return <QuestionVideo video={WholeQuestion.question_video} />
+      }
+  }
+
+  function AddAnswerVideos(){
+    if (WholeQuestion.default_answer.answer_video != null) {
+      return <QuestionVideo video={WholeQuestion.default_answer.answer_video} />
+      }
+  }
+
+  
+
 
   return (
     <div className="container">
@@ -83,10 +104,13 @@ const QuestionShow = (props) => {
           paddingBottom: "20px",
         }}
       >
-        <div style={{ paddingBottom: "40px" }}>
+        <div style={{ paddingBottom: "20px" }}>
           {WholeQuestion.question_text}
         </div>
         <QuestionImage image={WholeQuestion.question_image} />
+      </div>
+      <div>
+        {AddQuestionVideos()}
       </div>
       <div className="d-flex justify-content-center">
         {multipleChoice() ? (
@@ -102,15 +126,23 @@ const QuestionShow = (props) => {
           </div>
         ) : (
           <div
+            className="container"
             id="singlechoice"
             style={{ display: isVisible ? "inline" : "none" }}
           >
-            <AnswerField
-              key={arr[0].id}
-              answer={arr[0].text}
-              correct={arr[0].is_correct}
-            />
-            <QuestionImage image={WholeQuestion.default_answer.answer_image} />
+            <div className="row">
+              <AnswerField
+                key={arr[0].id}
+                answer={arr[0].text}
+                correct={arr[0].is_correct}
+              />
+              <QuestionImage
+                image={WholeQuestion.default_answer.answer_image}
+              />
+            </div>
+            <div className="row">
+             {AddAnswerVideos()}
+            </div>
           </div>
         )}
       </div>
@@ -119,6 +151,17 @@ const QuestionShow = (props) => {
           <div className="d-flex w-100">
             {arr.map((item) => (
               <AnsweroptionImage image={item.answer_image} />
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      <div>
+        {multipleChoice() ? (
+          <div className="d-flex w-100">
+            {arr.map((item) => (
+              <Answeroptionvideo video={item.answer_video} />
             ))}
           </div>
         ) : (

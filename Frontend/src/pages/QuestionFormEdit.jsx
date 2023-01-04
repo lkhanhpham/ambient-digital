@@ -26,17 +26,30 @@ const QuestionFormEdit = (id) => {
   const handleClose4 = () => setToLarge(false);
 
   const [images, setImages] = useState([]);
+  const [video, setVideos] = useState([]);
 
   const [isShown, setIsShown] = useState(false);
+  const [videoisShown, setVideoIsShown] = useState(false);
+
+  const [invalidInput, setinvalid] = useState(false);
+
+  const [vidSoundAnswerOption1, setVidSoundAO] = useState(false);
+  const [vidSoundQuestion, setVidSoundQues] = useState(false);
 
   const [questionImage, setQuestionImage] = useState(null);
   const [answerImage, setAnswerImage] = useState(null);
+
+  const [questionvid, setQuestionvid] = useState(null);
+  const [answervid, setAnswervid] = useState(null);
 
   const [question_image, setQuesImage] = useState(null);
   const [question_image_id, setQuesImageId] = useState(null);
 
   const [answer_image, setAnswImage] = useState(null);
   const [answer_image_id, setAnswImageId] = useState(null);
+
+  const [question_video_id, setQuesVideoId] = useState(null);
+  const [answer_video_id, setAnswVideoId] = useState(null);
 
   const handleClose = () => setShow(false);
   const [show2, setShow2] = useState(false);
@@ -45,11 +58,20 @@ const QuestionFormEdit = (id) => {
   };
   const handleClose2 = () => setShow2(false);
   const { user } = useContext(AuthContext);
+  const handleClose5 = () => {
+    setinvalid(false);
+    setShow2(false);
+  };
 
   const handleShow2 = (event) => {
     uploadAll(event);
-    if (questionText.length !== 0 && defaultAnswer.length !== 0) {
+    if (
+      questionText.length !== 0 &&
+      defaultAnswer.length !== 0 &&
+      validate(event)
+    ) {
       //console.log("show2")
+      uploadVideoLinks(event);
       setShow3(true);
     } else {
       setShow2(true);
@@ -87,6 +109,7 @@ const QuestionFormEdit = (id) => {
       setQuestionType(data.question_type);
       setAuthorId(user.user_id);
       getAllImages();
+      getAllVideos();
     } else {
       console.log("Failed Network request");
     }
@@ -103,6 +126,21 @@ const QuestionFormEdit = (id) => {
       console.log("Failed Network request");
     }
   };
+  const getAllVideos = async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/videoauthor/` + user.user_id + "/"
+    );
+    const data = await response.json();
+    if (response.ok) {
+      setVideos(data.video_author);
+    } else {
+      console.log("Failed Network request");
+    }
+  };
+
+  useEffect(() => {
+    assignImages(); // This will be executed when `images` state changes
+  }, [images]);
 
   function assignImages() {
     if (images.length === 0) {
@@ -118,9 +156,27 @@ const QuestionFormEdit = (id) => {
       }
     }
   }
+
   useEffect(() => {
-    assignImages(); // This will be executed when `images` state changes
-  }, [images]);
+    assignVideo();
+  }, [video]);
+
+  function assignVideo() {
+    if (video.length === 0) {
+      return;
+    }
+    for (let run = 0; run < video.length; run++) {
+      if (video[run].id === questions.question_video) {
+        setQuestionvid(video[run]);
+        setQuesVideoId(video[run].id);
+        setVidSoundQues(video[run].sound_only);
+      } else if (video[run].id === defaultAnswer.answer_video) {
+        setAnswervid(video[run]);
+        setAnswVideoId(video[run].id);
+        setVidSoundAO(video[run].sound_only);
+      }
+    }
+  }
 
   useEffect(() => {
     getAllQuestions();
@@ -134,10 +190,12 @@ const QuestionFormEdit = (id) => {
       data: {
         question_text: questionText,
         question_image: question_image_id,
+        question_video: question_video_id,
         default_answer: {
           text: defaultAnswer.text,
           is_correct: true,
           answer_image: answer_image_id,
+          answer_video: answer_video_id,
         },
         question_type: questiontype,
         author: user.user_id,
@@ -202,6 +260,15 @@ const QuestionFormEdit = (id) => {
       setBtnText("Add Images");
     }
   };
+  const [videobtnText, setvideoBtnText] = useState("Edit Videos");
+  const handleVideoClick = (event) => {
+    setVideoIsShown((current) => !current);
+    if (videobtnText === "Edit Videos") {
+      setvideoBtnText("Don't Change Videos");
+    } else {
+      setvideoBtnText("Edit Videos");
+    }
+  };
 
   function deleteQuestion(event) {
     if (event === "delete_question_image") {
@@ -210,6 +277,12 @@ const QuestionFormEdit = (id) => {
     } else if (event === "delete_answer_image") {
       setAnswImageId(null);
       setAnswerImage(null);
+    } else if (event === "delete_question_video") {
+      setQuesVideoId(null);
+      setQuestionvid(null);
+    } else if (event === "delete_answer_video") {
+      setAnswVideoId(null);
+      setAnswervid(null);
     }
   }
 
@@ -247,7 +320,7 @@ const QuestionFormEdit = (id) => {
       // posts the formdata to images interface
       axios({
         method: "POST",
-        url: "http://localhost:8000/api/images/",
+        url: `${API_BASE_URL}/api/images/`,
         headers: {
           "content-type": "multipart/form-data",
         },
@@ -263,6 +336,95 @@ const QuestionFormEdit = (id) => {
           }
         })
         .catch((err) => console.log(err));
+    }
+  }
+  function validate(event) {
+    var valid = true;
+    var input;
+    for (let run = 0; run < 2; run++) {
+      if (run === 0) {
+        input = document.getElementById("question_vid");
+      } else {
+        input = document.getElementById("answer_vid");
+      }
+      if (input === null) {
+      } else if (
+        input.value.includes("https://www.youtube.com/watch?v=") ||
+        input.value.includes("http://www.youtube.com/watch?v=")
+      ) {
+      } else if (
+        input.value.includes("https://youtu.be/") ||
+        input.value.includes("http://youtu.be/")
+      ) {
+      } else if (input.value === "") {
+      } else {
+        event.preventDefault();
+        input.value = "";
+        valid = false;
+        setinvalid(true);
+      }
+    }
+    return valid;
+  }
+
+  function uploadVideoLinks(event) {
+    for (let vid = 0; vid < 2; vid++) {
+      event.preventDefault();
+      var soundonly = false;
+      var vidurl = null;
+      if (vid === 0 && document.getElementById("question_vid") !== null) {
+        vidurl = document.getElementById("question_vid").value;
+        soundonly = vidSoundQuestion;
+      } else if (vid === 1 && document.getElementById("answer_vid") !== null) {
+        vidurl = document.getElementById("answer_vid").value;
+        soundonly = vidSoundAnswerOption1;
+      }
+      if (videoisShown) {
+        if (
+          questionvid !== null &&
+          vid === 0 &&
+          (vidurl === null || vidurl === "") &&
+          vidSoundQuestion !== questionvid.sound_only
+        ) {
+          vidurl = questionvid.link;
+          soundonly = vidSoundQuestion;
+        } else if (
+          answervid !== null &&
+          vid === 1 &&
+          (vidurl === null || vidurl === "") &&
+          vidSoundAnswerOption1 !== answervid.sound_only
+        ) {
+          vidurl = answervid.link;
+          soundonly = vidSoundAnswerOption1;
+        } else if (vidurl === null || vidurl === "") {
+          continue;
+        }
+      } else {
+        continue;
+      }
+
+      axios({
+        method: "POST",
+        url: `${API_BASE_URL}/api/video/`,
+        data: {
+          link: vidurl,
+          author: user.user_id,
+          sound_only: soundonly,
+        },
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          //console.log(response.data);
+          if (vid === 0) {
+            setQuesVideoId(response.data.id);
+          }
+          if (vid === 1) {
+            setAnswVideoId(response.data.id);
+          }
+        })
+        .catch((err) => console.log(err));
+
+      event.preventDefault();
     }
   }
 
@@ -325,6 +487,35 @@ const QuestionFormEdit = (id) => {
                 ></input>
               </div>
             )}
+            {videoisShown && (
+              <div>
+                <div
+                  className="input-group mb-3"
+                  style={{ paddingTop: "15px" }}
+                >
+                  <span className="input-group-text" id="basic-addon3">
+                    Add new Youtube link:
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="question_vid"
+                    name="question_vid"
+                    aria-describedby="basic-addon3"
+                  ></input>
+                </div>
+                <input
+                  className="soundOnly"
+                  id="soundbox1"
+                  type="checkbox"
+                  defaultChecked={vidSoundQuestion}
+                  value={vidSoundQuestion}
+                  onChange={(e) => setVidSoundQues(!vidSoundQuestion)}
+                  required
+                ></input>
+                <label id="checkbox-value3">Sound only</label>
+              </div>
+            )}
 
             {questionImage && (
               <div className="py-3">
@@ -339,6 +530,25 @@ const QuestionFormEdit = (id) => {
                   type="button"
                   className="btn btn-danger btn-sm float-end"
                   id="delete_question_image"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+            {questionvid && (
+              <div className="py-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Video: {questionvid.link}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_question_video"
                   onClick={(e) => deleteQuestion(e.target.id)}
                 >
                   Delete
@@ -387,6 +597,35 @@ const QuestionFormEdit = (id) => {
                 ></input>
               </div>
             )}
+            {videoisShown && (
+              <div>
+                <div
+                  className="input-group mb-3"
+                  style={{ paddingTop: "15px" }}
+                >
+                  <span className="input-group-text" id="basic-addon3">
+                    Add new Youtube link:
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="answer_vid"
+                    name="answer_vid"
+                    aria-describedby="basic-addon3"
+                  ></input>
+                </div>
+                <input
+                  className="soundOnly"
+                  id="soundbox2"
+                  type="checkbox"
+                  defaultChecked={vidSoundAnswerOption1}
+                  value={vidSoundAnswerOption1}
+                  onChange={(e) => setVidSoundAO(!vidSoundAnswerOption1)}
+                  required
+                ></input>
+                <label id="checkbox-value3">Sound only</label>
+              </div>
+            )}
 
             {answerImage && (
               <div className="py-3">
@@ -407,9 +646,34 @@ const QuestionFormEdit = (id) => {
                 </button>
               </div>
             )}
+            {answervid && (
+              <div className="py-3">
+                <label
+                  className="mb-2"
+                  htmlFor="exampleFormControlInput1"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Current Video: {answervid.link}
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm float-end"
+                  id="delete_answer_video"
+                  onClick={(e) => deleteQuestion(e.target.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </form>
 
           <div className="d-flex justify-content-end py-3">
+            <button
+              className="btn btn-secondary me-2"
+              onClick={handleVideoClick}
+            >
+              {videobtnText}
+            </button>
             <button className="btn btn-secondary me-2" onClick={handleClick}>
               {btnText}
             </button>
@@ -467,6 +731,10 @@ const QuestionFormEdit = (id) => {
               <Modal.Body>
                 This file is too large and will not be uploaded
               </Modal.Body>
+            </Modal>
+            <Modal show={invalidInput} onHide={handleClose5}>
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
           </div>
         </div>
