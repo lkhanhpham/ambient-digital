@@ -10,6 +10,7 @@ from .models import (
     Team,
     TeamMember,
     Image,
+    Video,
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
@@ -57,6 +58,24 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ("id", "link", "sound_only", "author", "embed_id")
+        read_only_fields = ("embed_id",)
+
+    def create(self, validated_data: dict):
+        url = validated_data.get("link")
+        if "youtu.be" in url:
+            emb_id = url.split(".be/")[1]
+        else:
+            emb_id1 = url.split("v=")[1]
+            emb_id = emb_id1.split("&")[0]
+        validated_data["embed_id"] = emb_id
+        created_video = super().create(validated_data)
+        return created_video
+
+
 class ImageAuthorSerializer(serializers.ModelSerializer):
     image_author = ImageSerializer(read_only=True, many=True)
 
@@ -65,10 +84,18 @@ class ImageAuthorSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "image_author")
 
 
+class VideoAuthorSerializer(serializers.ModelSerializer):
+    video_author = VideoSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = MyUser
+        fields = ("id", "username", "video_author")
+
+
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = FurtherAnswer
-        fields = ("text", "is_correct", "answer_image")
+        fields = ("text", "is_correct", "answer_image", "answer_video")
 
 
 class DefaultAnswerSerializer(serializers.ModelSerializer):
@@ -90,6 +117,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             "id",
             "question_text",
             "question_image",
+            "question_video",
             "pub_date",
             "author",
             "multiplayer",
@@ -110,6 +138,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             text=default_answer.get("text"),
             is_correct=default_answer.get("is_correct", True),
             answer_image=default_answer.get("answer_image"),
+            answer_video=default_answer.get("answer_video"),
         )
 
         validated_data["default_answer"] = default_answer_instance
@@ -123,6 +152,7 @@ class QuestionSerializer(serializers.ModelSerializer):
                 is_correct=answer_option.get("is_correct", False),
                 question_id=created_question.id,
                 answer_image=answer_option.get("answer_image"),
+                answer_video=answer_option.get("answer_video"),
             )
 
         return created_question
@@ -140,6 +170,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         instance.question_image = validated_data.get(
             "question_image", instance.question_image
         )
+        instance.question_video = validated_data.get(
+            "question_video", instance.question_video
+        )
         instance.multiplayer = validated_data.get("multiplayer", instance.multiplayer)
         instance.question_type = validated_data.get(
             "question_type", instance.question_type
@@ -150,6 +183,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         default_answer_instance = DefaultAnswer.objects.get(id=default_answer_orig.id)
         default_answer_instance.text = default_answer.get("text")
         default_answer_instance.answer_image = default_answer.get("answer_image")
+        default_answer_instance.answer_video = default_answer.get("answer_video")
         default_answer_instance.save()
         instance.default_answer = default_answer_instance
         # creates new answer options for multiple choice questions
@@ -163,6 +197,7 @@ class QuestionSerializer(serializers.ModelSerializer):
                 is_correct=answer_option.get("is_correct", False),
                 question_id=instance.id,
                 answer_image=answer_option.get("answer_image"),
+                answer_video=answer_option.get("answer_video"),
             )
         instance.save()
         return instance

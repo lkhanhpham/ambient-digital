@@ -14,10 +14,22 @@ from .serializers import (
     AddTeammateSerializer,
     ImageSerializer,
     ImageAuthorSerializer,
+    VideoSerializer,
+    VideoAuthorSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
-from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember, Image
+from .models import (
+    Quiz,
+    Categorie,
+    Question,
+    Field,
+    MyUser,
+    Team,
+    TeamMember,
+    Image,
+    Video,
+)
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.db.models import Prefetch
@@ -131,6 +143,11 @@ class AddTeammateView(
     queryset = TeamMember.objects.all()
 
 
+class VideoView(viewsets.ModelViewSet):
+    serializer_class = VideoSerializer
+    queryset = Video.objects.all()
+
+
 class ImageView(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
@@ -142,5 +159,13 @@ class ImageAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = ImageAuthorSerializer
+    queryset = MyUser.objects.all()
+    lookup_field = "id"
+
+
+class VideoAuthorView(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
+):
+    serializer_class = VideoAuthorSerializer
     queryset = MyUser.objects.all()
     lookup_field = "id"
