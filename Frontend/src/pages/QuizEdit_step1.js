@@ -65,11 +65,13 @@ const QuizEdit1 = () => {
   };
   //fetch all created questions
   const getAllQues = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/question/`);
+    const response = await fetch(
+      `${API_BASE_URL}/api/authorquestion/` + user.user_id + "/"
+    );
     const data = await response.json();
     if (response.ok) {
       //console.log(data)
-      setQuestions(data);
+      setQuestions(data.question_author);
     } else {
       //console.log(response.status)
       console.log("Failed Network request");
