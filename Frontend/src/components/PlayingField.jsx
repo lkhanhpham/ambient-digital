@@ -3,48 +3,50 @@ import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
 
 const PlayingField = (props) => {
-  const navigate = useNavigate();
-  const [question, setQuestion] = useState([]);
-  const getAllQuestions = async () => {
-    const response = await fetch(
-      `${API_BASE_URL}/api/question/` + props.id + "/"
-    );
-    const data = await response.json();
-    if (response.ok) {
-      //console.log(data.field_quiz)
-      setQuestion(data);
-    } else {
-      //console.log(response.status)
-      console.log("Failed Network request");
-    }
-  };
-  const display = (event) => {
-    event.preventDefault();
-    const statusString = localStorage.getItem(props.quizid);
-    const status = JSON.parse(statusString);
-    if (status[props.position] === 0) {
-      status[props.position] = 1;
-      localStorage.setItem(props.quizid, JSON.stringify(status));
-      navigate(props.quizid + "/Question/" + props.id + "/", {
-        state: {
-          quizId: props.quizid,
-          id: props.id,
-          question: question,
-          position: props.position,
-          categorie: props.categorie,
-          points: props.points,
-        },
-      });
-    } else {
-    }
-  };
-  useEffect(() => {
-    getAllQuestions();
-  }, []);
+  // const navigate = useNavigate();
+  // const [question, setQuestion] = useState([]);
+  // const getAllQuestions = async () => {
+  //   const response = await fetch(
+  //     `${API_BASE_URL}/api/question/` + props.id + "/"
+  //   );
+  //   const data = await response.json();
+  //   if (response.ok) {
+  //     //console.log(data.field_quiz)
+  //     setQuestion(data);
+  //   } else {
+  //     //console.log(response.status)
+  //     console.log("Failed Network request");
+  //   }
+  // };
+
+  // const display = (event) => {
+  //   event.preventDefault();
+  //   const statusString = localStorage.getItem(props.quizid);
+  //   const status = JSON.parse(statusString);
+  //   if (status[props.position] === 0) {
+  //     status[props.position] = 1;
+  //     localStorage.setItem(props.quizid, JSON.stringify(status));
+  //     navigate(props.quizid + "/Question/" + props.id + "/", {
+  //       state: {
+  //         quizId: props.quizid,
+  //         id: props.id,
+  //         question: question,
+  //         position: props.position,
+  //         categorie: props.categorie,
+  //         points: props.points,
+  //       },
+  //     });
+  //   } else {
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getAllQuestions();
+  // }, []);
   return (
     <>
       <div
-        onClick={display}
+        onClick={props.display}
         className="card field d-flex  rounded-0 justify-content-center"
         style={{ backgroundColor: props.status1 > 0 ? "#6c757d" : "white" }}
       >
