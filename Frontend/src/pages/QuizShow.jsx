@@ -6,6 +6,10 @@ import PlayingField from "../components/PlayingField";
 import TeamView from "../components/TeamView";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalQuestion from "../components/ModalQuestion";
+import axios from "axios";
+import { API_BASE_URL } from "../constants.ts";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
 
 const createCatAndFields = async (fields, status, quizId, display1) => {
   const cata = [];
@@ -77,6 +81,7 @@ const showTeams = async (teams) => {
 
   return [temp1, temp2];
 };
+
 // For each created quiz one quizcard is rendered
 const QuizShow = (props) => {
   const navigate = useNavigate();
@@ -92,93 +97,62 @@ const QuizShow = (props) => {
   const [status, setStatus] = useState(JSON.parse(statusString));
   let tempStatus = JSON.parse(statusString);
 
-  const [value, setValue] = useState(0);
-  const refresh = () => {
-    // it re-renders the component
-    setValue(value + 1);
-  };
+  var tmp = [];
+  teams.map((team) => {
+    tmp.push({ value: team.id, label: team.team_name });
+  });
+  const [teamOptions] = useState(tmp);
 
+  const [value, setValue] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const handleCloseSuccess = () => setShowSuccess(false);
   const handleShowSuccess = () => setShowSuccess(true);
-
   const [showQuestion, setShowQuestion] = useState(false);
   const handleCloseQues = () => {
     setShowQuestion(false);
-    console.log("setting status to", status);
+    setPoint(field.point);
     setStatus(tempStatus);
+    handleShowSuccess();
   };
   const handleShowQues = () => {
     setShowQuestion(true);
   };
-  // const[position, setPosition] = useState()
-  const [quesId, setQuesId] = useState(0);
 
-  // const display = (position, quesId) => {
-  //   // event.preventDefault();
-  //   // const statusString = localStorage.getItem(quizId);
-  //   // const status = JSON.parse(statusString);
-  //   let tempStatus = status;
-  //   if (status[position] === 0) {
-  //     tempStatus[position] = 1;
-  //     // localStorage.setItem(quizId, JSON.stringify(status));
-  //     setStatus(tempStatus);
-  //     setQuesId(quesId);
-  //     handleShowQues(position, quesId);
-  //     // refresh();
-  //   } else {
-  //   }
-  // };
+  //a prop that is passed to ModalQuestion to show the correct question
+  const [field, setField] = useState([]);
+
+  const getQuestion = async (id) => {
+    let data = [];
+    await axios
+      .get(`${API_BASE_URL}/api/field/` + id + "/")
+      .then((response) => {
+        data = response.data;
+        console.log(response.data);
+      })
+      .catch((error) => {
+        //   console.log(error);
+      });
+
+    return data;
+  };
+
   const display = (position, quesId) => {
-    // event.preventDefault();
-    // const statusString = localStorage.getItem(quizId);
-    // const status = JSON.parse(statusString);
     tempStatus = status;
     console.log("alter status", status);
     if (status[position] === 0) {
       tempStatus[position] = 1;
       localStorage.setItem(quizId, JSON.stringify(tempStatus));
       // setStatus(tempStatus);
-      setQuesId(quesId);
-      handleShowQues();
+      getQuestion(quesId).then((data) => {
+        setField(data);
+        handleShowQues();
+      });
     } else {
     }
   };
 
-  // for (let i = 0; i < fields.length; i++) {
-  //   if (!cols.includes(fields[i].categorie_name)) {
-  //     //console.log(fields[i].categorie_name)
-  //     cols.push(fields[i].categorie_name);
-  //     cats.push(<CatField key={i} category_name={fields[i].categorie_name} />);
-  //   }
-  // }
-
-  // for (let i = 0; i < cols.length; i++) {
-  //   let rows = [];
-  //   for (let k = 0; k < fields.length; k++) {
-  //     if (fields[k].categorie_name === cols[i]) {
-  //       rows.push(
-  //         <PlayingField
-  //           key={k}
-  //           points={fields[k].point}
-  //           id={fields[k].question.id}
-  //           quizid={quizId}
-  //           status1={status[k]}
-  //           position={k}
-  //           categorie={fields[k].categorie_name}
-  //           display={() => display(k, fields[k].question.id)}
-  //         />
-  //       );
-  //     }
-  //   }
-  //   if (myFields.length < cols.length) {
-  //   myFields.push(
-  //     <div key={i} className="d-flex flex-column">
-  //       {rows}
-  //     </div>
-  //   );
-  //   }
-  // }
+  //the points that will be assigned after a question is answered
+  const [assign_point, setPoint] = useState(0);
 
   useEffect(() => {
     showTeams(teams).then((teamArray) => {
@@ -219,19 +193,56 @@ const QuizShow = (props) => {
         {" "}
         End Quiz
       </button>
-      <ModalQuestion
-        show={showQuestion}
-        handleClose={handleCloseQues}
-        id={quesId}
-        onclick={handleCloseQues}
-      />
-      <ModalSuccess
-        showSuccess={showSuccess}
-        handleCloseSuccess={handleCloseSuccess}
-        onclick={handleCloseSuccess}
-        title={"Choose teams to assign points."}
-        body={"Click on the checkbox to select."}
-      />
+      {showQuestion ? (
+        <ModalQuestion
+          show={showQuestion}
+          handleClose={handleCloseQues}
+          field={field}
+          onclick={handleCloseQues}
+        />
+      ) : (
+        <></>
+      )}
+
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={showSuccess}
+      >
+        <Modal.Header>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Woo hoo! Who has got it right?
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center">
+            <p className="">
+              Select one or more teams to assign points. Close this if no one's
+              got the right answer.
+            </p>
+            <div>
+              <Select
+                placeholder="Select teams"
+                options={teamOptions}
+                // onChange={handleTypeSelect}
+                isMulti
+                noOptionsMessage={() => "No such team found"}
+              />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="d-flex justify-content-end">
+            <button onClick={handleCloseSuccess} className="btn btn-primary">
+              Close
+            </button>
+          </div>
+          <div className="d-flex justify-content-end p-3">
+            <button className="btn btn-primary">Assign points</button>
+          </div>
+        </Modal.Footer>
+      </Modal>
       <style jsx="true">
         {`
           .clickable {

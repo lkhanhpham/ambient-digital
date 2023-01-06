@@ -22,7 +22,7 @@ const QuestionImage = (props) => {
       <div>
         <img
           src={image.picture}
-          class="img-fluid mx-auto"
+          className="img-fluid mx-auto"
           style={{ display: "block" }}
         ></img>
       </div>
