@@ -90,7 +90,7 @@ const AnswerOptionEditComp = (props) => {
           <button
             type="button"
             className="btn btn-danger btn-sm float-end"
-            id="{`deleteAnswer${props.answerOptionNumber}Image`}"
+            id={`deleteAnswer${props.answerOptionNumber}Image`}
             onClick={(e) => props.deleteQuestion(e.target.id)}
           >
             Delete

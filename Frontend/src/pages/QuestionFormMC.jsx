@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../constants.ts";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
+import Spinner from "react-bootstrap/Spinner";
 
 var dropdownV = "MC";
 
@@ -59,9 +60,19 @@ const QuestionForm = () => {
 
   const [show, setShow] = useState(false);
 
+  const [uploading, setUploading] = useState(false);
+
+  const [clickCreate, setClickCreate] = useState(false);
+  const [uploadedQuesImage, setQuesImgUploaded] = useState(true);
+  const [uploadedAnsw1Image, setAnsw1ImgUploaded] = useState(true);
+  const [uploadedAnsw2Image, setAnsw2ImgUploaded] = useState(true);
+  const [uploadedAnsw3Image, setAnsw3ImgUploaded] = useState(true);
+  const [uploadedAnsw4Image, setAnsw4ImgUploaded] = useState(true);
+
+  const handleClose6 = () => setUploading(false);
+
   const handleClose = () => setShow(false);
   const handleShow = (event) => {
-    uploadAll(event);
     if (
       questionText.length !== 0 &&
       defaultAnswer.length !== 0 &&
@@ -71,7 +82,8 @@ const QuestionForm = () => {
       validate(event)
     ) {
       uploadVideoLinks(event);
-      setShow(true);
+      uploadAll(event);
+      setClickCreate(true);
     } else {
       setShow2(true);
     }
@@ -82,6 +94,47 @@ const QuestionForm = () => {
     setinvalid(false);
     setShow2(false);
   };
+
+  useEffect(() => {
+    checkUploaded();
+  }, [
+    uploadedQuesImage,
+    uploadedAnsw1Image,
+    uploadedAnsw2Image,
+    uploadedAnsw3Image,
+    uploadedAnsw4Image,
+  ]);
+
+  function checkUploaded() {
+    if (uploadsFinished()) {
+      setUploading(false);
+    } else {
+      setUploading(true);
+    }
+  }
+  function uploadsFinished() {
+    if (
+      uploadedQuesImage &&
+      uploadedAnsw1Image &&
+      uploadedAnsw2Image &&
+      uploadedAnsw3Image &&
+      uploadedAnsw4Image
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  useEffect(() => {
+    checkFinishedUpload();
+  }, [uploading, clickCreate]);
+
+  function checkFinishedUpload() {
+    if (uploading === false && uploadsFinished() && clickCreate) {
+      setShow(true);
+      setClickCreate(false);
+    }
+  }
 
   const $ = require("jquery");
   const navigate = useNavigate();
@@ -240,21 +293,49 @@ const QuestionForm = () => {
   };
   function uploadAll(event) {
     for (let image_nr = 0; image_nr < 5; image_nr++) {
+      var image = null;
       event.preventDefault();
       // the if assigns an image containing a constant to the variable image depending on which iteration
-      if (image_nr === 0) {
-        var image = question_image;
-      } else if (image_nr === 1) {
-        var image = answer1_image;
-      } else if (image_nr === 2) {
-        var image = answer2_image;
-      } else if (image_nr === 3) {
-        var image = answer3_image;
-      } else if (image_nr === 4) {
-        var image = answer4_image;
+      if (
+        image_nr === 0 &&
+        question_image !== null &&
+        question_image !== undefined
+      ) {
+        image = question_image;
+        setQuesImgUploaded(false);
+      } else if (
+        image_nr === 1 &&
+        answer1_image !== null &&
+        answer1_image !== undefined
+      ) {
+        image = answer1_image;
+        setAnsw1ImgUploaded(false);
+      } else if (
+        image_nr === 2 &&
+        answer2_image !== null &&
+        answer2_image !== undefined
+      ) {
+        image = answer2_image;
+        setAnsw2ImgUploaded(false);
+      } else if (
+        image_nr === 3 &&
+        answer3_image !== null &&
+        answer3_image !== undefined
+      ) {
+        image = answer3_image;
+        setAnsw3ImgUploaded(false);
+      } else if (
+        image_nr === 4 &&
+        answer4_image !== null &&
+        answer4_image !== undefined
+      ) {
+        image = answer4_image;
+        setAnsw4ImgUploaded(false);
       }
-      if (image === null) {
+      if (image === null || image === undefined) {
         continue;
+      } else {
+        setUploading(true);
       }
       // creates formdata and adds all for images necessary variables to it
       let data = new FormData();
@@ -274,14 +355,19 @@ const QuestionForm = () => {
           //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
           if (image_nr === 0) {
             setQuesImageId(res.data.id);
+            setQuesImgUploaded(true);
           } else if (image_nr === 1) {
             setAnsw1ImageId(res.data.id);
+            setAnsw1ImgUploaded(true);
           } else if (image_nr === 2) {
             setAnsw2ImageId(res.data.id);
+            setAnsw2ImgUploaded(true);
           } else if (image_nr === 3) {
             setAnsw3ImageId(res.data.id);
+            setAnsw3ImgUploaded(true);
           } else if (image_nr === 4) {
             setAnsw4ImageId(res.data.id);
+            setAnsw4ImgUploaded(true);
           }
         })
         .catch((err) => console.log(err));
@@ -796,6 +882,17 @@ const QuestionForm = () => {
             <Modal show={invalidInput} onHide={handleClose5}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
+            </Modal>
+            <Modal show={uploading} onHide={handleClose6}>
+              <Modal.Header></Modal.Header>
+              <Modal.Body>
+                <div className="mx-auto align-items-center justify-content-center">
+                  <Spinner className="spinner" animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                  <span> Loading...</span>
+                </div>
+              </Modal.Body>
             </Modal>
           </div>
         </div>

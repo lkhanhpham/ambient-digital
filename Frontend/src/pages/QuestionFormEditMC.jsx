@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import AnswerOptionEditComp from "../components/AnswerOptionEditComp";
+import Spinner from "react-bootstrap/Spinner";
 
 const QuestionFormEdit = (id) => {
   var dropdownV = "ScId";
@@ -85,6 +86,18 @@ const QuestionFormEdit = (id) => {
   const [answer4_image, setAnsw4Image] = useState(null);
   const [answer4_image_id, setAnsw4ImageId] = useState(null);
   const [btnText, setBtnText] = useState("Add Images");
+
+  const [uploading, setUploading] = useState(false);
+
+  const [clickCreate, setClickCreate] = useState(false);
+  const [uploadedQuesImage, setQuesImgUploaded] = useState(true);
+  const [uploadedAnsw1Image, setAnsw1ImgUploaded] = useState(true);
+  const [uploadedAnsw2Image, setAnsw2ImgUploaded] = useState(true);
+  const [uploadedAnsw3Image, setAnsw3ImgUploaded] = useState(true);
+  const [uploadedAnsw4Image, setAnsw4ImgUploaded] = useState(true);
+
+  const handleClose6 = () => setUploading(false);
+
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -95,7 +108,6 @@ const QuestionFormEdit = (id) => {
     setShow2(false);
   };
   const handleShow2 = (event) => {
-    uploadAll(event);
     if (
       questionText.length !== 0 &&
       defaultAnswer.length !== 0 &&
@@ -105,12 +117,54 @@ const QuestionFormEdit = (id) => {
       questionAnswerOption1.length !== 0 &&
       validate(event)
     ) {
-      setShow3(true);
       uploadVideoLinks(event);
+      uploadAll(event);
+      setClickCreate(true);
     } else {
       setShow2(true);
     }
   };
+
+  useEffect(() => {
+    checkUploaded();
+  }, [
+    uploadedQuesImage,
+    uploadedAnsw1Image,
+    uploadedAnsw2Image,
+    uploadedAnsw3Image,
+    uploadedAnsw4Image,
+  ]);
+
+  function checkUploaded() {
+    if (uploadsFinished()) {
+      setUploading(false);
+    } else {
+      setUploading(true);
+    }
+  }
+  function uploadsFinished() {
+    if (
+      uploadedQuesImage &&
+      uploadedAnsw1Image &&
+      uploadedAnsw2Image &&
+      uploadedAnsw3Image &&
+      uploadedAnsw4Image
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  useEffect(() => {
+    checkFinishedUpload();
+  }, [uploading, clickCreate]);
+
+  function checkFinishedUpload() {
+    if (uploading === false && uploadsFinished() && clickCreate) {
+      setShow3(true);
+      setClickCreate(false);
+    }
+  }
 
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
@@ -387,7 +441,7 @@ const QuestionFormEdit = (id) => {
     if (event === "delete_question_image") {
       setQuesImageId(null);
       setQuestionImage(null);
-    } else if (event === "deleteAnswer1Image") {
+    } else if (event === "delete_answer1_image") {
       setAnsw1ImageId(null);
       setAnswer1Image(null);
     } else if (event === "deleteAnswer2Image") {
@@ -402,7 +456,7 @@ const QuestionFormEdit = (id) => {
     } else if (event === "delete_question_video") {
       setQuesVideoId(null);
       setQuestionvid(null);
-    } else if (event === "deleteAnswer1Video") {
+    } else if (event === "delete_answer1_video") {
       setAnsw1VideoId(null);
       setAnswer1vid(null);
     } else if (event === "deleteAnswer2Video") {
@@ -427,11 +481,11 @@ const QuestionFormEdit = (id) => {
         setQuesImage(event.target.files[0]);
       } else if (event.target.id === "answer1_image") {
         setAnsw1Image(event.target.files[0]);
-      } else if (event.target.id === "answer2_image") {
+      } else if (event.target.id === "answer2Image") {
         setAnsw2Image(event.target.files[0]);
-      } else if (event.target.id === "answer3_image") {
+      } else if (event.target.id === "answer3Image") {
         setAnsw3Image(event.target.files[0]);
-      } else if (event.target.id === "answer4_image") {
+      } else if (event.target.id === "answer4Image") {
         setAnsw4Image(event.target.files[0]);
       }
     }
@@ -440,21 +494,48 @@ const QuestionFormEdit = (id) => {
   function uploadAll(event) {
     for (let image_nr = 0; image_nr < 5; image_nr++) {
       event.preventDefault();
+      var image = null;
       // the if assigns an image containing a constant to the variable image depending on which iteration
-      if (image_nr === 0) {
-        var image = question_image;
-      } else if (image_nr === 1) {
-        console.log("working");
-        var image = answer1_image;
-      } else if (image_nr === 2) {
-        var image = answer2_image;
-      } else if (image_nr === 3) {
-        var image = answer3_image;
-      } else if (image_nr === 4) {
-        var image = answer4_image;
+      if (
+        image_nr === 0 &&
+        question_image !== null &&
+        question_image !== undefined
+      ) {
+        image = question_image;
+        setQuesImgUploaded(false);
+      } else if (
+        image_nr === 1 &&
+        answer1_image !== null &&
+        answer1_image !== undefined
+      ) {
+        image = answer1_image;
+        setAnsw1ImgUploaded(false);
+      } else if (
+        image_nr === 2 &&
+        answer2_image !== null &&
+        answer2_image !== undefined
+      ) {
+        image = answer2_image;
+        setAnsw2ImgUploaded(false);
+      } else if (
+        image_nr === 3 &&
+        answer3_image !== null &&
+        answer3_image !== undefined
+      ) {
+        image = answer3_image;
+        setAnsw3ImgUploaded(false);
+      } else if (
+        image_nr === 4 &&
+        answer4_image !== null &&
+        answer4_image !== undefined
+      ) {
+        image = answer4_image;
+        setAnsw4ImgUploaded(false);
       }
-      if (image === null) {
+      if (image === null || image === undefined) {
         continue;
+      } else {
+        setUploading(true);
       }
       // creates formdata and adds all for images necessary variables to it
       let data = new FormData();
@@ -474,14 +555,19 @@ const QuestionFormEdit = (id) => {
           //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
           if (image_nr === 0) {
             setQuesImageId(res.data.id);
+            setQuesImgUploaded(true);
           } else if (image_nr === 1) {
             setAnsw1ImageId(res.data.id);
+            setAnsw1ImgUploaded(true);
           } else if (image_nr === 2) {
             setAnsw2ImageId(res.data.id);
+            setAnsw2ImgUploaded(true);
           } else if (image_nr === 3) {
             setAnsw3ImageId(res.data.id);
+            setAnsw3ImgUploaded(true);
           } else if (image_nr === 4) {
             setAnsw4ImageId(res.data.id);
+            setAnsw4ImgUploaded(true);
           }
         })
         .catch((err) => console.log(err));
@@ -687,8 +773,8 @@ const QuestionFormEdit = (id) => {
                   <input
                     type="text"
                     className="form-control"
-                    id="question_vid"
-                    name="question_vid"
+                    id="questionVid"
+                    name="questionVid"
                     aria-describedby="basic-addon3"
                   ></input>
                 </div>
@@ -796,8 +882,8 @@ const QuestionFormEdit = (id) => {
                   <input
                     type="text"
                     className="form-control"
-                    id="answer1_vid"
-                    name="answer1_vid"
+                    id="answer1Vid"
+                    name="answer1Vid"
                     aria-describedby="basic-addon3"
                   ></input>
                 </div>
@@ -968,6 +1054,17 @@ const QuestionFormEdit = (id) => {
             <Modal show={invalidInput} onHide={handleClose5}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
+            </Modal>
+            <Modal show={uploading} onHide={handleClose6}>
+              <Modal.Header></Modal.Header>
+              <Modal.Body>
+                <div className="mx-auto align-items-center justify-content-center">
+                  <Spinner className="spinner" animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                  <span> Loading...</span>
+                </div>
+              </Modal.Body>
             </Modal>
           </div>
         </div>
