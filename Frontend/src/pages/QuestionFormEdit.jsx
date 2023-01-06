@@ -7,6 +7,7 @@ import { API_BASE_URL } from "../constants.ts";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
+import Spinner from "react-bootstrap/Spinner";
 
 const QuestionFormEdit = (id) => {
   var dropdownV = "ScId";
@@ -51,6 +52,14 @@ const QuestionFormEdit = (id) => {
   const [question_video_id, setQuesVideoId] = useState(null);
   const [answer_video_id, setAnswVideoId] = useState(null);
 
+  const [uploading, setUploading] = useState(false);
+
+  const [clickCreate, setClickCreate] = useState(false);
+  const [uploadedQuesImage, setQuesImgUploaded] = useState(true);
+  const [uploadedAnsw1Image, setAnsw1ImgUploaded] = useState(true);
+
+  const handleClose6 = () => setUploading(false);
+
   const handleClose = () => setShow(false);
   const [show2, setShow2] = useState(false);
   const handleShow = () => {
@@ -64,19 +73,47 @@ const QuestionFormEdit = (id) => {
   };
 
   const handleShow2 = (event) => {
-    uploadAll(event);
     if (
       questionText.length !== 0 &&
       defaultAnswer.length !== 0 &&
       validate(event)
     ) {
-      //console.log("show2")
       uploadVideoLinks(event);
-      setShow3(true);
+      uploadAll(event);
+      setClickCreate(true);
     } else {
       setShow2(true);
     }
   };
+
+  useEffect(() => {
+    checkUploaded();
+  }, [uploadedQuesImage, uploadedAnsw1Image]);
+
+  function checkUploaded() {
+    if (uploadsFinished()) {
+      setUploading(false);
+    } else {
+      setUploading(true);
+    }
+  }
+  function uploadsFinished() {
+    if (uploadedQuesImage && uploadedAnsw1Image) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  useEffect(() => {
+    checkFinishedUpload();
+  }, [uploading, clickCreate]);
+
+  function checkFinishedUpload() {
+    if (uploading === false && uploadsFinished() && clickCreate) {
+      setShow3(true);
+      setClickCreate(false);
+    }
+  }
 
   const [show3, setShow3] = useState(false);
   const handleClose3 = () => setShow3(false);
@@ -302,15 +339,28 @@ const QuestionFormEdit = (id) => {
 
   function uploadAll(event) {
     for (let image_nr = 0; image_nr < 2; image_nr++) {
+      var image = null;
       event.preventDefault();
       // the if assigns an image containing a constant to the variable image depending on which iteration
-      if (image_nr === 0) {
-        var image = question_image;
-      } else if (image_nr === 1) {
-        var image = answer_image;
+      if (
+        image_nr === 0 &&
+        question_image !== null &&
+        question_image !== undefined
+      ) {
+        image = question_image;
+        setQuesImgUploaded(false);
+      } else if (
+        image_nr === 1 &&
+        answer_image !== null &&
+        answer_image !== undefined
+      ) {
+        image = answer_image;
+        setAnsw1ImgUploaded(false);
       }
-      if (image === null) {
+      if (image === null || image === undefined) {
         continue;
+      } else {
+        setUploading(true);
       }
       // creates formdata and adds all for images necessary variables to it
       let data = new FormData();
@@ -330,9 +380,12 @@ const QuestionFormEdit = (id) => {
           //assigns the id of the response header to a constant -> will later be used to assign this image to question/answer via foreignkey
           if (image_nr === 0) {
             setQuesImageId(res.data.id);
+            setQuesImgUploaded(true);
           }
           if (image_nr === 1) {
             setAnswImageId(res.data.id);
+            setAnsw1ImgUploaded(true);
+            console.log("entered");
           }
         })
         .catch((err) => console.log(err));
@@ -735,6 +788,17 @@ const QuestionFormEdit = (id) => {
             <Modal show={invalidInput} onHide={handleClose5}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
+            </Modal>
+            <Modal show={uploading} onHide={handleClose6}>
+              <Modal.Header></Modal.Header>
+              <Modal.Body>
+                <div className="mx-auto align-items-center justify-content-center">
+                  <Spinner className="spinner" animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                  <span> Loading...</span>
+                </div>
+              </Modal.Body>
             </Modal>
           </div>
         </div>
