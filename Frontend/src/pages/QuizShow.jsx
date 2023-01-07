@@ -27,7 +27,6 @@ const createCatAndFields = async (fields, status, quizId, display1) => {
     let rows = [];
     for (let k = 0; k < fields.length; k++) {
       if (fields[k].categorie_name === cols[i]) {
-        console.log("push new playing field", status[k]);
         rows.push(
           <PlayingField
             key={k}
@@ -82,6 +81,26 @@ const showTeams = async (teams) => {
   return [temp1, temp2];
 };
 
+const assignPointsToTeams = async (allTeams, allSelectedTeams, points) => {
+  let tmpTeamArray = [...allTeams];
+  console.log("tmpTeamArray is:", tmpTeamArray);
+  console.log("selectedTeams are", allSelectedTeams);
+  await tmpTeamArray.forEach((team) => {
+    console.log("TeamName:", team.team_name);
+    allSelectedTeams.forEach((assignedTeam) => {
+      console.log("TeamLabel:", assignedTeam.label);
+      if (assignedTeam.label === team.team_name) {
+        console.log("assigned Points to Team:", team.team_name);
+        console.log("old points:", team.team_points);
+        team.team_points = team.team_points + points;
+        console.log("new points:", team.team_points);
+      }
+    });
+  });
+
+  return tmpTeamArray;
+};
+
 // For each created quiz one quizcard is rendered
 const QuizShow = (props) => {
   const navigate = useNavigate();
@@ -97,7 +116,7 @@ const QuizShow = (props) => {
   const [status, setStatus] = useState(JSON.parse(statusString));
   let tempStatus = JSON.parse(statusString);
 
-  var tmp = [];
+  let tmp = [];
   teams.map((team) => {
     tmp.push({ value: team.id, label: team.team_name });
   });
@@ -110,7 +129,7 @@ const QuizShow = (props) => {
   const [showQuestion, setShowQuestion] = useState(false);
   const handleCloseQues = () => {
     setShowQuestion(false);
-    setPoint(field.point);
+    setQuestionPoint(field.point);
     setStatus(tempStatus);
     handleShowSuccess();
   };
@@ -138,7 +157,6 @@ const QuizShow = (props) => {
 
   const display = (position, quesId) => {
     tempStatus = status;
-    console.log("alter status", status);
     if (status[position] === 0) {
       tempStatus[position] = 1;
       localStorage.setItem(quizId, JSON.stringify(tempStatus));
@@ -151,10 +169,28 @@ const QuizShow = (props) => {
     }
   };
 
+  let selectedTeams = [];
+  //function to handle change in selected teams for point assignment
+  const handleTypeSelect = (selected) => {
+    console.log("seeting selectedTeams to", selected);
+    selectedTeams = selected;
+  };
+
   //the points that will be assigned after a question is answered
-  const [assign_point, setPoint] = useState(0);
+  const [questionPoints, setQuestionPoint] = useState(0);
+
+  const sucessFunction = () => {
+    assignPointsToTeams(teams, selectedTeams, questionPoints).then(
+      (tmpTeam) => {
+        console.log("setting teams to ", tmpTeam);
+        setTeams(tmpTeam);
+        setShowSuccess(false);
+      }
+    );
+  };
 
   useEffect(() => {
+    console.log("creating new teams");
     showTeams(teams).then((teamArray) => {
       setMyTeams(
         <div className="d-flex">
@@ -167,7 +203,6 @@ const QuizShow = (props) => {
 
   useEffect(() => {
     createCatAndFields(fields, status, quizId, display).then((field) => {
-      console.log("neu status", status);
       setMyFields(field[0]);
       setCats(field[1]);
     });
@@ -225,7 +260,7 @@ const QuizShow = (props) => {
               <Select
                 placeholder="Select teams"
                 options={teamOptions}
-                // onChange={handleTypeSelect}
+                onChange={handleTypeSelect}
                 isMulti
                 noOptionsMessage={() => "No such team found"}
               />
@@ -239,7 +274,9 @@ const QuizShow = (props) => {
             </button>
           </div>
           <div className="d-flex justify-content-end p-3">
-            <button className="btn btn-primary">Assign points</button>
+            <button className="btn btn-primary" onClick={sucessFunction}>
+              Assign points
+            </button>
           </div>
         </Modal.Footer>
       </Modal>
