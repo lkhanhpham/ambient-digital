@@ -231,6 +231,18 @@ const NewQuiz2 = () => {
 
   useEffect(() => {
     getAllQues();
+
+    const handleFocus = () => {
+      getAllQues();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleFocus);
+    };
   }, []);
 
   return (

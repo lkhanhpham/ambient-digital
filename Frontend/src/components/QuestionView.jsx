@@ -11,16 +11,18 @@ const QuestionView = () => {
   const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
-  const [questions, setQuiz] = useState([]);
+  const [questions, setQuestion] = useState([]);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const getAllQuestions = async () => {
     setShow(false);
-    const response = await fetch(`${API_BASE_URL}/api/question`);
+    const response = await fetch(
+      `${API_BASE_URL}/api/authorquestion/` + user.user_id + "/"
+    );
     const data = await response.json();
     if (response.ok) {
-      setQuiz(data);
+      setQuestion(data.question_author);
       //console.log(questions)
     } else {
       //console.log(response.status)
@@ -68,7 +70,7 @@ const QuestionView = () => {
   var arr = [];
   function functionOwn() {
     questions.forEach((element) => {
-      if (element.author === user.user_id && questions.length > 0) {
+      if (questions.length > 0) {
         arr.push(element);
       } else {
       }

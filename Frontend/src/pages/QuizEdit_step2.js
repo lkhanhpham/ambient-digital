@@ -474,6 +474,20 @@ const QuizEdit2 = () => {
     getAllFields();
     getAllQues();
     getAllCats();
+
+    const handleFocus = () => {
+      getAllFields();
+      getAllQues();
+      getAllCats();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleFocus);
+    };
   }, []);
 
   return (

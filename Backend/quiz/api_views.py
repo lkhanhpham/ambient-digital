@@ -14,10 +14,22 @@ from .serializers import (
     AddTeammateSerializer,
     ImageSerializer,
     ImageAuthorSerializer,
+    VideoSerializer,
+    VideoAuthorSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
-from .models import Quiz, Categorie, Question, Field, MyUser, Team, TeamMember, Image
+from .models import (
+    Quiz,
+    Categorie,
+    Question,
+    Field,
+    MyUser,
+    Team,
+    TeamMember,
+    Image,
+    Video,
+)
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.db.models import Prefetch
@@ -62,7 +74,9 @@ class QuizAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = QuizAuthorSerializer
-    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.prefetch_related(
+        Prefetch("quiz_author", queryset=Quiz.objects.order_by("-last_edit"))
+    )
     lookup_field = "id"
 
 
@@ -70,7 +84,9 @@ class QuestionAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = QuestionAuthorSerializer
-    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.prefetch_related(
+        Prefetch("question_author", queryset=Question.objects.order_by("-last_edit"))
+    )
     lookup_field = "id"
 
 
@@ -78,7 +94,11 @@ class CategorieAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = CategorieAuthorSerializer
-    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.prefetch_related(
+        Prefetch(
+            "categorie_author", queryset=Categorie.objects.order_by("categorie_name")
+        )
+    )
     lookup_field = "id"
 
 
@@ -131,6 +151,11 @@ class AddTeammateView(
     queryset = TeamMember.objects.all()
 
 
+class VideoView(viewsets.ModelViewSet):
+    serializer_class = VideoSerializer
+    queryset = Video.objects.all()
+
+
 class ImageView(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
@@ -142,5 +167,13 @@ class ImageAuthorView(
     viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
 ):
     serializer_class = ImageAuthorSerializer
+    queryset = MyUser.objects.all()
+    lookup_field = "id"
+
+
+class VideoAuthorView(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
+):
+    serializer_class = VideoAuthorSerializer
     queryset = MyUser.objects.all()
     lookup_field = "id"
