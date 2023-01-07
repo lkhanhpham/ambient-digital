@@ -83,17 +83,10 @@ const showTeams = async (teams) => {
 
 const assignPointsToTeams = async (allTeams, allSelectedTeams, points) => {
   let tmpTeamArray = [...allTeams];
-  console.log("tmpTeamArray is:", tmpTeamArray);
-  console.log("selectedTeams are", allSelectedTeams);
   await tmpTeamArray.forEach((team) => {
-    console.log("TeamName:", team.team_name);
     allSelectedTeams.forEach((assignedTeam) => {
-      console.log("TeamLabel:", assignedTeam.label);
       if (assignedTeam.label === team.team_name) {
-        console.log("assigned Points to Team:", team.team_name);
-        console.log("old points:", team.team_points);
         team.team_points = team.team_points + points;
-        console.log("new points:", team.team_points);
       }
     });
   });
@@ -146,7 +139,6 @@ const QuizShow = (props) => {
       .get(`${API_BASE_URL}/api/field/` + id + "/")
       .then((response) => {
         data = response.data;
-        console.log(response.data);
       })
       .catch((error) => {
         //   console.log(error);
@@ -172,7 +164,6 @@ const QuizShow = (props) => {
   let selectedTeams = [];
   //function to handle change in selected teams for point assignment
   const handleTypeSelect = (selected) => {
-    console.log("seeting selectedTeams to", selected);
     selectedTeams = selected;
   };
 
@@ -182,7 +173,6 @@ const QuizShow = (props) => {
   const sucessFunction = () => {
     assignPointsToTeams(teams, selectedTeams, questionPoints).then(
       (tmpTeam) => {
-        console.log("setting teams to ", tmpTeam);
         setTeams(tmpTeam);
         setShowSuccess(false);
       }
@@ -190,7 +180,6 @@ const QuizShow = (props) => {
   };
 
   useEffect(() => {
-    console.log("creating new teams");
     showTeams(teams).then((teamArray) => {
       setMyTeams(
         <div className="d-flex">
