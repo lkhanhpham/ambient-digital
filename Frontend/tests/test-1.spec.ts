@@ -2,19 +2,15 @@ import { test, expect } from '@playwright/test';
 
 test('Registration_Create_Question', async ({ page }) => {
 
-  
   let password= "AdminAdmin"
   let username= "Admin"
   let email=  username+ "@ex.com"
 
   await page.goto('/');
 
-  await page.locator('div:has-text("Not Logged InHomeLoginRegistration")').nth(2).click();
+  await page.getByRole('button', { name: 'Register now' }).click();
 
-  await page.locator('.nav__menu-bar').click();
-
-  await page.getByRole('link', { name: 'Registration' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Registration');
+  await expect(page).toHaveURL('/Registration');
 
   await page.getByPlaceholder('Username').click();
 
