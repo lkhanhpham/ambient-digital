@@ -212,9 +212,18 @@ const QuizShow = (props) => {
   const postUserPoint = () => {
     teams.forEach((team) => {
       team.teamMember_team.forEach((member) => {
-        axios.put(`${API_BASE_URL}/api/addUserPoints/` + member.member + "/", {
-          points: team.team_points,
-        });
+        let memberPoint = 0;
+        axios
+          .get(`${API_BASE_URL}/api/addUserPoints/` + member.member + "/")
+          .then((response) => {
+            memberPoint = response.data.points;
+            axios.put(
+              `${API_BASE_URL}/api/addUserPoints/` + member.member + "/",
+              {
+                points: memberPoint + team.team_points,
+              }
+            );
+          });
       });
     });
   };
