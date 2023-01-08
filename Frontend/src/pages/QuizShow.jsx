@@ -175,8 +175,19 @@ const QuizShow = (props) => {
       (tmpTeam) => {
         setTeams(tmpTeam);
         setShowSuccess(false);
+        postTeamsToServer(tmpTeam);
       }
     );
+  };
+
+  const postTeamsToServer = (teamToPost) => {
+    teamToPost.forEach((team) => {
+      axios.put(`${API_BASE_URL}/api/Teams/` + team.id + "/", {
+        team_name: team.team_name,
+        team_points: team.team_points,
+        quiz: team.quiz,
+      });
+    });
   };
 
   useEffect(() => {
@@ -263,7 +274,10 @@ const QuizShow = (props) => {
             </button>
           </div>
           <div className="d-flex justify-content-end p-3">
-            <button className="btn btn-primary" onClick={sucessFunction}>
+            <button
+              className="btn btn-primary"
+              onClick={() => sucessFunction()}
+            >
               Assign points
             </button>
           </div>
