@@ -202,14 +202,27 @@ const QuizShow = (props) => {
     });
   };
 
-  const postUserPoint = (teamToPost) => {
-    teamToPost.forEach((team) => {
-      axios.put(`${API_BASE_URL}/api/Teams/` + team.id + "/", {
-        team_name: team.team_name,
-        team_points: team.team_points,
-        quiz: team.quiz,
+  const resetPoints = () => {
+    teams.forEach((team) => {
+      axios.put(`${API_BASE_URL}/api/addTeamPoints/` + team.id + "/", {
+        team_points: 0,
       });
     });
+  };
+  const postUserPoint = () => {
+    teams.forEach((team) => {
+      team.teamMember_team.forEach((member) => {
+        axios.put(`${API_BASE_URL}/api/addUserPoints/` + member.member + "/", {
+          points: team.team_points,
+        });
+      });
+    });
+  };
+  //when user ends quiz, current points of each team are assigned to its members, all teams' points are set to 0, then navigate to library
+  const endQuiz = () => {
+    postUserPoint();
+    resetPoints();
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -254,7 +267,7 @@ const QuizShow = (props) => {
       </div>
       <button
         className="btn btn-secondary my-4 float-end"
-        onClick={() => navigate(-1)}
+        onClick={() => endQuiz()}
       >
         {" "}
         End Quiz

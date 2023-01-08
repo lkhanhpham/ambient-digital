@@ -55,7 +55,6 @@ const Quiz = (props) => {
           }
         }
       });
-      console.log(teams);
       // refresh();
     } else {
       //console.log(response.status)
