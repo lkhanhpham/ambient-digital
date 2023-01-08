@@ -43,7 +43,8 @@ router.register(r"authorquestion", api_views.QuestionAuthorView, "authorquestion
 router.register(r"authorcategorie", api_views.CategorieAuthorView, "authorcategorie")
 router.register(r"images", api_views.ImageView, "images")
 router.register(r"imageauthor", api_views.ImageAuthorView, "imageauthor")
-router.register(r"addPoints", api_views.AddPointView, "addPoints")
+router.register(r"addTeamPoints", api_views.AddTeamPointView, "addTeamPoints")
+router.register(r"addUserPoints", api_views.AddUserPointView, "addUserPoints")
 
 urlpatterns = [
     # manualy registers some views to urls. they can be reached at http://localhost:8000/<path>

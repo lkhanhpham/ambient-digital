@@ -11,6 +11,25 @@ import { API_BASE_URL } from "../constants.ts";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 
+const getAllTeams = async (quizId) => {
+  let data = [];
+  let tmpoptions = [];
+  await axios
+    .get(`${API_BASE_URL}/api/Teams/`)
+    .then((response) => {
+      response.data.map((team) => {
+        if (team.quiz === quizId) {
+          data.push(team);
+          tmpoptions.push({ value: team.id, label: team.team_name });
+        }
+      });
+    })
+    .catch((error) => {
+      //   console.log(error);
+    });
+
+  return [data, tmpoptions];
+};
 const createCatAndFields = async (fields, status, quizId, display1) => {
   const cata = [];
   const cols = [];
@@ -83,7 +102,7 @@ const showTeams = async (teams) => {
 
 const assignPointsToTeams = async (allTeams, allSelectedTeams, points) => {
   let tmpTeamArray = [...allTeams];
-  await tmpTeamArray.forEach((team) => {
+  tmpTeamArray.forEach((team) => {
     allSelectedTeams.forEach((assignedTeam) => {
       if (assignedTeam.label === team.team_name) {
         team.team_points = team.team_points + points;
@@ -101,7 +120,7 @@ const QuizShow = (props) => {
   const [quiz_name, setQuiz_Name] = useState(location.state.title);
   const [quizId, setQuizId] = useState(location.state.id);
   const [fields, setFields] = useState(location.state.fields);
-  const [teams, setTeams] = useState(location.state.teams);
+  const [teams, setTeams] = useState();
   const [cats, setCats] = useState([]);
   const [myFields, setMyFields] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
@@ -109,12 +128,7 @@ const QuizShow = (props) => {
   const [status, setStatus] = useState(JSON.parse(statusString));
   let tempStatus = JSON.parse(statusString);
 
-  let tmp = [];
-  teams.map((team) => {
-    tmp.push({ value: team.id, label: team.team_name });
-  });
-  const [teamOptions] = useState(tmp);
-
+  const [teamOptions, setTeamOptions] = useState([]);
   const [value, setValue] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const handleCloseSuccess = () => setShowSuccess(false);
@@ -182,6 +196,14 @@ const QuizShow = (props) => {
 
   const postTeamsToServer = (teamToPost) => {
     teamToPost.forEach((team) => {
+      axios.put(`${API_BASE_URL}/api/addTeamPoints/` + team.id + "/", {
+        team_points: team.team_points,
+      });
+    });
+  };
+
+  const postUserPoint = (teamToPost) => {
+    teamToPost.forEach((team) => {
       axios.put(`${API_BASE_URL}/api/Teams/` + team.id + "/", {
         team_name: team.team_name,
         team_points: team.team_points,
@@ -191,14 +213,23 @@ const QuizShow = (props) => {
   };
 
   useEffect(() => {
-    showTeams(teams).then((teamArray) => {
-      setMyTeams(
-        <div className="d-flex">
-          <div className="d-flex flex-column">{teamArray[0]}</div>
-          <div className="d-flex flex-column"> {teamArray[1]}</div>
-        </div>
-      );
+    getAllTeams(quizId).then((teams) => {
+      setTeams(teams[0]);
+      setTeamOptions(teams[1]);
     });
+  }, [quizId]);
+
+  useEffect(() => {
+    if (teams) {
+      showTeams(teams).then((teamArray) => {
+        setMyTeams(
+          <div className="d-flex">
+            <div className="d-flex flex-column">{teamArray[0]}</div>
+            <div className="d-flex flex-column"> {teamArray[1]}</div>
+          </div>
+        );
+      });
+    }
   }, [teams]);
 
   useEffect(() => {

@@ -417,7 +417,6 @@ class AddTeammateSerializer(serializers.ModelSerializer):
 
 
 class AddPointSerializer(serializers.ModelSerializer):
-    # team_id = TeamSerializer(read_only = True)
 
     class Meta:
         model = Team
@@ -430,3 +429,20 @@ class AddPointSerializer(serializers.ModelSerializer):
         instance.quiz = validated_data.get("quiz", instance.quiz)
         instance.save()
         return instance
+
+class AddUserPointSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = ("id", "points")
+        # read_only_fields = "id"
+
+    def update(self, instance, validated_data):
+        instance.points = validated_data.get("points", instance.points)
+        instance.username = validated_data.get("username", instance.username)
+        instance.email = validated_data.get("email", instance.email)
+        instance.is_guest = validated_data.get("is_guest", instance.is_guest)
+        instance.is_superuser = validated_data.get("is_superuser", instance.is_superuser)
+        instance.save()
+        return instance
+
