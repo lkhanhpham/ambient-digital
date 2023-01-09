@@ -1,5 +1,5 @@
 import { Modal } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AnswerField from "../components/AnswerField";
 import QuestionImage from "../components/QuestionImage";
 import AnsweroptionImage from "../components/AnsweroptionImage";
@@ -12,34 +12,6 @@ const ModalQuestion = (props) => {
   const WholeQuestion = field.question;
   const category = field.categorie;
   const point = field.point;
-  const default_answer = WholeQuestion.default_answer;
-  const question_image = WholeQuestion.question_image;
-
-  //   useEffect(() => {
-  //     getQuestion(props.id).then((data) => {
-  //       try {
-  //         setField(data);
-  //         setWholeQuestion(data.question);
-
-  //         if (data.question.question_image) {
-  //           setImage_id(data.question.question_image);
-  //         } else {
-  //           setImage_id(0);
-  //         }
-  //         let temp = [];
-  //         temp.push(data.question.default_answer);
-  //         if (data.question.question_type === "MC") {
-  //           data.question.question_answer_option.map((answer) => {
-  //             temp.push(answer);
-  //           });
-  //         }
-  //         console.log(temp);
-  //         setAnswer_options(temp);
-  //       } catch (error) {
-  //         // console.error(error);
-  //       }
-  //     });
-  //   }, [props.id]);
 
   //   handles multiple choice questions
   function multipleChoice() {

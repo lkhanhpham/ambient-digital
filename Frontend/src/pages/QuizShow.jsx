@@ -4,13 +4,14 @@ import { useLocation } from "react-router-dom";
 import CatField from "../components/CatField";
 import PlayingField from "../components/PlayingField";
 import TeamView from "../components/TeamView";
-import ModalSuccess from "../components/ModalSuccess";
 import ModalQuestion from "../components/ModalQuestion";
 import axios from "axios";
 import { API_BASE_URL } from "../constants.ts";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 
+/* function that calls the api to get all teams and filters them for teams that are assigned to this quiz.
+it then returns an array with all teams and an array to be used by the mutli select in the point assign modal */
 const getAllTeams = async (quizId) => {
   let data = [];
   let tmpoptions = [];
@@ -30,6 +31,11 @@ const getAllTeams = async (quizId) => {
 
   return [data, tmpoptions];
 };
+
+/*function which takes the fields, the status of the fields, the quizId and a method too display the question
+and returns two arrays. one has all the fields in it and the second has the categories
+ */
+
 const createCatAndFields = async (fields, status, quizId, display1) => {
   const cata = [];
   const cols = [];
@@ -69,6 +75,8 @@ const createCatAndFields = async (fields, status, quizId, display1) => {
   return [tmpArray, cata];
 };
 
+/*Function that takes a teams array and creates two arrays of TeamView components which it returns
+ */
 const showTeams = async (teams) => {
   const temp1 = [];
   const temp2 = [];
@@ -100,6 +108,8 @@ const showTeams = async (teams) => {
   return [temp1, temp2];
 };
 
+/*function called after modal to assign points is closed which adds points to 
+the teams in allTeams that are selected in allSelectedTeams and returns a new array with the updated points */
 const assignPointsToTeams = async (allTeams, allSelectedTeams, points) => {
   let tmpTeamArray = [...allTeams];
   tmpTeamArray.forEach((team) => {
@@ -113,13 +123,12 @@ const assignPointsToTeams = async (allTeams, allSelectedTeams, points) => {
   return tmpTeamArray;
 };
 
-// For each created quiz one quizcard is rendered
 const QuizShow = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [quiz_name, setQuiz_Name] = useState(location.state.title);
-  const [quizId, setQuizId] = useState(location.state.id);
-  const [fields, setFields] = useState(location.state.fields);
+  const [quiz_name] = useState(location.state.title);
+  const [quizId] = useState(location.state.id);
+  const [fields] = useState(location.state.fields);
   const [teams, setTeams] = useState();
   const [cats, setCats] = useState([]);
   const [myFields, setMyFields] = useState([]);
@@ -129,11 +138,14 @@ const QuizShow = (props) => {
   let tempStatus = JSON.parse(statusString);
 
   const [teamOptions, setTeamOptions] = useState([]);
-  const [value, setValue] = useState(0);
+
+  //useState to show or hide the point assignment modal
   const [showSuccess, setShowSuccess] = useState(false);
   const handleCloseSuccess = () => setShowSuccess(false);
   const handleShowSuccess = () => setShowSuccess(true);
+  //useState to show or hide the question modal
   const [showQuestion, setShowQuestion] = useState(false);
+
   const handleCloseQues = () => {
     setShowQuestion(false);
     setQuestionPoint(field.point);
@@ -147,6 +159,7 @@ const QuizShow = (props) => {
   //a prop that is passed to ModalQuestion to show the correct question
   const [field, setField] = useState([]);
 
+  //function which calls the api for the question with id and returns the data for this question
   const getQuestion = async (id) => {
     let data = [];
     await axios
@@ -161,6 +174,7 @@ const QuizShow = (props) => {
     return data;
   };
 
+  //function which displays the clicked question and sets the status of the clicked question to 1 so it appears grey
   const display = (position, quesId) => {
     tempStatus = status;
     if (status[position] === 0) {
@@ -184,7 +198,8 @@ const QuizShow = (props) => {
   //the points that will be assigned after a question is answered
   const [questionPoints, setQuestionPoint] = useState(0);
 
-  const sucessFunction = () => {
+  //function called when closing the success modal which assigns the points to the team and then call postTeamsToServer
+  const successFunction = () => {
     assignPointsToTeams(teams, selectedTeams, questionPoints).then(
       (tmpTeam) => {
         setTeams(tmpTeam);
@@ -194,6 +209,7 @@ const QuizShow = (props) => {
     );
   };
 
+  //function which makes a put request to the database to update the team points
   const postTeamsToServer = (teamToPost) => {
     teamToPost.forEach((team) => {
       axios.put(`${API_BASE_URL}/api/addTeamPoints/` + team.id + "/", {
@@ -202,6 +218,7 @@ const QuizShow = (props) => {
     });
   };
 
+  //function called when ending the game which resets all team points to 0 in the database
   const resetPoints = () => {
     teams.forEach((team) => {
       axios.put(`${API_BASE_URL}/api/addTeamPoints/` + team.id + "/", {
@@ -209,6 +226,8 @@ const QuizShow = (props) => {
       });
     });
   };
+
+  //function which updates the user points in the database
   const postUserPoint = () => {
     teams.forEach((team) => {
       team.teamMember_team.forEach((member) => {
@@ -234,6 +253,7 @@ const QuizShow = (props) => {
     navigate(-1);
   };
 
+  //useEffect to update the Teams when first opening the page
   useEffect(() => {
     getAllTeams(quizId).then((teams) => {
       setTeams(teams[0]);
@@ -241,6 +261,7 @@ const QuizShow = (props) => {
     });
   }, [quizId]);
 
+  //useEffect to create or update the TeamViews/Team cards at the bottom of the page. is callend when useState teams is changed
   useEffect(() => {
     if (teams) {
       showTeams(teams).then((teamArray) => {
@@ -254,6 +275,7 @@ const QuizShow = (props) => {
     }
   }, [teams]);
 
+  //useEffect to create/update the playing field (catagories and fields)
   useEffect(() => {
     createCatAndFields(fields, status, quizId, display).then((field) => {
       setMyFields(field[0]);
@@ -329,7 +351,7 @@ const QuizShow = (props) => {
           <div className="d-flex justify-content-end p-3">
             <button
               className="btn btn-primary"
-              onClick={() => sucessFunction()}
+              onClick={() => successFunction()}
             >
               Assign points
             </button>
