@@ -64,7 +64,7 @@ const Teams = () => {
       selectedUsers.map((user) => {
         //if memberid exists in another team
         if (user.team !== teamId && user.member === member) {
-          //set valid = false do that member cannot be added
+          //set valid = false so that member cannot be added
           valid = false;
         }
       });
@@ -126,15 +126,8 @@ const Teams = () => {
       url: `${API_BASE_URL}/api/Teams/` + teamId + "/",
       headers: { "Content-Type": "application/json" },
     }).then((response) => {
-      const test = teamIds.filter((id) => +id !== +teamId);
-      console.log("data", response.data);
-      const test1 = teamNames.filter((name) => name !== teamName);
-      setteamIds(test);
-      setTeamNames(test1);
-      // window.location.reload();
+      window.location.reload();
     });
-    getAllTeams();
-    refresh();
     console.log(teamNames);
   };
 
@@ -162,10 +155,7 @@ const Teams = () => {
         },
         headers: { "Content-Type": "application/json" },
       }).then((response) => {
-        teamIds.push(response.data.id);
-        setTeams([]);
-        getAllTeams();
-        refresh();
+        window.location.reload();
       });
       //confirm();
     }
@@ -191,6 +181,7 @@ const Teams = () => {
             />
           );
         } else {
+          console.log("temp2", teamIds[i]);
           temp2.push(
             <TeamCard
               teamName={teamNames[i]}

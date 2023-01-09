@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import "./styles/index.css";
 import "./styles/App.css";
 import "./styles/library.css";
-import "./styles/quizView.css";
 import App from "./pages/App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";

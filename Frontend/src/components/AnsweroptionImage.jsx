@@ -15,17 +15,23 @@ const AnsweroptionImage = (props) => {
     }
   };
   useEffect(() => {
-    getImage();
-  }, []);
+    if (props.image > 0) {
+      getImage();
+    }
+  }, [props.image]);
   return (
     <>
       <div style={{ maxWidth: "25%", minWidth: "25%" }}>
         <div>
-          <img
-            src={image.picture}
-            className="img-fluid mx-auto"
-            style={{ padding: "5px", display: "block" }}
-          ></img>
+          {image ? (
+            <img
+              src={image.picture}
+              className="img-fluid mx-auto"
+              style={{ padding: "5px", display: "block" }}
+            ></img>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>
