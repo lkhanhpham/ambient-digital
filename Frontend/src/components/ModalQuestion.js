@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import AnswerField from "../components/AnswerField";
 import QuestionImage from "../components/QuestionImage";
 import AnsweroptionImage from "../components/AnsweroptionImage";
+import QuestionVideo from "../components/QuestionVideo";
+import Answeroptionvideo from "../components/Answeroptionvideo";
 
 const ModalQuestion = (props) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -89,6 +91,20 @@ const ModalQuestion = (props) => {
     return array;
   }
 
+  function AddQuestionVideos() {
+    if (WholeQuestion.question_video != null) {
+      return <QuestionVideo video={WholeQuestion.question_video} />;
+    }
+  }
+
+  function AddAnswerVideos() {
+    if (WholeQuestion.default_answer.answer_video != null) {
+      return (
+        <QuestionVideo video={WholeQuestion.default_answer.answer_video} />
+      );
+    }
+  }
+
   return (
     //
     <>
@@ -126,11 +142,16 @@ const ModalQuestion = (props) => {
                 paddingBottom: "20px",
               }}
             >
-              <div style={{ paddingBottom: "40px" }}>
+              <div style={{ paddingBottom: "20px" }}>
                 {WholeQuestion.question_text}
               </div>
-              <QuestionImage image={WholeQuestion.question_image} />
+              {WholeQuestion.question_image ? (
+                <QuestionImage image={WholeQuestion.question_image} />
+              ) : (
+                <></>
+              )}
             </div>
+            <div>{AddQuestionVideos()}</div>
             <div className="d-flex justify-content-center">
               {multipleChoice() ? (
                 <div className="d-flex w-100">
@@ -153,9 +174,18 @@ const ModalQuestion = (props) => {
                     answer={arr[0].text}
                     correct={arr[0].is_correct}
                   />
-                  <QuestionImage
-                    image={WholeQuestion.default_answer.answer_image}
-                  />
+                  {WholeQuestion.default_answer.answer_image ? (
+                    <QuestionImage
+                      image={WholeQuestion.default_answer.answer_image}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {WholeQuestion.default_answer.answer_vide ? (
+                    <div className="row">{AddAnswerVideos()}</div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               )}
             </div>
@@ -164,6 +194,17 @@ const ModalQuestion = (props) => {
                 <div className="d-flex w-100">
                   {arr.map((item) => (
                     <AnsweroptionImage image={item.answer_image} />
+                  ))}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div>
+              {multipleChoice() ? (
+                <div className="d-flex w-100">
+                  {arr.map((item) => (
+                    <Answeroptionvideo video={item.answer_video} />
                   ))}
                 </div>
               ) : (

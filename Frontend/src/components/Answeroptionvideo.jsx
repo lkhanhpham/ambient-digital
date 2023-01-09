@@ -15,8 +15,10 @@ const Answeroptionvideo = (props) => {
     }
   };
   useEffect(() => {
-    getVideo();
-  }, []);
+    if (props.video > 0) {
+      getVideo();
+    }
+  }, [props.video]);
 
   const startPlaying = (event) => {
     var player = document.getElementById(video.id);
