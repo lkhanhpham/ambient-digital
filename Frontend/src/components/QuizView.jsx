@@ -10,10 +10,12 @@ const QuizView = () => {
   const { user } = useContext(AuthContext);
 
   const getAllQuizzes = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/quiz/`);
+    const response = await fetch(
+      `${API_BASE_URL}/api/authorquiz/` + user.user_id + "/"
+    );
     const data = await response.json();
     if (response.ok) {
-      setQuizzes(data);
+      setQuizzes(data.quiz_author);
     } else {
       //console.log(response.status)
       console.log("Failed Network request");
@@ -40,7 +42,7 @@ const QuizView = () => {
   var arr = [];
   function functionOwn() {
     quizzes.forEach((element) => {
-      if (element.author === user.user_id && quizzes.length > 0) {
+      if (quizzes.length > 0) {
         arr.push(element);
       } else {
       }

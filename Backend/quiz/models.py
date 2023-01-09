@@ -3,6 +3,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import post_save
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from urllib.parse import urlparse
+from django.core.exceptions import ValidationError
 
 
 # Classes in this file are tables in the database and the fields are columns in the same table
@@ -82,6 +84,28 @@ class Categorie(models.Model):
         return self.categorie_name
 
 
+def validate_url(value):
+    if not value:
+        return
+    obj = urlparse(value)
+    if not obj.hostname in ("www.youtube.com", "youtu.be"):
+        raise ValidationError("Only urls from YouTube allowed")
+
+
+class Video(models.Model):
+    link = models.URLField(max_length=200, validators=[validate_url])
+    embed_id = models.CharField(max_length=190)
+    sound_only = models.BooleanField(default=False)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="video_author",
+    )
+
+    def __str__(self):
+        return self.link
+
+
 class Image(models.Model):
     picture = models.ImageField(upload_to="image")
     name = models.CharField(blank=True, max_length=100)
@@ -105,6 +129,13 @@ class DefaultAnswer(models.Model):
         null=True,
         blank=True,
     )
+    answer_video = models.ForeignKey(
+        Video,
+        on_delete=models.SET_NULL,
+        related_name="video_answer",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.text
@@ -120,6 +151,13 @@ class Question(models.Model):
         Image,
         on_delete=models.SET_NULL,
         related_name="image_question",
+        null=True,
+        blank=True,
+    )
+    question_video = models.ForeignKey(
+        Video,
+        on_delete=models.SET_NULL,
+        related_name="video_question",
         null=True,
         blank=True,
     )
@@ -172,6 +210,13 @@ class FurtherAnswer(models.Model):
         Image,
         on_delete=models.SET_NULL,
         related_name="image_answer_option",
+        null=True,
+        blank=True,
+    )
+    answer_video = models.ForeignKey(
+        Video,
+        on_delete=models.SET_NULL,
+        related_name="video_answer_option",
         null=True,
         blank=True,
     )

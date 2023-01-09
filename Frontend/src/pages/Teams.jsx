@@ -170,8 +170,7 @@ const Teams = () => {
       const temp1 = [];
       const temp2 = [];
       for (let i = 0; i < teamIds.length; i++) {
-        if (i < teamIds.length / 2) {
-          console.log("temp1", teamIds[i]);
+        if (i % 2 === 0) {
           temp1.push(
             <TeamCard
               teamName={teamNames[i]}

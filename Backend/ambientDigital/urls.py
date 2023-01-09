@@ -43,6 +43,8 @@ router.register(r"authorquestion", api_views.QuestionAuthorView, "authorquestion
 router.register(r"authorcategorie", api_views.CategorieAuthorView, "authorcategorie")
 router.register(r"images", api_views.ImageView, "images")
 router.register(r"imageauthor", api_views.ImageAuthorView, "imageauthor")
+router.register(r"video", api_views.VideoView, "video")
+router.register(r"videoauthor", api_views.VideoAuthorView, "videoauthor")
 router.register(r"addTeamPoints", api_views.AddTeamPointView, "addTeamPoints")
 router.register(r"addUserPoints", api_views.AddUserPointView, "addUserPoints")
 
