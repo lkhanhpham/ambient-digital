@@ -20,7 +20,6 @@ import Home from "./HomePage";
 import Registration from "./RegisterPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../context/AuthContext";
-import QuestionShow from "./QuestionShow";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import QuizEdit1 from "./QuizEdit_step1";
 import QuizEdit2 from "./QuizEdit_step2";
@@ -110,15 +109,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <QuizShow />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            exact
-            path="/Quiz/:QuizID/Question/*"
-            element={
-              <ProtectedRoute>
-                <QuestionShow />
               </ProtectedRoute>
             }
           />
