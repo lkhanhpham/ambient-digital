@@ -141,7 +141,13 @@ const QuizShow = (props) => {
 
   //useState to show or hide the point assignment modal
   const [showSuccess, setShowSuccess] = useState(false);
-  const handleCloseSuccess = () => setShowSuccess(false);
+  const handleCloseSuccess = () => {
+    createCatAndFields(fields, status, quizId, display).then((field) => {
+      setMyFields(field[0]);
+      setCats(field[1]);
+    });
+    setShowSuccess(false);
+  };
   const handleShowSuccess = () => setShowSuccess(true);
   //useState to show or hide the question modal
   const [showQuestion, setShowQuestion] = useState(false);
@@ -155,6 +161,11 @@ const QuizShow = (props) => {
   const handleShowQues = () => {
     setShowQuestion(true);
   };
+
+  //useState to show or hide the winning team
+  const [showWinner, setShowWinner] = useState(false);
+  const handleCloseWinner = () => setShowWinner(false);
+  const handleShowWinner = () => setShowWinner(true);
 
   //a prop that is passed to ModalQuestion to show the correct question
   const [field, setField] = useState([]);
@@ -174,13 +185,15 @@ const QuizShow = (props) => {
     return data;
   };
 
+  const [position, setPosition] = useState(0);
   //function which displays the clicked question and sets the status of the clicked question to 1 so it appears grey
   const display = (position, quesId) => {
     tempStatus = status;
+    setPosition(position);
     if (status[position] === 0) {
       tempStatus[position] = 1;
       localStorage.setItem(quizId, JSON.stringify(tempStatus));
-      // setStatus(tempStatus);
+      setStatus(tempStatus);
       getQuestion(quesId).then((data) => {
         setField(data);
         handleShowQues();
@@ -189,24 +202,51 @@ const QuizShow = (props) => {
     }
   };
 
-  let selectedTeams = [];
+  //the text shown on the button to assign points
+  const [btnText, setBtnText] = useState("Assign no points");
+
+  const [selectedTeams, setSelectedTeams] = useState([]);
   //function to handle change in selected teams for point assignment
   const handleTypeSelect = (selected) => {
-    selectedTeams = selected;
+    if (selected.length > 0) {
+      setBtnText("Assign points");
+    } else {
+      setBtnText("Assign no points");
+    }
+    setSelectedTeams(selected);
   };
 
   //the points that will be assigned after a question is answered
   const [questionPoints, setQuestionPoint] = useState(0);
 
+  const [value, setValue] = useState(0);
+  const refresh = () => {
+    // it re-renders the component
+    setValue(value + 1);
+  };
   //function called when closing the success modal which assigns the points to the team and then call postTeamsToServer
   const successFunction = () => {
+    tempStatus = status;
+    if (selectedTeams.length > 0) {
+      //field was answered correctly
+      tempStatus[position] = 2;
+    } else {
+      //field was answered wrong
+      tempStatus[position] = 3;
+    }
+    setStatus(tempStatus);
+    localStorage.setItem(quizId, JSON.stringify(tempStatus));
     assignPointsToTeams(teams, selectedTeams, questionPoints).then(
       (tmpTeam) => {
         setTeams(tmpTeam);
-        setShowSuccess(false);
         postTeamsToServer(tmpTeam);
+        setSelectedTeams([]);
       }
     );
+    if (btnText === "Assign points") {
+      setBtnText("Assign no points");
+    }
+    handleCloseSuccess();
   };
 
   //function which makes a put request to the database to update the team points
@@ -246,9 +286,34 @@ const QuizShow = (props) => {
       });
     });
   };
-  //when user ends quiz, current points of each team are assigned to its members, all teams' points are set to 0, then navigate to library
+
+  const [winner] = useState([]);
+  const [maxPoint, setMax] = useState(-1);
+  //function to determine the winner team
+  const findWinner = () => {
+    let max = -1;
+    teams.forEach((team) => {
+      if (team.team_points > max) {
+        max = team.team_points;
+      }
+    });
+    teams.forEach((team) => {
+      if (team.team_points === max) {
+        winner.push(team.team_name);
+      }
+    });
+    setMax(max);
+    handleShowWinner();
+  };
+  //when user ends quiz, current points of each team are assigned to its members, all teams' points are set to 0, winner is specified, then navigate to library
   const endQuiz = () => {
     postUserPoint();
+    findWinner();
+    // resetPoints();
+    // navigate(-1);
+  };
+
+  const goBack = () => {
     resetPoints();
     navigate(-1);
   };
@@ -327,10 +392,7 @@ const QuizShow = (props) => {
         </Modal.Header>
         <Modal.Body>
           <div className="d-flex flex-column justify-content-center">
-            <p className="">
-              Select one or more teams to assign points. Close this if no one's
-              got the right answer.
-            </p>
+            <p className="">Select one or more teams to assign points.</p>
             <div>
               <Select
                 placeholder="Select teams"
@@ -343,17 +405,50 @@ const QuizShow = (props) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="d-flex justify-content-end">
-            <button onClick={handleCloseSuccess} className="btn btn-primary">
-              Close
-            </button>
-          </div>
           <div className="d-flex justify-content-end p-3">
             <button
               className="btn btn-primary"
               onClick={() => successFunction()}
             >
-              Assign points
+              {btnText}
+            </button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={showWinner}
+      >
+        <Modal.Header>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Well done everyone!
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            {winner.length > 1 ? (
+              <p className="extra-big-title">Our winners are</p>
+            ) : (
+              <p className="extra-big-title">Our winner is</p>
+            )}
+            <div>
+              <p className="winner big-title">{winner.join(", ")}</p>
+            </div>
+            <div>
+              <p className="small-title">with the score of</p>
+            </div>
+            <div>
+              <p className="point"> {maxPoint} points</p>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="d-flex justify-content-end p-3">
+            <button className="btn btn-primary" onClick={() => goBack()}>
+              Back to Library
             </button>
           </div>
         </Modal.Footer>
@@ -368,6 +463,12 @@ const QuizShow = (props) => {
           }
           .unclickable:hover {
             cursor: not-allowed;
+          }
+          .winner {
+            background-color: #ca6702;
+            padding: 10px 10px;
+            border-radius: 0.5rem;
+            color: white;
           }
         `}
       </style>
