@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
-
+import { aqua, coral } from "../constants.ts";
 const PlayingField = (props) => {
   return (
     <>
@@ -12,15 +12,15 @@ const PlayingField = (props) => {
           //white: initial state, gray: question was displayed, green: question was answered correctly, red: question was answered incorrectly
           backgroundColor:
             props.status1 == 0
-              ? "white"
+              ? "#002838"
               : props.status1 == 1
               ? "gray"
               : props.status1 == 2
-              ? "green"
-              : "red",
+              ? aqua
+              : coral,
         }}
       >
-        <p className="align-self-center">{props.points}</p>
+        <p className="align-self-center points">{props.points}</p>
       </div>
       <style jsx="true">
         {`
@@ -32,6 +32,10 @@ const PlayingField = (props) => {
           .field:hover {
             cursor: pointer;
             border: solid 3px black;
+          }
+          .points {
+            font-weight: 700;
+            color: #f2c94c;
           }
         `}
       </style>

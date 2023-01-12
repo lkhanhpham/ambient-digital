@@ -7,12 +7,17 @@ const AnswerField = (props) => {
         style={{ marginBottom: "30px" }}
         id="AnswerOption"
       >
-        <p
-          style={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}
+        <span
+          style={{
+            textAlign: "center",
+            fontSize: "20px",
+            fontWeight: "bold",
+            padding: "0px",
+          }}
           className="align-self-center text-break"
         >
           {props.answer}
-        </p>
+        </span>
       </div>
       <style jsx="true">
         {`

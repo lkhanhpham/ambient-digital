@@ -5,7 +5,7 @@ import QuestionImage from "../components/QuestionImage";
 import AnsweroptionImage from "../components/AnsweroptionImage";
 import QuestionVideo from "../components/QuestionVideo";
 import Answeroptionvideo from "../components/Answeroptionvideo";
-
+import { dark_orange, aqua, coral } from "../constants.ts";
 const ModalQuestion = (props) => {
   const [isVisible, setIsVisible] = useState(false);
   const field = props.field;
@@ -38,9 +38,9 @@ const ModalQuestion = (props) => {
     } else {
       for (var i = 0; i < answer.length; i++) {
         if (arr[i].is_correct === true) {
-          answer[i].style.backgroundColor = "green";
+          answer[i].style.backgroundColor = aqua;
         } else {
-          answer[i].style.backgroundColor = "red";
+          answer[i].style.backgroundColor = coral;
         }
       }
     }
@@ -102,7 +102,23 @@ const ModalQuestion = (props) => {
                 margin: "20px",
               }}
             >
-              Category {category} for {point} points!
+              <span
+                style={{
+                  color: dark_orange,
+                }}
+              >
+                {" "}
+                Category {category}{" "}
+              </span>
+              for{" "}
+              <span
+                style={{
+                  color: "#f2c94c",
+                }}
+              >
+                {point}{" "}
+              </span>{" "}
+              points!
             </p>
             <div
               style={{
@@ -186,7 +202,7 @@ const ModalQuestion = (props) => {
 
             <div>
               <button
-                className="btn btn-secondary my-4 btn-lg w-100"
+                className="my-btn-secondary my-4 btn-lg w-100"
                 id="button"
                 onClick={handleClick}
               >

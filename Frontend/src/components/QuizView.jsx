@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
+import { dark_orange, light_yellow } from "../constants.ts";
 //all created quizes are inserted into the quizview
 const QuizView = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -63,7 +64,7 @@ const QuizView = () => {
           </span>
 
           <Link to="/QuizCreator">
-            <button className="btn btn-primary"> Create quiz</button>
+            <button className="my-btn-primary"> Create quiz</button>
           </Link>
         </div>
         <div className="card-body scrollable ">

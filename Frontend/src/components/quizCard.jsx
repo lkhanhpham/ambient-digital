@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
 import ModalWarning from "./ModalWarning";
 import { Modal, Button } from "react-bootstrap";
+import { aqua, dark_aqua, background } from "../constants.ts";
+import pencil from "../icons/pencil.png";
+import trash from "../icons/Trash.png";
 
 // For each created quiz one quizcard is rendered
 const Quiz = (props) => {
@@ -63,33 +66,38 @@ const Quiz = (props) => {
   };
 
   const display = (event) => {
-    if (teams.length > 1) {
-      event.preventDefault();
-      const status = new Array(fields.length).fill(0);
-      const fieldStatus = JSON.stringify(status);
-      localStorage.setItem(props.id, fieldStatus);
-      var valid = true;
-      fields.map((field) => {
-        if (field.question_id === null) {
-          valid = false;
-        }
-      });
-      if (!valid) {
-        handleShowWarning();
-      } else {
-        navigate("/Quiz/" + props.id + "/", {
-          state: {
-            id: props.id,
-            title: props.title,
-            nr_of_categories: nr_of_categories,
-            nr_of_rows: nr_of_rows,
-            fields: fields,
-            teams: teams,
-          },
-        });
-      }
+    console.log(fields);
+    if (fields.length === 0) {
+      handleShowWarning();
     } else {
-      setShowNoTeams(true);
+      if (teams.length > 1) {
+        event.preventDefault();
+        const status = new Array(fields.length).fill(0);
+        const fieldStatus = JSON.stringify(status);
+        localStorage.setItem(props.id, fieldStatus);
+        var valid = true;
+        fields.map((field) => {
+          if (field.question_id === null) {
+            valid = false;
+          }
+        });
+        if (!valid) {
+          handleShowWarning();
+        } else {
+          navigate("/Quiz/" + props.id + "/", {
+            state: {
+              id: props.id,
+              title: props.title,
+              nr_of_categories: nr_of_categories,
+              nr_of_rows: nr_of_rows,
+              fields: fields,
+              teams: teams,
+            },
+          });
+        }
+      } else {
+        setShowNoTeams(true);
+      }
     }
   };
 
@@ -129,7 +137,7 @@ const Quiz = (props) => {
         /* Calculates 50% of the element's width, and moves it by that */
         /* amount across the X-axis to the left */
         transform: "translateX(25%)",
-        backgroundColor: "#D9D9D9",
+        backgroundColor: aqua,
         width: "287px",
         height: "287px",
       }}
@@ -140,24 +148,41 @@ const Quiz = (props) => {
           {props.title}{" "}
         </p>
       </div>
-      <div className="d-flex justify-content-center pt-3">
-        <p className="body-text"> {props.nr_of_categories} categories</p>
+      <div className="d-flex justify-content-center pt-2">
+        <p
+          className=""
+          style={{
+            color: background,
+            fontWeight: "600",
+          }}
+        >
+          {" "}
+          {props.nr_of_categories} categories
+        </p>
       </div>
       <div className="d-flex justify-content-center">
-        <p className="body-text text-muted"> Created: {props.pub_date}</p>
+        <p
+          className="body-text"
+          style={{
+            color: dark_aqua,
+          }}
+        >
+          {" "}
+          Created: {props.pub_date}
+        </p>
       </div>
       <div className="d-flex justify-content-center mt-3 my-div">
-        <button className="col my-btn" onClick={addTeam}>
+        <button className="col my-btn-secondary" onClick={addTeam}>
           Teams
         </button>
       </div>
       <div className="d-flex justify-content-center mb-3 p-3">
         <div className="row ">
-          <button className="col me-3 my-btn" onClick={editItem}>
-            Edit
+          <button className="col my-btn" onClick={editItem}>
+            <img src={pencil} width="30px" height="30px" alt="edit"></img>
           </button>
           <button className="col my-btn" onClick={handleShow}>
-            Delete
+            <img src={trash} width="30px" height="30px" alt="delete"></img>
           </button>
         </div>
         <ModalWarning
@@ -195,27 +220,26 @@ const Quiz = (props) => {
           .custom-card {
             border-radius: 1rem;
           }
-          .my-btn {
-            border-radius: 0.5rem;
-            background-color: #e7e7e7;
-            border-color: #e7e7e7;
-            color: black;
-          }
-
-          .my-btn:hover {
-            background: white;
-          }
           .quiz-title {
+            font-size: 1.5rem;
+            color: #e9d8a6;
             font-weight: 500;
           }
           .quiz-title:hover {
-            font-size: 1.2rem;
-            color: blue;
+            font-size: 1.7rem;
+            color: #005f73;
             cursor: pointer;
           }
           .my-div {
             padding-left: 80px;
             padding-right: 80px;
+          }
+          .team-button {
+            background-color: #e9d8a6;
+            color: #005f73;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 5px 5px;
           }
         `}
       </style>

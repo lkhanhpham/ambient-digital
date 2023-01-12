@@ -12,9 +12,10 @@ class Library extends Component {
         <div>
           <QuizView />
         </div>
-        <div>
+        <div className="pb-5 mb-5">
           <QuestionView />
         </div>
+        <div className="spacer"></div>
       </div>
     );
   }

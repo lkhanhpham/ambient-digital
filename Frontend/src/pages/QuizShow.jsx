@@ -351,9 +351,9 @@ const QuizShow = (props) => {
 
   return (
     <div className="container">
-      <p style={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}>
-        {quiz_name}
-      </p>
+      <div className="d-flex justify-content-center align-items-center">
+        <p className="extra-big-title self-align-center">{quiz_name}</p>
+      </div>
       <div className="d-sm-flex justify-content-center">{cats}</div>
       <div className="d-sm-flex justify-content-center">{myFields}</div>
       <div className="mt-5 pt-5 d-flex flex-column justify-content-center">
@@ -407,7 +407,7 @@ const QuizShow = (props) => {
         <Modal.Footer>
           <div className="d-flex justify-content-end p-3">
             <button
-              className="btn btn-primary"
+              className="my-btn-primary"
               onClick={() => successFunction()}
             >
               {btnText}
@@ -447,7 +447,7 @@ const QuizShow = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <div className="d-flex justify-content-end p-3">
-            <button className="btn btn-primary" onClick={() => goBack()}>
+            <button className="my-btn-primary" onClick={() => goBack()}>
               Back to Library
             </button>
           </div>
@@ -465,7 +465,7 @@ const QuizShow = (props) => {
             cursor: not-allowed;
           }
           .winner {
-            background-color: #ca6702;
+            background-color: #5b84b1;
             padding: 10px 10px;
             border-radius: 0.5rem;
             color: white;

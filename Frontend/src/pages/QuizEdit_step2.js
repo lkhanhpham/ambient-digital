@@ -516,14 +516,14 @@ const QuizEdit2 = () => {
             <div className="d-flex">{newcats}</div>
           </div>
           <div className="d-flex justify-content-between p-3">
-            <button onClick={prevStep} className="btn btn-primary">
+            <button onClick={prevStep} className="my-btn-primary">
               Back
             </button>
             <div className="d-flex align-self-end">
-              <button onClick={saveStep2} className="btn btn-warning me-3">
+              <button onClick={saveStep2} className="my-btn-secondary me-3">
                 Save
               </button>
-              <button onClick={nextStep} className="btn btn-primary">
+              <button onClick={nextStep} className="my-btn-primary">
                 Next
               </button>
             </div>
@@ -573,7 +573,7 @@ const QuizEdit2 = () => {
 
             <button
               onClick={() => saveQuestion(positionField)}
-              className="btn btn-primary"
+              className="my-btn-primary"
             >
               Save
             </button>
@@ -614,7 +614,7 @@ const QuizEdit2 = () => {
 
             <button
               onClick={() => saveCat(position)}
-              className="btn btn-primary"
+              className="my-btn-primary"
             >
               Save
             </button>

@@ -153,7 +153,7 @@ const NewQuiz1 = () => {
         <h3 className="small-title">{quiz_name} </h3>
       </div>
       <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
-        <h3 className="body-text">1. Choose your categories</h3>
+        <h3 className="instruction bold p-3">1. Choose your categories</h3>
       </div>
       <div className="row justify-content-center p-3">
         <div className="col-12 d-flex flex-row justify-content-center">
@@ -195,7 +195,7 @@ const NewQuiz1 = () => {
 
             <button
               onClick={() => saveCat(position)}
-              className="btn btn-primary"
+              className="my-btn-primary"
             >
               Save
             </button>
@@ -203,7 +203,7 @@ const NewQuiz1 = () => {
         </Modal.Footer>
       </Modal>
       <div className="d-flex justify-content-end p-3">
-        <button onClick={nextStep} className="btn btn-primary">
+        <button onClick={nextStep} className="my-btn-primary">
           Next
         </button>
       </div>

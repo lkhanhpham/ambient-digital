@@ -97,14 +97,14 @@ const QuestionView = () => {
           </span>
 
           <Link to="/QuestionCreator/SC">
-            <button className="btn btn-primary"> Create question</button>
+            <button className="my-btn-primary"> Create question</button>
           </Link>
         </div>
         <div className="card-body scrollable ">
           <div className="">
             {functionOwn() ? (
               <div className="mx-auto align-items-center justify-content-center">
-                <div className="d-block">
+                <div className="">
                   {arr.map((item) => (
                     <Question
                       key={item.id}
