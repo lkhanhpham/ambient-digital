@@ -6,6 +6,7 @@ import ModalSuccess from "../components/ModalSuccess";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 import ModalWarning from "../components/ModalWarning";
+import { background } from "../constants.ts";
 const CategoryCreator = () => {
   const { user } = useContext(AuthContext);
   const [catName, setCatName] = useState("");
@@ -45,7 +46,12 @@ const CategoryCreator = () => {
         <h3 className="big-title">New Category</h3>
       </div>
       <div className="row justify-content-center">
-        <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+        <div
+          className="custom-card col-lg-6 col-md-8 p-5 justify-content-center align-self-center"
+          style={{
+            backgroundColor: background,
+          }}
+        >
           <form className="text-light" onSubmit={createCat}>
             <div className="form-group m-3">
               <label className="mb-2" htmlFor="exampleFormControlInput1">
@@ -67,7 +73,7 @@ const CategoryCreator = () => {
                   Cancel
                 </button>
               </Link>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="my-btn-primary">
                 Create
               </button>
             </div>

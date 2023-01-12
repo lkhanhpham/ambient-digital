@@ -5,6 +5,7 @@ import React from "react";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import { API_BASE_URL } from "../constants.ts";
+import { background } from "../constants.ts";
 
 const GuestCreator = () => {
   //array that stores all usernames
@@ -89,7 +90,12 @@ const GuestCreator = () => {
         <h3 className="big-title">New Guest</h3>
       </div>
       <div className="row justify-content-center">
-        <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+        <div
+          className="custom-card col-lg-6 col-md-8 p-5 justify-content-center align-self-center"
+          style={{
+            backgroundColor: background,
+          }}
+        >
           <form className="text-light" onSubmit={createGuest}>
             <div className="form-group m-3">
               <label className="mb-2" htmlFor="exampleFormControlInput1">
@@ -112,7 +118,7 @@ const GuestCreator = () => {
               >
                 Cancel
               </button>
-              <button type="submit" value="Create" className="btn btn-primary">
+              <button type="submit" value="Create" className="my-btn-primary">
                 Create
               </button>
             </div>

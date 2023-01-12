@@ -268,7 +268,7 @@ const QuizEdit1 = () => {
             <Link to="../../Library">
               <button className="btn btn-secondary">Cancel</button>
             </Link>
-            <button onClick={nextStep} className="btn btn-primary">
+            <button onClick={nextStep} className="my-btn-primary">
               Next
             </button>
           </div>
@@ -315,7 +315,7 @@ const QuizEdit1 = () => {
               Cancel
             </button>
 
-            <button onClick={putField} className="btn btn-primary">
+            <button onClick={putField} className="my-btn-primary">
               Save
             </button>
           </div>
@@ -354,7 +354,7 @@ const QuizEdit1 = () => {
               Cancel
             </button>
 
-            <button onClick={saveQuizname} className="btn btn-primary">
+            <button onClick={saveQuizname} className="my-btn-primary">
               Save
             </button>
           </div>

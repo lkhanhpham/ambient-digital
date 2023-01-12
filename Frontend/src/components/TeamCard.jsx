@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import Select from "react-select";
+import { dark_orange } from "../constants.ts";
 
 const getAllUser = async () => {
   const response = await fetch(`${API_BASE_URL}/api/user/`);
@@ -101,7 +102,15 @@ const TeamCard = (props) => {
   }, [teamId]);
 
   return (
-    <div className="team-card d-flex flex-column justify-content-center m-2">
+    <div
+      className=" d-flex flex-column justify-content-center m-2"
+      style={{
+        backgroundColor: dark_orange,
+        width: "500px",
+        height: "auto",
+        borderRadius: "1rem",
+      }}
+    >
       <div
         onClick={props.deleteItem}
         className="align-self-end p-2 delete-button"
@@ -130,7 +139,7 @@ const TeamCard = (props) => {
         </div>
         <div className="pb-3">
           <button
-            className="btn btn-primary"
+            className="my-btn-secondary"
             onClick={() => props.selectUser(selectedUsers, teamId, teamName)}
           >
             Save
@@ -140,13 +149,6 @@ const TeamCard = (props) => {
 
       <style jsx="true">
         {`
-          .team-card {
-            width: 500px;
-            height: auto;
-            border-radius: 1rem;
-            background-color: #ca6702;
-          }
-
           .delete-button:hover {
             cursor: pointer;
           }

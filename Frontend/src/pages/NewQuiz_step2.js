@@ -251,7 +251,7 @@ const NewQuiz2 = () => {
         <h3 className="small-title"> {quiz_name} </h3>
       </div>
       <div className="text-dark d-flex justify-content-center align-self-center pt-3 pb-3">
-        <h3 className="body-text">2. Click on each field to edit</h3>
+        <h3 className="instruction bold p-3">2. Click on each field to edit</h3>
       </div>
       <div className="row justify-content-center p-3">
         <div className="col-12 d-flex flex-row justify-content-center">
@@ -317,7 +317,7 @@ const NewQuiz2 = () => {
 
             <button
               onClick={() => saveQuestion(position)}
-              className="btn btn-primary"
+              className="my-btn-primary"
             >
               Save
             </button>
@@ -353,7 +353,7 @@ const NewQuiz2 = () => {
       />
 
       <div className="d-flex justify-content-end p-3">
-        <button onClick={saveQuiz} className="btn btn-primary">
+        <button onClick={saveQuiz} className="my-btn-primary">
           Save
         </button>
       </div>

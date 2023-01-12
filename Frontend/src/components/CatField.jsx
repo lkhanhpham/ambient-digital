@@ -1,10 +1,18 @@
-// import Modal from 'react-bootstrap/Modal';
+import { dark_aqua } from "../constants.ts";
 const CatField = (props) => {
   return (
     <>
       <div
         onClick={props.handleShow}
         className="custom-card d-flex  rounded-0 justify-content-center"
+        style={{
+          width: "160px",
+          height: "80px",
+          border: "solid 2px black",
+          borderRadius: "8px",
+          backgroundColor: dark_aqua,
+          color: "white",
+        }}
       >
         {props.chosen ? (
           <p
@@ -25,14 +33,6 @@ const CatField = (props) => {
 
       <style jsx="true">
         {`
-          .custom-card {
-            width: 160px;
-            height: 80px;
-            border: solid 2px black;
-            border-radius: 8px;
-            background-color: #292b2c;
-            color: white;
-          }
           .custom-card:hover {
             cursor: pointer;
           }

@@ -72,14 +72,6 @@ function App() {
             }
           />
           <Route
-            path="/QuestionCreator/NewQuestion"
-            element={
-              <ProtectedRoute>
-                <NewQuestion />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/QuizCreator/NewQuiz1"
             element={
               <ProtectedRoute>

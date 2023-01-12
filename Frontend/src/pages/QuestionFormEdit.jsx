@@ -8,7 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
-
+import { background } from "../constants.ts";
 const QuestionFormEdit = (id) => {
   var dropdownV = "ScId";
   const location = useLocation();
@@ -489,7 +489,10 @@ const QuestionFormEdit = (id) => {
       <div className="row justify-content-center">
         <div
           id="formidCustom"
-          className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
+          className="custom-card col-lg-6 col-md-8 p-5 justify-content-center align-self-center"
+          style={{
+            backgroundColor: background,
+          }}
         >
           <form className="text-light">
             <label htmlFor="type">Choose a Type: </label>
@@ -722,12 +725,12 @@ const QuestionFormEdit = (id) => {
 
           <div className="d-flex justify-content-end py-3">
             <button
-              className="btn btn-secondary me-2"
+              className="my-btn-secondary me-2"
               onClick={handleVideoClick}
             >
               {videobtnText}
             </button>
-            <button className="btn btn-secondary me-2" onClick={handleClick}>
+            <button className="my-btn-secondary me-2" onClick={handleClick}>
               {btnText}
             </button>
             <button className="btn btn-secondary me-2" onClick={handleShow}>
@@ -738,7 +741,7 @@ const QuestionFormEdit = (id) => {
             </Link>
             <button
               id="submitButton"
-              className="btn btn-primary"
+              className="my-btn-primary"
               onClick={handleShow2}
             >
               Update

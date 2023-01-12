@@ -76,7 +76,7 @@ const Header = () => {
                         </Nav.Link>
                         {user ? (
                           <>
-                            <Nav.Link className="NavLink" href="Library">
+                            <Nav.Link className="NavLink" href="/Library">
                               My Library
                             </Nav.Link>
                             {/* <Nav.Link href="/">Quiz-Room</Nav.Link> */}
@@ -131,7 +131,7 @@ const Header = () => {
                       font-size: 2rem;
                     }
                     .NavLink:hover {
-                      color: black;
+                      color: #ca6702;
                       cursor: pointer;
                     }
                     .NavbarSite {

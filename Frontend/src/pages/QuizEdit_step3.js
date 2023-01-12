@@ -469,14 +469,14 @@ const QuizEdit3 = () => {
           </div>
 
           <div className="d-flex justify-content-between p-3">
-            <button onClick={prevStep} className="btn btn-primary">
+            <button onClick={prevStep} className="my-btn-primary">
               Back
             </button>
             <div className="d-flex align-self-end">
-              <button onClick={saveStep3} className="btn btn-warning me-3">
+              <button onClick={saveStep3} className="my-btn-secondary me-3">
                 Save
               </button>
-              <button onClick={nextStep} className="btn btn-primary">
+              <button onClick={nextStep} className="my-btn-primary">
                 Finish
               </button>
             </div>
@@ -526,7 +526,7 @@ const QuizEdit3 = () => {
 
             <button
               onClick={() => saveQuestion(positionField)}
-              className="btn btn-primary"
+              className="my-btn-primary"
             >
               Save
             </button>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import axios from "axios";
+import { aqua, dark_aqua, background } from "../constants.ts";
 
 const getAllMembers = async (id) => {
   let tmpMemberArr = [];
@@ -38,18 +39,30 @@ const TeamView = (props) => {
           </div>
           <div className="d-flex mt-3 mb-2">
             <div>
-              <span>
-                <b>Members:</b>
+              <span
+                className=""
+                style={{
+                  color: background,
+                  fontWeight: "600",
+                }}
+              >
+                Members:
               </span>
             </div>
             <div>
-              <span className="m-2">{memberNames.join(", ")}</span>
+              <span className="body-text m-2">{memberNames.join(", ")}</span>
             </div>
           </div>
           <div>
-            <p className="body-text">
-              <b>Current Points:</b>
-              <span className="point m-2">{props.teamPoint}</span>
+            <p
+              className=""
+              style={{
+                color: background,
+                fontWeight: "600",
+              }}
+            >
+              Current Points:
+              <span className="point body-text m-2">{props.teamPoint}</span>
             </p>
           </div>
         </div>

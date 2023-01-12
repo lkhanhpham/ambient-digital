@@ -7,6 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
+import { background } from "../constants.ts";
 
 var dropdownV = "x";
 
@@ -301,7 +302,7 @@ const QuestionForm = () => {
         vidurl = document.getElementById("answer_vid").value;
         soundonly = vidSoundAnswerOption1;
       }
-      console.log(vidurl);
+      // console.log(vidurl);
       if (vidurl === null || vidurl === "") {
         continue;
       }
@@ -338,10 +339,15 @@ const QuestionForm = () => {
       <div className="row justify-content-center">
         <div
           id="formidCustom"
-          className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center"
+          className="custom-card col-lg-6 col-md-8 p-5 justify-content-center align-self-center"
+          style={{
+            backgroundColor: background,
+          }}
         >
-          <form className="text-light">
-            <label htmlFor="type">Choose a Type: </label>
+          <form className="text-light mb-3">
+            <label className="me-2" htmlFor="type">
+              Choose a Type:{" "}
+            </label>
             <select
               id="selectOpt"
               name="typeSelection"
@@ -416,7 +422,7 @@ const QuestionForm = () => {
               </div>
             )}
 
-            <label className="mb-2" htmlFor="exampleFormControlInput1">
+            <label className="mt-3 mb-2" htmlFor="exampleFormControlInput1">
               Answers{" "}
             </label>
 
@@ -483,20 +489,20 @@ const QuestionForm = () => {
 
           <div className="d-flex justify-content-end py-4">
             <button
-              className="btn btn-secondary me-2"
+              className="my-btn-secondary me-2"
               onClick={handleVideoClick}
             >
               {videobtnText}
             </button>
 
-            <button className="btn btn-secondary me-2" onClick={handleClick}>
+            <button className="my-btn-secondary me-2" onClick={handleClick}>
               {btnText}
             </button>
 
             <button
               id="submitButton"
               onClick={handleShow}
-              className="btn btn-primary me-2"
+              className="my-btn-primary me-2"
             >
               Create
             </button>

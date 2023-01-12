@@ -6,6 +6,7 @@ import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
+import { background } from "../constants.ts";
 const QuizForm = () => {
   const [quizName, setQuizName] = useState("");
   const [nrOfRows, setNrOfRows] = useState(5);
@@ -81,7 +82,12 @@ const QuizForm = () => {
         <h3 className="big-title">New quiz</h3>
       </div>
       <div className="row justify-content-center">
-        <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+        <div
+          className="custom-card col-lg-6 col-md-8 p-5 justify-content-center align-self-center"
+          style={{
+            backgroundColor: background,
+          }}
+        >
           <form className="text-light">
             <div className="form-group m-3">
               <label className="mb-2" htmlFor="exampleFormControlInput1">
@@ -142,7 +148,7 @@ const QuizForm = () => {
               <button className="btn btn-secondary me-2">Cancel</button>
             </Link>
 
-            <button onClick={createQuiz} className="btn btn-primary">
+            <button onClick={createQuiz} className="my-btn-primary">
               Create
             </button>
           </div>

@@ -5,6 +5,7 @@ import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import TeamCard from "../components/TeamCard";
 import { API_BASE_URL } from "../constants.ts";
+import { background } from "../constants.ts";
 
 //create new teams
 
@@ -128,7 +129,6 @@ const Teams = () => {
     }).then((response) => {
       window.location.reload();
     });
-    console.log(teamNames);
   };
 
   const [value, setValue] = useState(0);
@@ -181,7 +181,7 @@ const Teams = () => {
             />
           );
         } else {
-          console.log("temp2", teamIds[i]);
+          // console.log("temp2", teamIds[i]);
           temp2.push(
             <TeamCard
               teamName={teamNames[i]}
@@ -217,7 +217,12 @@ const Teams = () => {
         <h3 className="big-title">New Team</h3>
       </div>
       <div className="row justify-content-center">
-        <div className="custom-card col-lg-6 col-md-8 p-5 bg-dark justify-content-center align-self-center">
+        <div
+          className="custom-card col-lg-6 col-md-8 p-5 justify-content-center align-self-center"
+          style={{
+            backgroundColor: background,
+          }}
+        >
           <form className="text-light">
             <label className="mb-2" htmlFor="exampleFormControlInput1">
               Team name
@@ -230,7 +235,7 @@ const Teams = () => {
               text={teamName}
               onChange={(e) => setTeamName(e.target.value)}
             ></input>
-            <button onClick={createTeam} className="btn btn-primary">
+            <button onClick={createTeam} className="my-btn-primary mt-3">
               Create Team
             </button>
             <div></div>
