@@ -1,0 +1,110 @@
+{% extends "rest_framework/base.html" %} {% block content %}
+<div style="padding: 1rem 0">
+  <button onclick="toggleExplanations()">Show explanations</button>
+  <ul
+    id="explanationList"
+    style="display: none; padding: 2rem; font-size: 18px"
+  >
+    <li>
+      Die <b>quiz</b> Schnittstelle ist dafür gedacht, die Daten des Quizzes
+      abzurufen, diese zu ändern und löschen zu können (beinhaltet keine Fragen,
+      Felder, Kategorien oä.). Die zurückgegebenen Teams können hier nicht
+      angepasst werden.
+    </li>
+    <li>
+      Die <b>categorie</b> Schnittstelle ist dafür gedacht, die Daten der
+      Kategorien abzurufen, diese zu ändern und löschen zu können.
+    </li>
+    <li>
+      Die <b>question</b> Schnittstelle ist dafür gedacht, die Fragen und
+      Antworten abzurufen, diese zu ändern und löschen zu können.
+    </li>
+    <li>
+      Die <b>field</b> Schnittstelle ist dafür gedacht, die Felder, ihre Punkte
+      und die Referenzen auf zugehörige Objekte abzurufen, sowie die Punkte und
+      Referenzen zu ändern und löschen zu können. Fragen oder ähnliches sollten
+      über diese Schnittstelle nicht anpassbar sein.
+    </li>
+    <li>
+      Die <b>wholequiz</b> Schnittstelle ist dafür gedacht, die Daten des
+      gesamten Quiz abzurufen, welche zum Spielen des Quiz nötig sind (Quiz,
+      Felder, Kategorien, Fragen). Diese Schnittstelle ist nicht für Anpassungen
+      an den Fragen, Kategorien, etc gedacht.
+    </li>
+    <li>
+      Die <b>authorquiz, authorquestion und authorcategorie</b> Schnittstellen
+      sind identisch zu den jeweiligen Schnittstelle, mit dem Unterschied, dass
+      abhängig vom Author und nicht von der Id des Quiz gefiltert wird. Diese
+      Schnittstelle ist nicht für Änderungen an den Quiz gedacht.
+    </li>
+    <li>
+      Die <b>registration</b> Schnittstelle wird zur Registrierung neuer Nutzer
+      verwendet. Es ist nicht möglich Nutzer zu bearbeiten, löschen oder
+      ähnliches. Dafür muss weiterhin das Django-Admin-Interface genutzt werden.
+    </li>
+    <li>
+      Die <b>token</b> Schnittstelle ist nicht im Router registriert und muss
+      über api/token angesteuert werden. Diese kann verwendet werden um einen
+      refresh und einen access token zu erhalten
+    </li>
+    <li>
+      Die <b>token/refresh</b> Schnittstelle ist nicht im Router registriert und
+      muss über api/token/refresh angesteuert werden. Der Schnittstelle kann ein
+      refresh Token übergeben werden, um einen validen access Token zu erhalten.
+    </li>
+    <li>
+      Die <b>token/verify</b> Schnittstelle ist nicht im Router registriert und
+      muss über api/token/verify angesteuert werden. Die Schnittstelle
+      verifiziert einen ihr übergebenen access token.
+    </li>
+    <li>
+      Die <b>guestregistration</b> Schnittstelle ermöglicht das Erstellen eines
+      Gasts, welcher kein Passwort, aber einen Nutzernamen und Punkte, besitzt.
+    </li>
+    <li>
+      Die <b>user</b> Schnittstelle ermöglicht das Abrufen von grundlegenden
+      Nutzerdaten
+    </li>
+    <li>
+      Die <b>Teams</b> Schnittstelle ermöglicht das Erstellen, Anpassen und
+      Löschen von Teams, sowie das zuweisen von Teammitgliedern in diese Teams.
+      Beim bearbeiten der Teams müssen aktuell immer alle Teammitglieder
+      angegeben werden und nicht nur die zu bearbeitenden.
+    </li>
+    <li>
+      Die <b>Teammates</b> Schnittstelle zeigt die Verbindungen zwischen User,
+      Team und Quiz an. Sie kann benutzt werden um ein Teammitglied mit einem
+      anderen Nutzer, welcher in keinem zu diesem Quiz zugehörigen Team ist,
+      auszutauschen oder einzelne Teammitglieder aus einem Team zu entfernen.
+    </li>
+    <li>
+      Die <b>AddTeammates</b> Schnittstelle ermöglicht das einfachere hinzufügen
+      eines Users in ein Team, sowie das entfernen eines Users aus einem Team.
+    </li>
+    <li>
+      Die <b>Images</b> Schnittstelle ermöglicht das Hochladen und Zurückgeben
+      von Bildern
+    </li>
+    <li>
+      Die <b>imageauthor</b> Schnittstelle ermöglicht das abrufen von Bildern
+      eines Autors
+    </li>
+    <li>
+      Die <b>Video</b> Schnittstelle ermöglicht das Hochladen und Zurückgeben
+      von Links zu Youtube Videos.
+    </li>
+    <li>
+      Die <b>Videoauthor</b> Schnittstelle ermöglicht das abrufen von Videos
+      eines Autors
+    </li>
+  </ul>
+</div>
+
+<script>
+  function toggleExplanations() {
+    const explanationList = document.getElementById("explanationList");
+    explanationList.style.display =
+      explanationList.style.display === "none" ? "block" : "none";
+  }
+</script>
+{{ block.super }} {% endblock %}

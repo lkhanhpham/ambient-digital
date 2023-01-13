@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "==4.1.3"
+djangorestframework = "==3.14.0"
+flake8 = "==5.0.4"
+django-cors-headers="==3.13.0"
+whitenoise = "==6.2.0"
+djangorestframework-simplejwt = "5.2.2"
+pillow = "==9.3"
+cloudinary = "==1.30.0"                     # Needed for using Images on Heroku
+django-cloudinary-storage = "==0.3.0"       # Needed for using Images on Heroku
+psycopg2-binary = "3.1.4"                   # Needed for Heroku Deployment
+gunicorn = "==20.1.0"                       # Needed for Heroku Deployment
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
