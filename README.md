@@ -53,8 +53,10 @@ $ npm install
 $ cd ../path/to/the/folder/Backend
 $ pip install django
 $ pip install djangorestframework
-$ pip install flake8
+$ pip install djangorestframework-simplejwt
 $ pip install django-cors-headers
+$ pip install cloudinary
+$ pip install django-cloudinary-storage
 ```
 
 ## Get Started
