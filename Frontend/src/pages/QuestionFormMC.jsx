@@ -857,7 +857,7 @@ const QuestionForm = () => {
               <button className="btn btn-secondary me-2 ">Cancel</button>
             </Link>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} backdrop="static">
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Woohoo, you created a question!</Modal.Body>
               <Modal.Footer>
@@ -887,7 +887,7 @@ const QuestionForm = () => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
-            <Modal show={uploading} onHide={handleClose6}>
+            <Modal show={uploading} onHide={handleClose6} backdrop="static">
               <Modal.Header></Modal.Header>
               <Modal.Body>
                 <div className="mx-auto align-items-center justify-content-center">

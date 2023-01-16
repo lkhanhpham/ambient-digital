@@ -1037,7 +1037,7 @@ const QuestionFormEdit = (id) => {
               </Modal.Body>
             </Modal>
             {/* Update Sucess */}
-            <Modal show={show3} onHide={handleClose3}>
+            <Modal show={show3} onHide={handleClose3} backdrop="static">
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Your Update was successful.</Modal.Body>
               <Modal.Footer>
@@ -1059,7 +1059,7 @@ const QuestionFormEdit = (id) => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
-            <Modal show={uploading} onHide={handleClose6}>
+            <Modal show={uploading} onHide={handleClose6} backdrop="static">
               <Modal.Header></Modal.Header>
               <Modal.Body>
                 <div className="mx-auto align-items-center justify-content-center">
