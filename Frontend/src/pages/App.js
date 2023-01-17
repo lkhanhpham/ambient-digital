@@ -24,6 +24,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 import QuizEdit1 from "./QuizEdit_step1";
 import QuizEdit2 from "./QuizEdit_step2";
 import QuizEdit3 from "./QuizEdit_step3";
+import Leaderboard from "./Leaderboard";
 
 //the Library, which contains all quizes from one author, and the header are put together
 function App() {
@@ -161,6 +162,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <GuestCreator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/leaderboard"
+            element={
+              <ProtectedRoute>
+                <Leaderboard />
               </ProtectedRoute>
             }
           />

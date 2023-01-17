@@ -18,6 +18,7 @@ from .serializers import (
     VideoAuthorSerializer,
     AddPointSerializer,
     AddUserPointSerializer,
+    LeaderboardSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
@@ -193,3 +194,12 @@ class VideoAuthorView(
     serializer_class = VideoAuthorSerializer
     queryset = MyUser.objects.all()
     lookup_field = "id"
+
+
+# returns all users ordered by points descending
+class LeaderboardView(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
+):
+    serializer_class = LeaderboardSerializer
+    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.order_by("-points")
