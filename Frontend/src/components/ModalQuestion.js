@@ -10,7 +10,7 @@ const ModalQuestion = (props) => {
   const [isVisible, setIsVisible] = useState(false);
   const field = props.field;
   const WholeQuestion = field.question;
-  const category = field.categorie;
+  const category = field.categorie_name;
   const point = field.point;
 
   //   handles multiple choice questions
