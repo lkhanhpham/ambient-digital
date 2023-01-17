@@ -27,7 +27,9 @@ const Header = () => {
                     height="45"
                   ></img>
                 </Link>
-                Hello {user.username}
+                <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+                  Hello {user.username}
+                </Link>
               </h5>
             </>
           ) : (
