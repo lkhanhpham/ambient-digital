@@ -97,6 +97,9 @@ const Header = () => {
                             >
                               Create Category
                             </Nav.Link>
+                            <Nav.Link className="NavLink" href="/leaderboard">
+                              Leaderboard
+                            </Nav.Link>
                             <Nav.Link
                               className="NavLink"
                               href="/"

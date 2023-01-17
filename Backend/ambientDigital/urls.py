@@ -47,6 +47,7 @@ router.register(r"video", api_views.VideoView, "video")
 router.register(r"videoauthor", api_views.VideoAuthorView, "videoauthor")
 router.register(r"addTeamPoints", api_views.AddTeamPointView, "addTeamPoints")
 router.register(r"addUserPoints", api_views.AddUserPointView, "addUserPoints")
+router.register(r"leaderboard", api_views.LeaderboardView, "leaderboard")
 
 urlpatterns = [
     # manualy registers some views to urls. they can be reached at http://localhost:8000/<path>
