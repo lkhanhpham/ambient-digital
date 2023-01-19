@@ -19,7 +19,6 @@ build:
   before_script:
     - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
     - export BACKEND_IMAGE=$IMAGE:backend
-    - export NGINX_IMAGE=$IMAGE:nginx
     - apk add --no-cache openssh-client bash
     - echo $SQL_HOST
     - chmod +x ./setup_env.sh
@@ -28,10 +27,8 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker pull $IMAGE:backend || true
-    - docker pull $IMAGE:nginx || true
-    - docker-compose -f docker-compose.ci.yml build
+    - docker-compose -f docker-compose.yml build
     - docker push $IMAGE:backend
-    - docker push $IMAGE:nginx
 
 e2e_test:
   stage: test
