@@ -41,12 +41,17 @@ const Leaderboard = () => {
         >
           <div>
             {functionOwn() ? (
-              <div>
+              <div
+                className="row justify-content-center"
+                style={{ color: "white" }}
+              >
+                <div style={{ marginBottom: "8px" }}>
+                  <label className="col-sm-1">Pos.</label>
+                  <label className="col-sm-10">Username</label>
+                  <label className="col-sm-1">Points</label>
+                </div>
                 {leaderboard.map((player, index) => (
-                  <div
-                    className="row justify-content-center"
-                    style={{ color: "white" }}
-                  >
+                  <div>
                     <label className="col-sm-1">{index + 1}.</label>
                     <label className="col-sm-10">{player.username}</label>
                     <label className="col-sm-1">{player.points}</label>
