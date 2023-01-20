@@ -25,9 +25,15 @@ RUN pipenv install --system --deploy
 # copy run_backend_e2e_test.sh
 COPY ./run_backend_e2e_test.sh /usr/src/backend/run_backend_e2e_test.sh
 
+# copy entrypoint.sh
+COPY ./entrypoint.sh /usr/src/backend/entrypoint.sh
+
 # Copy the source code of the project into the container.
 COPY . /usr/src/backend
 
-RUN ["chmod", "+x", "/usr/src/backend/run_backend_e2e_test.sh"]
-CMD ["./usr/src/backend/run_backend_e2e_test.sh"]
+#RUN ["chmod", "+x", "/usr/src/backend/run_backend_e2e_test.sh"]
+#CMD ["./usr/src/backend/run_backend_e2e_test.sh"]
+
+RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
 
