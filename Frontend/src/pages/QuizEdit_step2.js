@@ -357,7 +357,10 @@ const QuizEdit2 = () => {
 
         for (let k = 0; k < fields.length; k++) {
           if (fields[k].categorie_name === categorie_name) {
-            if (fields[k].question == null || fields[k].question == undefined) {
+            if (
+              fields[k].question == null ||
+              fields[k].question === undefined
+            ) {
               old_question_text[k] = "Choose a question";
             } else {
               old_question_text[k] = fields[k].question.question_text;

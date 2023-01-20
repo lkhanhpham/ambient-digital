@@ -66,7 +66,7 @@ const QuizEdit3 = () => {
       var exist = false;
       for (let i = 0; i < fields.length; i++) {
         //check if question exits in old columns
-        if (fields[i].question_id == id) {
+        if (fields[i].question_id === id) {
           handleShowWarningQues();
           exist = true;
           break;
@@ -302,7 +302,10 @@ const QuizEdit3 = () => {
               fieldIds.push(object);
               rowId = rowId + 1;
             }
-            if (fields[k].question == null || fields[k].question == undefined) {
+            if (
+              fields[k].question == null ||
+              fields[k].question === undefined
+            ) {
               old_question_text[k] = "Choose a question";
             } else {
               old_question_text[k] = fields[k].question.question_text;

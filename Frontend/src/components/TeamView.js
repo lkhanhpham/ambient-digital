@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import axios from "axios";
 import { background } from "../constants.ts";

@@ -50,7 +50,7 @@ const GuestCreator = () => {
   };
   //post guest to database to save
   const createGuest = (event) => {
-    console.log(names.findIndex((name) => name == guest) > -1);
+    console.log(names.findIndex((name) => name === guest) > -1);
     event.preventDefault();
     if (names.findIndex((name) => name === guest) > -1) {
       handleShowWarning();
