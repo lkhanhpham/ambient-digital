@@ -217,14 +217,14 @@ const QuestionForm = () => {
         question_image !== null &&
         question_image !== undefined
       ) {
-        var image = question_image;
+        image = question_image;
         setQuesImgUploaded(false);
       } else if (
         image_nr === 1 &&
         answer_image !== null &&
         answer_image !== undefined
       ) {
-        var image = answer_image;
+        image = answer_image;
         setAnsw1ImgUploaded(false);
       }
       if (image === null || image === undefined) {

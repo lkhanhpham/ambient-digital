@@ -10,7 +10,6 @@ import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
 const QuestionFormEdit = (id) => {
-  var dropdownV = "ScId";
   const location = useLocation();
   const idQuestion = location.state.id;
 
@@ -19,7 +18,7 @@ const QuestionFormEdit = (id) => {
   const [questions, setQuiz] = useState([]);
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  const [author, setAuthorId] = useState("");
+  //const [author, setAuthorId] = useState("");
   const [questiontype, setQuestionType] = useState("");
   const [show, setShow] = useState(false);
   const [btnText, setBtnText] = useState("Add Images");
@@ -144,7 +143,7 @@ const QuestionFormEdit = (id) => {
       setQuestionText(data.question_text);
       setDefaultAnswer(data.default_answer);
       setQuestionType(data.question_type);
-      setAuthorId(user.user_id);
+      //setAuthorId(user.user_id);
       getAllImages();
       getAllVideos();
     } else {
@@ -242,10 +241,7 @@ const QuestionFormEdit = (id) => {
       //console.log(response.data)
     });
     event.preventDefault();
-    navigate(
-      "/Library"
-      // Update erfolgreich meldung einfügen
-    );
+    navigate("/Library");
   }
 
   function changeQuestion(value) {
@@ -265,7 +261,6 @@ const QuestionFormEdit = (id) => {
     } else {
       setQuestionType(value);
     }
-    dropdownV = value;
   }
   function setdefAnswer(defAnswer, bDefAnswer) {
     const data = {

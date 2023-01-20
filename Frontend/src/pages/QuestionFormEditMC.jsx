@@ -12,7 +12,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
 
 const QuestionFormEdit = (id) => {
-  var dropdownV = "ScId";
+  //var dropdownV = "ScId";
   const location = useLocation();
   const idQuestion = location.state.id;
 
@@ -21,7 +21,7 @@ const QuestionFormEdit = (id) => {
   const [questions, setQuiz] = useState([]);
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  const [author, setAuthorId] = useState("");
+  ///const [author, setAuthorId] = useState("");
   const { user } = useContext(AuthContext);
 
   const [questiontype, setQuestionType] = useState("MC");
@@ -194,7 +194,7 @@ const QuestionFormEdit = (id) => {
       setQuiz(data);
       setQuestionText(data.question_text);
       setDefaultAnswer(data.default_answer);
-      setAuthorId(user.user_id);
+      //setAuthorId(user.user_id);
       setQuestionType(data.question_type);
 
       setQuestionAnswerOption1(data.question_answer_option[0].text);
@@ -346,7 +346,7 @@ const QuestionFormEdit = (id) => {
     }).then((response) => {
       //console.log(response.data)
     });
-    setAuthorId(1);
+    //setAuthorId(1);
     event.preventDefault();
     navigate(
       "/Library"
@@ -371,7 +371,7 @@ const QuestionFormEdit = (id) => {
     } else {
       setQuestionType(value);
     }
-    dropdownV = value;
+    // dropdownV = value;
   }
 
   $("#checkbox1").on("change", function () {

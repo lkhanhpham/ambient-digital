@@ -7,7 +7,6 @@ import QuizForm from "./QuizForm";
 import Teams from "./Teams";
 import QuestionForm from "./QuestionForm";
 import QuestionFormMC from "./QuestionFormMC";
-import NewQuestion from "./NewQuestion";
 import NewQuiz1 from "./NewQuiz_step1";
 import NewQuiz2 from "./NewQuiz_step2";
 import CategoryCreator from "./CategoryCreator";

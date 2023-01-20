@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import { background } from "../constants.ts";
 
