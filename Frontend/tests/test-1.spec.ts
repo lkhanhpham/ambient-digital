@@ -1,132 +1,81 @@
-import { test, expect } from '@playwright/test';
+import {ModalDialog} from "react-bootstrap";
+import {test, expect} from "@playwright/test";
+import {username, email, password} from "../src/constants";
 
-test('Registration_Create_Question', async ({ page }) => {
+test("Registration", async ({page}) => {
+  page.on("request", (interceptedRequest) =>
+    interceptedRequest.response().then(res => {
+      console.log(`A ${interceptedRequest.method()} request was made: ${interceptedRequest.url()} ${interceptedRequest.postData()}`)
 
-  let password= "AdminAdmin"
-  let username= "Admin"
-  let email=  username+ "@ex.com"
+      if (!res) return
+      console.log(`Response ${res.status()} with ${res.statusText()} ()`)
+    })
+  );
 
-  await page.goto('/');
+  page.on("console", (msg) => console.log("console.log:", msg.text()));
 
-  await page.getByRole('button', { name: 'Register now' }).click();
+  await page.goto("/");
 
-  await expect(page).toHaveURL('/Registration');
+  await page.locator('button:has-text("Register now")').click()
+  await expect(page).toHaveURL("/Registration");
 
-  await page.getByPlaceholder('Username').click();
+  await page.type('input[id="username"]', username);
 
-  await page.getByPlaceholder('Username').fill(username);
+  // await page.getByPlaceholder('Username').click();
 
-  await page.getByPlaceholder('Username').press('Tab');
+  // await page.getByPlaceholder('Username').fill(username);
 
-  await page.getByPlaceholder('E-Mail').fill(email);
+  await page.type('input[id="email"]', email);
 
-  await page.getByPlaceholder('E-Mail').press('Tab');
+  // await page.getByPlaceholder('E-Mail').click();
 
-  await page.locator('#password').fill(password);
+  // await page.getByPlaceholder('E-Mail').fill(email);
 
-  await page.locator('#password').press('Tab');
+  // await page.getByPlaceholder('E-Mail').press('Tab');
 
-  await page.getByPlaceholder('Confirm Password').fill(password);
+  await page.type('input[id="password"]', password);
 
-  await page.getByRole('button', { name: 'Submit' }).click();
+  // await page.locator('#password').fill(password);
 
-  await  page.on('dialog', async dialog => {
+  // await page.locator('#password').press('Tab');
+
+  await page.type('input[id="confirm-password"]', password);
+
+  // await page.getByPlaceholder('Confirm Password').fill(password);
+
+  await page.locator('input:text("Submit")').click();
+
+  await expect(page).toHaveURL("/login");
+
+  // page.removeListener("request", logRequest);
+
+  /*   await page.waitForTimeout(1000);
+  await page.on('dialog', async dialog => {
     console.log(dialog.message());
-    await dialog.dismiss();
+    await dialog.dismiss(); // you can change the action you need, like `.accept({ promptText: "Yes" }) or `.dismiss()` for cancel actions
   });
- /* 
-  await page.goto('http://localhost:3000/login');
+await page.waitForTimeout(1000); */
+  //   await expect(page).toHaveURL('/login');
 
-  await expect(page).toHaveURL('http://localhost:3000/login');
+  //   await page.getByPlaceholder('Enter Username').click();
 
-  await page.getByPlaceholder('Enter Username').click();
+  //   await page.getByPlaceholder('Enter Username').click();
 
-  await page.getByPlaceholder('Enter Username').fill(username);
+  //   await page.getByPlaceholder('Enter Username').fill(username);
 
-  await page.getByPlaceholder('Enter Username').press('Tab');
+  //   await page.getByPlaceholder('Enter Password').click();
 
-  await page.getByPlaceholder('Enter Password').fill(password);
+  //   await page.getByPlaceholder('Enter Password').fill(password);
 
-  await page.getByRole('button', { name: 'Login' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Library');
+  //   await page.getByRole('button', { name: 'Login' }).click();
+  //   await expect(page).toHaveURL('/Library');
 
-  await page.locator('.nav__menu-bar > div:nth-child(2)').click();
+  //   await page.getByRole('heading', { name: 'My Library' }).click();
 
-  await page.getByRole('link', { name: 'Home' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/');
+  //   await page.getByRole('button', { name: 'Toggle navigation' }).click();
 
-  await page.locator('.nav__menu-bar').click();
+  //   await page.getByRole('link', { name: 'Logout' }).click();
+  //   await expect(page).toHaveURL('/');
 
-  await page.getByRole('link', { name: 'My Library' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Library');
-
-  await page.locator('.nav__menu-bar > div:nth-child(2)').click();
-
-  await page.getByRole('link', { name: 'Quiz-Room' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/');
-
-  await page.locator('.nav__menu-bar').click();
-
-  await page.getByRole('link', { name: 'Create Quiz' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/QuizCreator');
-
-  await page.locator('.nav__menu-bar > div:nth-child(2)').click();
-
-  await page.getByRole('link', { name: 'Create Question' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/QuestionCreator/SC');
-
-  await page.locator('#root div:has-text("HomeMy LibraryQuiz-RoomCreate QuizCreate QuestionCreate CategoriesLogout")').nth(3).click();
-
-  await page.getByRole('link', { name: 'Create Categories' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/CategoryCreator');
-
-  await page.getByPlaceholder('New Category').click();
-
-  await page.getByPlaceholder('New Category').fill('Cat1');
-
-  await page.getByRole('button', { name: 'Create' }).click();
-
-  await page.getByRole('button', { name: 'Continue' }).click();
-
-  await page.locator('.nav__menu-bar').click();
-
-  await page.getByRole('link', { name: 'Create Question' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/QuestionCreator/SC');
-
-  await page.getByPlaceholder('New Question').click();
-
-  await page.getByPlaceholder('New Question').fill('TestFrage1');
-
-  await page.getByPlaceholder('New Answer').click();
-
-  await page.getByPlaceholder('New Answer').fill('TestAntwort1');
-
-  await page.getByRole('button', { name: 'Create' }).click();
-
-  await page.getByRole('button', { name: 'Close and back to overview.' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Library');
-
-  await page.getByRole('button', { name: 'Delete' }).click();
-
-  await page.getByRole('button', { name: 'Yes!' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Library');
-
-  await page.locator('.nav__menu-bar').click();
-
-  await page.getByRole('link', { name: 'Logout' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/');
-
-  await page.getByRole('link', { name: 'Home' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/');
-
-  await page.locator('.nav__menu-bar > div:nth-child(2)').click();
-
-  await page.getByRole('link', { name: 'Login' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Login');
-
-  await page.locator('.nav__menu-bar').click();
-
-  await page.getByRole('link', { name: 'Registration' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/Registration');  */
-
+  //   await page.getByRole('heading', { name: 'logoNot Logged In' }).click();
 });

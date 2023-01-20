@@ -20,16 +20,14 @@ ADD Pipfile Pipfile.lock /usr/src/backend/
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install -U pip pipenv
-RUN #pipenv install --deploy --verbose --ignore-pipfile
 RUN pipenv install --system --deploy
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh /usr/src/backend/entrypoint.sh
+# copy run_backend_e2e_test.sh
+COPY ./run_backend_e2e_test.sh /usr/src/backend/run_backend_e2e_test.sh
 
 # Copy the source code of the project into the container.
 COPY . /usr/src/backend
 
-# run entrypoint.sh
-RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
-ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
+RUN ["chmod", "+x", "/usr/src/backend/run_backend_e2e_test.sh"]
+CMD ["./usr/src/backend/run_backend_e2e_test.sh"]
 

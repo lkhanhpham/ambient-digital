@@ -1,5 +1,5 @@
 image:
-  name: docker/compose:1.29.2
+  name: docker:20.10.16
   entrypoint: [ "" ]
 
 services:
@@ -13,42 +13,91 @@ stages:
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
+  IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+  FRONTEND_IMAGE: $IMAGE:frontend
+  BACKEND_IMAGE: $IMAGE:backend
 
-build:
+
+########################################### Build Stage ###########################################
+
+build_frontend:
   stage: build
+  cache:
+    key: npm
+    policy: pull-push
+    paths:
+      - Frontend/.npm/
   before_script:
-    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-    - export BACKEND_IMAGE=$IMAGE:backend
     - apk add --no-cache openssh-client bash
-    - echo $SQL_HOST
     - chmod +x ./setup_env.sh
     - bash ./setup_env.sh
-    - ls -a
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $FRONTEND_IMAGE || true
   script:
-    - docker pull $IMAGE:backend || true
-    - docker-compose -f docker-compose.yml build
-    - docker push $IMAGE:backend
+    - docker build --cache-from $FRONTEND_IMAGE -t $FRONTEND_IMAGE ./Frontend
+    - echo "docker push $FRONTEND_IMAGE"
+    - docker push $FRONTEND_IMAGE
 
-e2e_test:
-  stage: test
+build_backend:
+  stage: build
+  before_script:
+    - apk add --no-cache openssh-client bash
+    - chmod +x ./setup_env.sh
+    - bash ./setup_env.sh
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $BACKEND_IMAGE || true
   script:
-    - docker-compose up -d
-    - docker exec ambient_frontend npx playwright install --with-deps
-    - docker exec ambient_frontend npx playwright test
+    - docker build --cache-from $BACKEND_IMAGE -t $BACKEND_IMAGE ./Backend
+    - echo "docker push $BACKEND_IMAGE"
+    - docker push $BACKEND_IMAGE
+
+
+########################################### E2E Stage ###########################################
+
+e2e_docker:
+  stage: test
   artifacts:
     when: always
     paths:
-        - Frontend/playwright-report/
-        - Frontend/results.xml
+      - Frontend/playwright-report/
+      - Frontend/results.xml
     reports:
-        junit: Frontend/results.xml
-  needs: [build]
+      junit: Frontend/results.xml
+  cache:
+    paths:
+      - ms-playwright/
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    # break
+    - docker run --name ambient_database -d -e POSTGRES_DB=ambient_lcd -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=my-password -p 5432:5432 postgres:15-alpine
+    - docker run --name ambient_backend -d -p 8000:8000 --link ambient_database -e DB_HOST=ambient_database -e DB_NAME=ambient_lcd -e DB_PASSWORD=my-password -e DB_USER=postgres -e SECRET_KEY=SECRET_KEY $BACKEND_IMAGE sh /usr/src/backend/run_backend_e2e_test.sh
+    - docker run --name ambient_frontend -d -p 3000:3000 -e CI_ENVIRONMENT_URL=http://localhost:3000 -e REACT_APP_API_BASE_URL=http://localhost:8000 $FRONTEND_IMAGE
+    # break
+    - while [ "$(docker inspect --format='{{json .State.Status}}' ambient_database)" != '"running"' ]; do docker logs ambient_database && docker inspect --format='{{json .State}}' ambient_database && sleep 5; done
+    - while [ "$(docker inspect --format='{{json .State.Status}}' ambient_backend)" != '"running"' ]; do docker logs ambient_backend && docker inspect --format='{{json .State}}' ambient_backend && sleep 5; done
+    - while [ "$(docker inspect --format='{{json .State.Status}}' ambient_frontend)" != '"running"' ]; do docker logs ambient_frontend && docker inspect --format='{{json .State}}' ambient_frontend && sleep 5; done
+  script:
+    - docker run --rm
+      --name playwright
+      --volume  "$(pwd)":"$(pwd)"
+      --workdir "$(pwd)"
+      --env CI="true"
+      --env PLAYWRIGHT_BROWSERS_PATH="$(pwd)/ms-playwright"
+      --network=host
+      --ipc=host
+      --user "${CURRENT_USER:-pwuser:pwuser}"
+      mcr.microsoft.com/playwright:v1.27.1-focal
+      bash -c 'cd Frontend; npm ci; npx playwright install; npx playwright test'
+  needs:
+    - build_backend
+    - build_frontend
+
+########################################### Deploy Stage ###########################################
 
 backend_to_test:
   image: ruby:latest
   stage: deploy
-  needs: [e2e_test]
+  needs: [ e2e_docker ]
   before_script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
@@ -62,7 +111,7 @@ backend_to_test:
 frontend_to_test:
   image: node:16.16.0
   stage: deploy
-  needs: [e2e_test]
+  needs: [ e2e_docker ]
   script:
     - npm install --location=global vercel
     - vercel pull --yes --environment=development --token=$VERCEL_API_TOKEN
@@ -74,7 +123,7 @@ frontend_to_test:
 backend_to_prod:
   image: ruby:latest
   stage: deploy
-  needs: [e2e_test]
+  needs: [ e2e_docker ]
   before_script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
@@ -88,7 +137,7 @@ backend_to_prod:
 frontend_to_prod:
   image: node:16.16.0
   stage: deploy
-  needs: [e2e_test]
+  needs: [ e2e_docker ]
   script:
     - npm install --location=global vercel
     - vercel pull --yes --environment=production --token=$VERCEL_API_TOKEN

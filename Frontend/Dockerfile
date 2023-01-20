@@ -10,12 +10,12 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 # install and cache app dependencies
 ADD package.json package-lock.json /app/
+COPY .npm /app/
 RUN npm install
 
 # Copy all frontend stuff to new "app" folder
-COPY ./src /app/
-
-RUN chown -R node:node /app/node_modules
+COPY . /app/
 
 EXPOSE 3000
 
+CMD ["npm", "run", "start"]

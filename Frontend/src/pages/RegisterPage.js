@@ -16,6 +16,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     registerUser(username, email, password, password2);
+    alert("TESTESTSUBMIt");
   };
   //check uf each field is filled
   function checkIfEnabled() {
@@ -91,13 +92,12 @@ function Register() {
                 <p>{password2 !== password ? "Passwords do not match" : ""}</p>
               </div>
               <div className="d-flex align-item-start p-3 divButton">
-                <button
+                <input
                   className="btn btn-secondary me-3"
                   type="submit"
+                  value="Submit"
                   disabled={checkIfEnabled()}
-                >
-                  Submit
-                </button>
+                ></input>
                 <label className="me-3 colorLink">
                   <Link to="/Login"> Login here</Link>
                 </label>
