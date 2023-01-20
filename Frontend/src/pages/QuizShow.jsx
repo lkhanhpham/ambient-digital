@@ -258,7 +258,7 @@ const QuizShow = (props) => {
   //function which makes a put request to the database to update the team points
   const postTeamsToServer = (teamToPost) => {
     teamToPost.forEach((team) => {
-      axios.put(`${API_BASE_URL}/api/addTeamPoints/` + team.id + "/", {
+      axios.put(`${API_BASE_URL}/api/TeamPoints/` + team.id + "/", {
         team_points: team.team_points,
       });
     });
@@ -267,7 +267,7 @@ const QuizShow = (props) => {
   //function called when ending the game which resets all team points to 0 in the database
   const resetPoints = () => {
     teams.forEach((team) => {
-      axios.put(`${API_BASE_URL}/api/addTeamPoints/` + team.id + "/", {
+      axios.put(`${API_BASE_URL}/api/TeamPoints/` + team.id + "/", {
         team_points: 0,
       });
     });
@@ -279,15 +279,12 @@ const QuizShow = (props) => {
       team.teamMember_team.forEach((member) => {
         let memberPoint = 0;
         axios
-          .get(`${API_BASE_URL}/api/addUserPoints/` + member.member + "/")
+          .get(`${API_BASE_URL}/api/UserPoints/` + member.member + "/")
           .then((response) => {
             memberPoint = response.data.points;
-            axios.put(
-              `${API_BASE_URL}/api/addUserPoints/` + member.member + "/",
-              {
-                points: memberPoint + team.team_points,
-              }
-            );
+            axios.put(`${API_BASE_URL}/api/UserPoints/` + member.member + "/", {
+              points: memberPoint + team.team_points,
+            });
           });
       });
     });
