@@ -4,7 +4,9 @@ import dayjs from "dayjs";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { API_BASE_URL } from "../constants.ts";
-
+/**
+ * backup option for authentication
+ */
 const baseURL = `${API_BASE_URL}/api/`;
 
 const useAxios = () => {
