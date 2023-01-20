@@ -16,7 +16,6 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     registerUser(username, email, password, password2);
-    alert("TESTESTSUBMIt");
   };
   //check uf each field is filled
   function checkIfEnabled() {
