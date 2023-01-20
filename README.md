@@ -38,6 +38,14 @@ $ docker compose up --build
 $ docker compose up
 ```
 
+To get access to the Django Admin Interface, you must create a superuser in Docker. Just open your Docker-App and go in the terminal of your backend container. Type the following command:
+
+```
+$ pthon manage.py createsuperuser
+```
+
+Now you just need an username, password and an email. This are the credetials now to log in on localhost:8000/admin
+
 ### Without Docker
 
 If you don't want to use the docker container, we could not guarantee that the project will run without any problems. And you will not have a database, where you can store your created questions and quiz.
