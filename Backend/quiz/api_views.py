@@ -16,8 +16,8 @@ from .serializers import (
     ImageAuthorSerializer,
     VideoSerializer,
     VideoAuthorSerializer,
-    AddPointSerializer,
-    AddUserPointSerializer,
+    PointSerializer,
+    UserPointSerializer,
     LeaderboardSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
@@ -154,17 +154,13 @@ class AddTeammateView(
     queryset = TeamMember.objects.all()
 
 
-class AddTeamPointView(
-    viewsets.ModelViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
-):
-    serializer_class = AddPointSerializer
+class TeamPointView(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = PointSerializer
     queryset = Team.objects.all()
 
 
-class AddUserPointView(
-    viewsets.ModelViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
-):
-    serializer_class = AddUserPointSerializer
+class UserPointView(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = UserPointSerializer
     queryset = MyUser.objects.all()
 
 
