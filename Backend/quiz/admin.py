@@ -44,6 +44,8 @@ class QuestionAdmin(admin.ModelAdmin):
                 # register fields from Question to show up on Admin Page
                 "fields": [
                     "question_text",
+                    "question_video",
+                    "question_image",
                 ]
             },
         ),
