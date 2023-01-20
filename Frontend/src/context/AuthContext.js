@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }) => {
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => {
+        console.log(response);
         if (response.status === 201) {
           navigate("/login");
         }
