@@ -292,7 +292,16 @@ const QuizEdit1 = () => {
             <select className="form-control mb-4" id="questions">
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.question_text}
+                  {item.question_text.length > 70 ? (
+                    <>
+                      {item.question_text.substring(
+                        0,
+                        Math.min(item.question_text.length, 70)
+                      ) + "..."}
+                    </>
+                  ) : (
+                    <>{item.question_text}</>
+                  )}
                 </option>
               ))}
             </select>
@@ -303,6 +312,11 @@ const QuizEdit1 = () => {
               <option value={300}>300</option>
               <option value={400}>400</option>
               <option value={500}>500</option>
+              <option value={600}>600</option>
+              <option value={700}>700</option>
+              <option value={800}>800</option>
+              <option value={900}>900</option>
+              <option value={1000}>1000</option>
             </select>
           </form>
           <Link to="../../QuestionCreator/SC" target="_blank">
