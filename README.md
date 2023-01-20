@@ -20,7 +20,7 @@ You can download the current Python version from [here](https://www.python.org/d
 
 ## Installations
 
-We suggest you run the project in a docker container.
+You must run the project in a docker container. This was a requirement of our business partner.
 Get docker [here](https://docs.docker.com/).
 You need to type the following command only once after the installation of docker.
 
@@ -38,43 +38,13 @@ $ docker compose up --build
 $ docker compose up
 ```
 
-### Without Docker
-
-If you don't want to use the docker container, we could not guarantee that the project will run without any problems. And you will not have a database, where you can store your created questions and quiz.
-
-If you still want to start the project without docker you have to follow the steps
-
-To install all the needed packages please execute the follwing steps below.
+To get access to the Django Admin Interface, you must create a superuser in Docker. Just open your Docker-App and go in the terminal of your backend container. Type the following command:
 
 ```
-$ git clone "path to GitLab Project"
-$ cd ../path/to/the/folder/Frontend
-$ npm install
-$ cd ../path/to/the/folder/Backend
-$ pip install django
-$ pip install djangorestframework
-$ pip install djangorestframework-simplejwt
-$ pip install django-cors-headers
-$ pip install cloudinary
-$ pip install django-cloudinary-storage
+$ pthon manage.py createsuperuser
 ```
 
-## Get Started
-
-If you use docker, this chapter can be skipped.
-
-You need to start the frontend and backend seperatley.
-For the frontend navigate to the frontend folder and type
-
-```
-$ npm start
-```
-
-In a seperate terminal navigate to the Backend folder to start the backend with the following command:
-
-```
-$ python ./manage.py runserver
-```
+Now you just need an username, password and an email. This are the credetials now to log in on localhost:8000/admin
 
 ## Current Status
 
@@ -102,8 +72,8 @@ After playing the quiz you click on "End quiz" and the winner team will be shown
 
 ## Testing
 
-We will test our project end to end with Playwright. So if you want to work with this project you will need playwright too. This will be installed automatically, when you followed the installation instructions.
-We still have only a few dummy test which are running in a git pipeline.
+We will test our project end to end with Playwright. So if you want to work with this project you will need playwright too.
+We still have only a few test which are running in a git pipeline.
 
 ## Git Pipeline
 
@@ -111,7 +81,6 @@ Our git pipeline builds, each time you push to develop or main, a docker contain
 
 ## Development status
 
-This Project is still in development.
 We are currently working on qualtity of life changes and testing.
 
 ## Links

@@ -451,8 +451,7 @@ class AddTeammateSerializer(serializers.ModelSerializer):
         return created_member
 
 
-class AddPointSerializer(serializers.ModelSerializer):
-
+class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ("id", "team_points", "quiz")
@@ -465,8 +464,8 @@ class AddPointSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class AddUserPointSerializer(serializers.ModelSerializer):
 
+class UserPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ("id", "points")
@@ -474,10 +473,12 @@ class AddUserPointSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.points = validated_data.get("points", instance.points)
-        instance.username = validated_data.get("username", instance.username)
-        instance.email = validated_data.get("email", instance.email)
-        instance.is_guest = validated_data.get("is_guest", instance.is_guest)
-        instance.is_superuser = validated_data.get("is_superuser", instance.is_superuser)
         instance.save()
         return instance
 
+
+# Returns the id, username and points of the user
+class LeaderboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ("id", "username", "points")

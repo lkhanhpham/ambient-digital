@@ -16,8 +16,9 @@ from .serializers import (
     ImageAuthorSerializer,
     VideoSerializer,
     VideoAuthorSerializer,
-    AddPointSerializer,
-    AddUserPointSerializer,
+    PointSerializer,
+    UserPointSerializer,
+    LeaderboardSerializer,
 )
 from .serializers import QuestionAuthorSerializer, CategorieAuthorSerializer
 from rest_framework import viewsets, mixins
@@ -153,17 +154,13 @@ class AddTeammateView(
     queryset = TeamMember.objects.all()
 
 
-class AddTeamPointView(
-    viewsets.ModelViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
-):
-    serializer_class = AddPointSerializer
+class TeamPointView(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = PointSerializer
     queryset = Team.objects.all()
 
 
-class AddUserPointView(
-    viewsets.ModelViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
-):
-    serializer_class = AddUserPointSerializer
+class UserPointView(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = UserPointSerializer
     queryset = MyUser.objects.all()
 
 
@@ -193,3 +190,12 @@ class VideoAuthorView(
     serializer_class = VideoAuthorSerializer
     queryset = MyUser.objects.all()
     lookup_field = "id"
+
+
+# returns all users ordered by points descending
+class LeaderboardView(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
+):
+    serializer_class = LeaderboardSerializer
+    queryset = MyUser.objects.all()
+    queryset = MyUser.objects.order_by("-points")

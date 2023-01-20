@@ -6,15 +6,21 @@ import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-
+/**
+ * Combines question cards to one question view, the bottom container
+ * @returns QuestionView
+ */
 const QuestionView = () => {
+  //constants to handle modal options
   const [show, setShow] = useState(true);
-
   const handleClose = () => setShow(false);
   const [questions, setQuestion] = useState([]);
+  //naviagte to other sides
   const navigate = useNavigate();
+  //used for user information
   const { user } = useContext(AuthContext);
 
+  //fetch all questions from one user
   const getAllQuestions = async () => {
     setShow(false);
     const response = await fetch(
@@ -36,6 +42,7 @@ const QuestionView = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  //delete clicked question
   const deleteItem = async (questionId) => {
     axios({
       method: "DELETE",
@@ -47,6 +54,7 @@ const QuestionView = () => {
     window.location.reload();
   };
 
+  //edit clicked question and navigate to edit site
   const editItem = async (questionId) => {
     const response = await fetch(
       `${API_BASE_URL}/api/question/` + questionId + "/"
@@ -68,7 +76,9 @@ const QuestionView = () => {
     }
   };
   var arr = [];
-  function functionOwn() {
+
+  //prove if user created min. 1 question
+  function proveOwnQuestion() {
     questions.forEach((element) => {
       if (questions.length > 0) {
         arr.push(element);
@@ -102,7 +112,7 @@ const QuestionView = () => {
         </div>
         <div className="card-body scrollable ">
           <div className="">
-            {functionOwn() ? (
+            {proveOwnQuestion() ? (
               <div className="mx-auto align-items-center justify-content-center">
                 <div className="">
                   {arr.map((item) => (

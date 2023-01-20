@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
+/**
+ * For each uploaded image one componnent gets rendered
+ * the picture gets fetched from the backend and if one exist this component exist too
+ * @param {Object} props
+ * @returns AnsweroptionImage
+ */
 const AnsweroptionImage = (props) => {
   const [image, setImage] = useState([]);
   //gets the image from api

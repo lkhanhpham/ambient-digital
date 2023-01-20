@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../constants.ts";
+import React from "react";
 import { aqua, coral } from "../constants.ts";
+/**
+ * Field in Quiz which is colored depending on it playing status
+ * @param {Object} props
+ * @returns PlayingField
+ */
 const PlayingField = (props) => {
   return (
     <>
@@ -11,11 +14,11 @@ const PlayingField = (props) => {
         style={{
           //white: initial state, gray: question was displayed, green: question was answered correctly, red: question was answered incorrectly
           backgroundColor:
-            props.status1 == 0
+            props.status1 === 0
               ? "#002838"
-              : props.status1 == 1
+              : props.status1 === 1
               ? "gray"
-              : props.status1 == 2
+              : props.status1 === 2
               ? aqua
               : coral,
         }}

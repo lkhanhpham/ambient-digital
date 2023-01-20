@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import QuizView from "../components/QuizView";
 import QuestionView from "../components/QuestionView";
-//the Quizview with the quizcards are inserted into a container
+//
+/**
+ * the Quizview with the quizcards are inserted into a container
+ * same for the questionview
+ */
 class Library extends Component {
   render() {
     return (

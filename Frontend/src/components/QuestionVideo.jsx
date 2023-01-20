@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
+/**
+ * component for video in question with sound_only option
+ * @param {Object} props
+ * @returns QuestionVideo
+ */
 const QuestionVideo = (props) => {
   const [video, setVideo] = useState([]);
   //gets the image from api

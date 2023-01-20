@@ -3,6 +3,10 @@ import { React, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { aqua, dark_aqua, dark_orange } from "../constants.ts";
 import partypopper from "../icons/partypopper.png";
+/**
+ * Homepage to welcome the user
+ * @returns Home
+ */
 const Home = () => {
   const { user, logoutUser } = useContext(AuthContext);
   return (

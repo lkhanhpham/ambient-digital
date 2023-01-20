@@ -1,3 +1,9 @@
+/**
+ * for each Answer on AnswerField gets rendered
+ *
+ * @param {Object} props
+ * @returns AnswerField
+ */
 const AnswerField = (props) => {
   return (
     <>

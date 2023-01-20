@@ -6,7 +6,10 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
-
+/**
+ * The header shows the log in status of the user and contains the navbar
+ * @returns Header
+ */
 const Header = () => {
   const { user, logoutUser } = useContext(AuthContext);
 
@@ -27,7 +30,9 @@ const Header = () => {
                     height="45"
                   ></img>
                 </Link>
-                Hello {user.username}
+                <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+                  Hello {user.username}
+                </Link>
               </h5>
             </>
           ) : (
@@ -94,6 +99,9 @@ const Header = () => {
                               href="/CategoryCreator"
                             >
                               Create Category
+                            </Nav.Link>
+                            <Nav.Link className="NavLink" href="/leaderboard">
+                              Leaderboard
                             </Nav.Link>
                             <Nav.Link
                               className="NavLink"

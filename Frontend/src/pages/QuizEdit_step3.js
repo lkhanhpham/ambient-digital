@@ -9,8 +9,10 @@ import axios from "axios";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import AuthContext from "../context/AuthContext";
-
-// For each created quiz one quizcard is rendered
+/**
+ * remove and add of rows in edit quiz, last step in quiz edit
+ * @returns QuizEdit3
+ */
 const QuizEdit3 = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -64,7 +66,7 @@ const QuizEdit3 = () => {
       var exist = false;
       for (let i = 0; i < fields.length; i++) {
         //check if question exits in old columns
-        if (fields[i].question_id == id) {
+        if (fields[i].question_id === id) {
           handleShowWarningQues();
           exist = true;
           break;
@@ -300,7 +302,10 @@ const QuizEdit3 = () => {
               fieldIds.push(object);
               rowId = rowId + 1;
             }
-            if (fields[k].question == null || fields[k].question == undefined) {
+            if (
+              fields[k].question == null ||
+              fields[k].question === undefined
+            ) {
               old_question_text[k] = "Choose a question";
             } else {
               old_question_text[k] = fields[k].question.question_text;
@@ -512,6 +517,11 @@ const QuizEdit3 = () => {
               <option value={300}>300</option>
               <option value={400}>400</option>
               <option value={500}>500</option>
+              <option value={600}>600</option>
+              <option value={700}>700</option>
+              <option value={800}>800</option>
+              <option value={900}>900</option>
+              <option value={1000}>1000</option>
             </select>
           </form>
           <Link to="../../QuestionCreator/SC" target="_blank">

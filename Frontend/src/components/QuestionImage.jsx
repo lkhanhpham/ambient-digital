@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
+/**
+ * component for image in question
+ * @param {Object} props
+ * @returns QuestionImage
+ */
 const QuestionImage = (props) => {
   const [image, setImage] = useState([]);
   //gets the image from api

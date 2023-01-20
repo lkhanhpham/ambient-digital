@@ -8,13 +8,15 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
-
+// initial value for dropdown if navigation comes from single choice question
 var dropdownV = "MC";
-
+/**
+ * form to create a multiple choice question with 4 possible answer options. Each option can be true and have an additional image or video
+ * @returns QuestionForm
+ */
 const QuestionForm = () => {
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  const [author, setAuthorId] = useState("");
   const [questionAnswerOption1, setQuestionAnswerOption1] = useState("");
   const [questionAnswerOption2, setQuestionAnswerOption2] = useState("");
   const [questionAnswerOption3, setQuestionAnswerOption3] = useState("");
@@ -142,8 +144,6 @@ const QuestionForm = () => {
 
   function createQuestionMC(event) {
     event.preventDefault();
-
-    setAuthorId(user.user_id);
 
     axios({
       method: "POST",
@@ -412,8 +412,8 @@ const QuestionForm = () => {
     var vidurl;
     var soundonly = false;
     for (let vid = 0; vid < 5; vid++) {
-      var vidurl = null;
-      var soundonly = false;
+      vidurl = null;
+      soundonly = false;
       event.preventDefault();
       if (vid === 0 && document.getElementById("question_vid") !== null) {
         vidurl = document.getElementById("question_vid").value;
@@ -857,7 +857,7 @@ const QuestionForm = () => {
               <button className="btn btn-secondary me-2 ">Cancel</button>
             </Link>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} backdrop="static">
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Woohoo, you created a question!</Modal.Body>
               <Modal.Footer>
@@ -887,7 +887,7 @@ const QuestionForm = () => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
-            <Modal show={uploading} onHide={handleClose6}>
+            <Modal show={uploading} onHide={handleClose6} backdrop="static">
               <Modal.Header></Modal.Header>
               <Modal.Body>
                 <div className="mx-auto align-items-center justify-content-center">

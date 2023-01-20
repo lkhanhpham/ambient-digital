@@ -8,7 +8,10 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
-
+/**
+ * Input form to create new quetions
+ */
+//initial value for dropdown questions type
 var dropdownV = "x";
 
 const QuestionForm = () => {
@@ -68,7 +71,7 @@ const QuestionForm = () => {
   };
   const $ = require("jquery");
   const navigate = useNavigate();
-
+  //create SC or EQ question and save in database
   function createQuestionSC(event) {
     if (dropdownV === "x") {
       dropdownV = "SC";
@@ -102,6 +105,7 @@ const QuestionForm = () => {
 
     event.preventDefault();
   }
+  //change question type and navigate to multiple choice side or just change value of questiontype
   function changeQuestion(value) {
     if (value === "MC") {
       navigate("/QuestionCreator/MC", {
@@ -118,7 +122,7 @@ const QuestionForm = () => {
     }
     dropdownV = value;
   }
-
+  //add event listener to enter key to submit question on enter
   const eventListener = async () => {
     var input = document.getElementById("formidCustom");
     input.addEventListener("keypress", function (event) {
@@ -161,7 +165,7 @@ const QuestionForm = () => {
       setClickCreate(false);
     }
   }
-
+  //create question befor gooing back to overview
   const backHome = (event) => {
     createQuestionSC(event);
     navigate("/Library");
@@ -171,7 +175,7 @@ const QuestionForm = () => {
     createQuestionSC(event);
     window.location.reload();
   };
-
+  //change button text depending on video add or image add action
   const [btnText, setBtnText] = useState("Add Images");
   const handleClick = (event) => {
     setIsShown((current) => !current);
@@ -206,7 +210,7 @@ const QuestionForm = () => {
       }
     }
   };
-
+  //upload all images
   function uploadAll(event) {
     for (let image_nr = 0; image_nr < 2; image_nr++) {
       var image = null;
@@ -217,14 +221,14 @@ const QuestionForm = () => {
         question_image !== null &&
         question_image !== undefined
       ) {
-        var image = question_image;
+        image = question_image;
         setQuesImgUploaded(false);
       } else if (
         image_nr === 1 &&
         answer_image !== null &&
         answer_image !== undefined
       ) {
-        var image = answer_image;
+        image = answer_image;
         setAnsw1ImgUploaded(false);
       }
       if (image === null || image === undefined) {
@@ -260,7 +264,7 @@ const QuestionForm = () => {
         .catch((err) => console.log(err));
     }
   }
-
+  //check if links for vidoes are valid
   function validate(event) {
     var valid = true;
     var input;
@@ -289,7 +293,7 @@ const QuestionForm = () => {
     }
     return valid;
   }
-
+  //upload links from videos
   function uploadVideoLinks(event) {
     for (let vid = 0; vid < 2; vid++) {
       event.preventDefault();
@@ -511,7 +515,7 @@ const QuestionForm = () => {
               <button className="btn btn-secondary me-2">Cancel</button>
             </Link>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} backdrop="static">
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Woohoo, you created a question!</Modal.Body>
               <Modal.Footer>
@@ -540,7 +544,7 @@ const QuestionForm = () => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
-            <Modal show={uploading} onHide={handleClose6}>
+            <Modal show={uploading} onHide={handleClose6} backdrop="static">
               <Modal.Header></Modal.Header>
               <Modal.Body>
                 <div className="mx-auto align-items-center justify-content-center">

@@ -6,9 +6,10 @@ import ModalWarning from "../components/ModalWarning";
 import TeamCard from "../components/TeamCard";
 import { API_BASE_URL } from "../constants.ts";
 import { background } from "../constants.ts";
-
-//create new teams
-
+/**
+ * Site to create new teams and show team cards
+ * @returns Teams
+ */
 const Teams = () => {
   const location = useLocation();
   const [teamName, setTeamName] = useState("");
@@ -34,7 +35,7 @@ const Teams = () => {
 
   //array that stores all members in all the created teams of this quiz
   const [selectedUsers] = useState([]);
-
+  //fetch all user from backend
   const getAllSelectedUsers = async () => {
     const response = await fetch(`${API_BASE_URL}/api/Teammates/`);
     const data = await response.json();
@@ -57,6 +58,7 @@ const Teams = () => {
     }
   };
 
+  //post each team member to backend
   const selectUser = (arr, teamId, teamName) => {
     var valid = true;
     //for each member in the selected members (arr):
@@ -120,7 +122,7 @@ const Teams = () => {
       console.log("Failed Network request");
     }
   };
-
+  //delete a team
   const deleteItem = async (teamId, teamName) => {
     axios({
       method: "DELETE",
@@ -136,7 +138,7 @@ const Teams = () => {
     // it re-renders the component
     setValue(value + 1);
   };
-
+  //create new team and post to backend
   function createTeam(event) {
     //setTeamPoints(100)
     if (teamName === "") {
@@ -161,7 +163,7 @@ const Teams = () => {
     }
     event.preventDefault();
   }
-
+  //show team card for each team
   function showTeams() {
     while (teams.length) {
       teams.pop();

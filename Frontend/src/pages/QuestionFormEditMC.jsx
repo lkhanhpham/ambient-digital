@@ -10,19 +10,24 @@ import AuthContext from "../context/AuthContext";
 import AnswerOptionEditComp from "../components/AnswerOptionEditComp";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
-
+/**
+ * Edit multiple choice question
+ * Add Videos, images or remove them
+ * fix typos or change whole question
+ *
+ * @param {integer} id
+ * @returns QuestionFormEdit
+ */
 const QuestionFormEdit = (id) => {
-  var dropdownV = "ScId";
   const location = useLocation();
   const idQuestion = location.state.id;
-
+  const { user } = useContext(AuthContext);
   const url = `${API_BASE_URL}/api/question/` + idQuestion + "/";
 
+  //all used constants to store attributes of question
   const [questions, setQuiz] = useState([]);
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  const [author, setAuthorId] = useState("");
-  const { user } = useContext(AuthContext);
 
   const [questiontype, setQuestionType] = useState("MC");
   const [questionAnswerOption1, setQuestionAnswerOption1] = useState("");
@@ -37,13 +42,11 @@ const QuestionFormEdit = (id) => {
   const [questionAnswerOption4v, setQuestionAnswerOption4v] = useState(null);
   const [questionAnswerOption2v, setQuestionAnswerOption2v] = useState(null);
   const [questionAnswerOption3v, setQuestionAnswerOption3v] = useState(null);
-  const [show, setShow] = useState(false);
 
   const [images, setImages] = useState([]);
 
   const [video, setVideos] = useState([]);
 
-  const [isShown, setIsShown] = useState(false);
   const [videoisShown, setVideoIsShown] = useState(false);
 
   const [invalidInput, setinvalid] = useState(false);
@@ -97,8 +100,10 @@ const QuestionFormEdit = (id) => {
   const [uploadedAnsw3Image, setAnsw3ImgUploaded] = useState(true);
   const [uploadedAnsw4Image, setAnsw4ImgUploaded] = useState(true);
 
+  //modal states change
+  const [show, setShow] = useState(false);
+  const [isShown, setIsShown] = useState(false);
   const handleClose6 = () => setUploading(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -173,7 +178,7 @@ const QuestionFormEdit = (id) => {
 
   const $ = require("jquery");
   const navigate = useNavigate();
-
+  //delte whole question
   function deleteItem(event) {
     event.preventDefault();
     axios({
@@ -186,15 +191,16 @@ const QuestionFormEdit = (id) => {
 
     navigate("/Library");
   }
-
+  //fetch the question and all attributes from backend
   const getAllQuestions = async () => {
     const response = await fetch(url);
     const data = await response.json();
     if (response.ok) {
+      //set all attributes to show them in form
       setQuiz(data);
       setQuestionText(data.question_text);
       setDefaultAnswer(data.default_answer);
-      setAuthorId(user.user_id);
+      //setAuthorId(user.user_id);
       setQuestionType(data.question_type);
 
       setQuestionAnswerOption1(data.question_answer_option[0].text);
@@ -217,7 +223,7 @@ const QuestionFormEdit = (id) => {
       console.log("Failed Network request");
     }
   };
-
+  //fetch all images from differnt api
   const getAllImages = async () => {
     const response = await fetch(
       `${API_BASE_URL}/api/imageauthor/` + user.user_id + "/"
@@ -229,6 +235,7 @@ const QuestionFormEdit = (id) => {
       console.log("Failed Network request");
     }
   };
+  //fetch all videolinks
   const getAllVideos = async () => {
     const response = await fetch(
       `${API_BASE_URL}/api/videoauthor/` + user.user_id + "/"
@@ -240,7 +247,7 @@ const QuestionFormEdit = (id) => {
       console.log("Failed Network request");
     }
   };
-
+  //set images to right option
   function assignImages() {
     if (images.length === 0) {
       return;
@@ -271,7 +278,7 @@ const QuestionFormEdit = (id) => {
   useEffect(() => {
     assignVideo();
   }, [video]);
-
+  //assigne videos to their right option in question
   function assignVideo() {
     if (video.length === 0) {
       return;
@@ -304,6 +311,7 @@ const QuestionFormEdit = (id) => {
   useEffect(() => {
     getAllQuestions();
   }, []);
+  //update the questions attributes in backend
   function editQuestion(event) {
     event.preventDefault();
     axios({
@@ -343,15 +351,9 @@ const QuestionFormEdit = (id) => {
         ],
       },
       headers: { "Content-Type": "application/json" },
-    }).then((response) => {
-      //console.log(response.data)
-    });
-    setAuthorId(1);
+    }).then((response) => {});
     event.preventDefault();
-    navigate(
-      "/Library"
-      // Update erfolgreich meldung einfügen
-    );
+    navigate("/Library");
   }
 
   function changeQuestion(value) {
@@ -371,9 +373,8 @@ const QuestionFormEdit = (id) => {
     } else {
       setQuestionType(value);
     }
-    dropdownV = value;
   }
-
+  //set checkbox status on click for each answer option
   $("#checkbox1").on("change", function () {
     if ($(this).is(":checked")) {
       setQuestionAnswerOption1b(true);
@@ -397,7 +398,7 @@ const QuestionFormEdit = (id) => {
       setQuestionAnswerOption3b(false);
     }
   });
-
+  //save default Answer in Object
   function setdefAnswer(defAnswer, bDefAnswer) {
     const data = {
       text: defAnswer,
@@ -405,7 +406,7 @@ const QuestionFormEdit = (id) => {
     };
     setDefaultAnswer(data);
   }
-
+  //add eventlistener to enter key to save question on enter
   const eventListener = async () => {
     var input = document.getElementById("formidCustom");
     input.addEventListener("keypress", function (event) {
@@ -419,7 +420,7 @@ const QuestionFormEdit = (id) => {
   useEffect(() => {
     eventListener();
   }, []);
-
+  //change button text depending on image add
   const handleClick = (event) => {
     setIsShown((current) => !current);
     if (btnText === "Add Images") {
@@ -437,7 +438,7 @@ const QuestionFormEdit = (id) => {
       setvideoBtnText("Edit Videos");
     }
   };
-
+  //delte whole question
   function deleteQuestion(event) {
     if (event === "delete_question_image") {
       setQuesImageId(null);
@@ -471,7 +472,7 @@ const QuestionFormEdit = (id) => {
       setAnswer4vid(null);
     }
   }
-
+  //update image attribute in question
   const onImageChange = (event) => {
     if (event.target.files[0].size > 5242880) {
       setToLarge(true);
@@ -491,7 +492,7 @@ const QuestionFormEdit = (id) => {
       }
     }
   };
-
+  //upload all images
   function uploadAll(event) {
     for (let image_nr = 0; image_nr < 5; image_nr++) {
       event.preventDefault();
@@ -574,6 +575,7 @@ const QuestionFormEdit = (id) => {
         .catch((err) => console.log(err));
     }
   }
+  //prove youtube links for invalid links
   function validate(event) {
     var valid = true;
     var input;
@@ -608,7 +610,7 @@ const QuestionFormEdit = (id) => {
     }
     return valid;
   }
-
+  //upload video links to question with option sound only
   function uploadVideoLinks(event) {
     for (let vid = 0; vid < 5; vid++) {
       event.preventDefault();
@@ -942,7 +944,7 @@ const QuestionFormEdit = (id) => {
                 </button>
               </div>
             )}
-
+            {/* Answer option components */}
             <AnswerOptionEditComp
               questionAnswerOption={questionAnswerOption1}
               answerOptionNumber={2}
@@ -1015,6 +1017,7 @@ const QuestionFormEdit = (id) => {
             >
               Update
             </button>
+            {/* Confirm Modal to delete question */}
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
@@ -1037,7 +1040,7 @@ const QuestionFormEdit = (id) => {
               </Modal.Body>
             </Modal>
             {/* Update Sucess */}
-            <Modal show={show3} onHide={handleClose3}>
+            <Modal show={show3} onHide={handleClose3} backdrop="static">
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>Your Update was successful.</Modal.Body>
               <Modal.Footer>
@@ -1059,7 +1062,7 @@ const QuestionFormEdit = (id) => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>One is not a valid Youtube Link</Modal.Body>
             </Modal>
-            <Modal show={uploading} onHide={handleClose6}>
+            <Modal show={uploading} onHide={handleClose6} backdrop="static">
               <Modal.Header></Modal.Header>
               <Modal.Body>
                 <div className="mx-auto align-items-center justify-content-center">

@@ -1,20 +1,9 @@
-import {test, expect} from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test("Registration_and_login", async ({page}) => {
+test('create_categories', async ({ page }) => {
   const username = Math.random().toString(36).slice(-8);
   const email = Math.random().toString(36).slice(-8)+"@ex.com";
   const password = "Test123test123!";
-
-  page.on("request", (interceptedRequest) =>
-    interceptedRequest.response().then(res => {
-      console.log(`A ${interceptedRequest.method()} request was made: ${interceptedRequest.url()} ${interceptedRequest.postData()}`)
-
-      if (!res) return
-      console.log(`Response ${res.status()} with ${res.statusText()} ()`)
-    })
-  );
-
-  page.on("console", (msg) => console.log("console.log:", msg.text()));
 
   await page.goto("/");
 
@@ -42,14 +31,34 @@ test("Registration_and_login", async ({page}) => {
   await page.getByPlaceholder('Enter Password').fill(password);
 
   await page.getByRole('button', { name: 'Login' }).click();
-  await expect(page).toHaveURL('/Library');
 
-  await page.getByRole('heading', { name: 'My Library' }).click();
+  await expect(page).toHaveURL('/Library');
 
   await page.getByRole('button', { name: 'Toggle navigation' }).click();
 
-  await page.getByRole('link', { name: 'Logout' }).click();
-  await expect(page).toHaveURL('/');
+  await page.getByRole('link', { name: 'Create Category' }).click();
+  await expect(page).toHaveURL('/CategoryCreator');
 
-  await page.getByRole('heading', { name: 'logoNot Logged In' }).click();
+  await page.getByPlaceholder('New Category').click();
+
+  await page.getByPlaceholder('New Category').fill('Cat1');
+
+  await page.getByRole('button', { name: 'Create' }).click();
+
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  await page.getByPlaceholder('New Category').click();
+
+  await page.getByPlaceholder('New Category').fill('Cat2');
+
+  await page.getByRole('button', { name: 'Create' }).click();
+
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  await page.getByPlaceholder('New Category').click();
+
+  await page.getByPlaceholder('New Category').fill('Ca3');
+
+  await page.getByRole('button', { name: 'Create' }).click();
+
 });
