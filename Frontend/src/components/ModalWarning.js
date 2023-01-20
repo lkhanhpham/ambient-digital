@@ -1,5 +1,9 @@
 import { Modal } from "react-bootstrap";
-
+/**
+ * Warning Modal gets displayed to give feedback that the operation didn't worked
+ * @param {Object} props
+ * @returns ModalWarning
+ */
 const ModalWarning = (props) => {
   return (
     <Modal

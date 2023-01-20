@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import { background } from "../constants.ts";
-
+/**
+ * creates a highscore board and display the best persons
+ * @returns Leaderboard
+ */
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   //gets all users by points descending and saves it in the leaderboard variable

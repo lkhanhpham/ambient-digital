@@ -3,6 +3,9 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../constants.ts";
 import axios from "axios";
+/**
+ * Used for authentificaton. Saves authTokens in local storage and created it if new registration of user
+ */
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -13,6 +16,7 @@ export const AuthProvider = ({ children }) => {
       ? JSON.parse(localStorage.getItem("authTokens"))
       : null
   );
+  //authToken constant to prove if person is authenticated
   const [user, setUser] = useState(() =>
     localStorage.getItem("authTokens")
       ? jwt_decode(localStorage.getItem("authTokens"))
@@ -48,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         alert(stringLogin);
       });
   };
-
+  //send registration data to api to get authtoken and create a new user
   const registerUser = async (userName, eMail, passWord, passWord2) => {
     axios({
       method: "POST",
@@ -66,7 +70,7 @@ export const AuthProvider = ({ children }) => {
         if (response.status === 201) {
           navigate("/login");
         }
-      })
+      }) //build erorr message from response
       .catch(function (error) {
         var string = "Something went wrong! \n";
         if (error.response.data.email) {
@@ -84,23 +88,11 @@ export const AuthProvider = ({ children }) => {
             string = string + error.response.data.username[i] + "\n";
           }
         }
-
+        //displays error message
         alert(string);
       });
-    // const response = await fetch(`${API_BASE_URL}/api/registration/`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     username,
-    //     email,
-    //     password,
-    //     password2,
-    //   }),
-    // });
   };
-
+  //removes authtoken from local storage to logout user
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);

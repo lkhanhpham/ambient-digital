@@ -1,5 +1,9 @@
 import { light_yellow, aqua } from "../constants.ts";
-
+/**
+ *  This fields shows the questions in the quiz. It adds styling and slices the shown question to display it properly.
+ * @param {Object} props
+ * @returns Field
+ */
 const Field = (props) => {
   return (
     <>

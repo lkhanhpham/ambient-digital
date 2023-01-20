@@ -6,7 +6,10 @@ import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import { API_BASE_URL } from "../constants.ts";
 import { background } from "../constants.ts";
-
+/**
+ * form to create guests to add them afterwards to a team
+ * @returns GuestCreator
+ */
 const GuestCreator = () => {
   //array that stores all usernames
   const [names] = useState([]);
@@ -45,8 +48,9 @@ const GuestCreator = () => {
     event.preventDefault();
     navigate("../Library");
   };
+  //post guest to database to save
   const createGuest = (event) => {
-    console.log(names.findIndex((name) => name == guest) > -1);
+    console.log(names.findIndex((name) => name === guest) > -1);
     event.preventDefault();
     if (names.findIndex((name) => name === guest) > -1) {
       handleShowWarning();
@@ -67,7 +71,7 @@ const GuestCreator = () => {
       handleShow();
     }
   };
-
+  //get all user to check afterwards if username is already taken
   const getAllUser = async () => {
     const response = await fetch(`${API_BASE_URL}/api/user/`);
     const data = await response.json();

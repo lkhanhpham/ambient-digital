@@ -6,14 +6,17 @@ import { Modal, Button } from "react-bootstrap";
 import { aqua, dark_aqua, background } from "../constants.ts";
 import pencil from "../icons/pencil.png";
 import trash from "../icons/Trash.png";
-
-// For each created quiz one quizcard is rendered
+/**
+ * For each created quiz one quizcard is rendered
+ * @param {Object} props
+ * @returns Quiz
+ */
 const Quiz = (props) => {
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
   const nr_of_categories = props.nr_of_categories;
   const nr_of_rows = props.nr_of_rows;
-
+  //handle modal behaviour
   const [show, setShow] = useState(false);
   const [showWarningNoTeams, setShowNoTeams] = useState(false);
   const handleCloseNoTeams = () => setShowNoTeams(false);
@@ -21,7 +24,6 @@ const Quiz = (props) => {
   const handleShow = () => {
     setShow(true);
   };
-
   const [showWarning, setShowWarning] = useState(false);
   //close the Warning
   const handleCloseWarning = () => setShowWarning(false);

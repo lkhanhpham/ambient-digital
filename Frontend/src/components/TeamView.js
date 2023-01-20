@@ -1,8 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import axios from "axios";
-import { aqua, dark_aqua, background } from "../constants.ts";
-
+import { background } from "../constants.ts";
+/**
+ * displays in a quiz play the differnt teams incl. their members and their current points
+ * @param {integer} id
+ * @returns TeamView
+ */
 const getAllMembers = async (id) => {
   let tmpMemberArr = [];
   await axios

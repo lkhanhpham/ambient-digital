@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
-import { dark_orange, light_yellow } from "../constants.ts";
-//all created quizes are inserted into the quizview
+/**
+ * all created quizes are inserted into the quizview
+ * @returns QuizView
+ */
 const QuizView = () => {
   const [quizzes, setQuizzes] = useState([]);
   const { user } = useContext(AuthContext);
@@ -26,10 +28,8 @@ const QuizView = () => {
     getAllQuizzes();
   }, []);
 
+  //deletes one quiz
   const deleteItem = async (quizId) => {
-    // delete function
-    //console.log(quizId)
-
     axios({
       method: "DELETE",
       url: `${API_BASE_URL}/api/quiz/` + quizId + "/",
@@ -41,7 +41,8 @@ const QuizView = () => {
   };
 
   var arr = [];
-  function functionOwn() {
+  //proves if user has min. 1 own quiz
+  function hasOwnQuizes() {
     quizzes.forEach((element) => {
       if (quizzes.length > 0) {
         arr.push(element);
@@ -69,7 +70,7 @@ const QuizView = () => {
         </div>
         <div className="card-body scrollable ">
           <div className="">
-            {functionOwn() ? (
+            {hasOwnQuizes() ? (
               <div className="mx-auto align-items-center justify-content-center">
                 <div className="d-block">
                   {arr.map((item) => (

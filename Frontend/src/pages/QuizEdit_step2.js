@@ -9,8 +9,10 @@ import axios from "axios";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import AuthContext from "../context/AuthContext";
-
-// For each created quiz one quizcard is rendered
+/**
+ * add and remove categories in quiz edit
+ * @returns QuizEdit2
+ */
 const QuizEdit2 = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -334,7 +336,7 @@ const QuizEdit2 = () => {
   // showNewCat()
 
   const [old_question_text] = useState([]);
-
+  //creates grid in quiz edit
   function createGrid() {
     for (let i = 0; i < fields.length; i++) {
       // console.log("vor if")
@@ -355,7 +357,10 @@ const QuizEdit2 = () => {
 
         for (let k = 0; k < fields.length; k++) {
           if (fields[k].categorie_name === categorie_name) {
-            if (fields[k].question == null || fields[k].question == undefined) {
+            if (
+              fields[k].question == null ||
+              fields[k].question === undefined
+            ) {
               old_question_text[k] = "Choose a question";
             } else {
               old_question_text[k] = fields[k].question.question_text;
@@ -559,6 +564,11 @@ const QuizEdit2 = () => {
               <option value={300}>300</option>
               <option value={400}>400</option>
               <option value={500}>500</option>
+              <option value={600}>600</option>
+              <option value={700}>700</option>
+              <option value={800}>800</option>
+              <option value={900}>900</option>
+              <option value={100}>1000</option>
             </select>
           </form>
           <Link to="../../QuestionCreator/SC" target="_blank">

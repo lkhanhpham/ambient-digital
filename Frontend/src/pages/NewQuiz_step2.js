@@ -10,7 +10,11 @@ import axios from "axios";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 import Select from "react-select";
-
+/**
+ * last step of quiz creation, add questions to the fields or create new questions
+ * after that you can add teams to the quiz to play it
+ * @returns NewQuiz2
+ */
 const NewQuiz2 = () => {
   const { user } = useContext(AuthContext);
   const location = useLocation();
@@ -46,6 +50,11 @@ const NewQuiz2 = () => {
     { value: "300", label: "300" },
     { value: "400", label: "400" },
     { value: "500", label: "500" },
+    { value: "600", label: "600" },
+    { value: "700", label: "700" },
+    { value: "800", label: "800" },
+    { value: "900", label: "900" },
+    { value: "1000", label: "1000" },
   ];
   const [point, setPoint] = useState(100);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -140,13 +149,9 @@ const NewQuiz2 = () => {
 
   //check if user has chosen all fields
   const checkValid = (chosen) => {
-    //console.log(chosen)
-    // console.log("cats",nr_of_categories,"length", chosen.length)
-    //console.log(nr_of_categories * nr_of_rows)
     if (chosen.length === nr_of_categories * nr_of_rows) {
       setValid(chosen.every((element) => element === true));
     }
-    //console.log("valid", valid)
   };
 
   // After user edits all fields, the data is saved into fields
@@ -163,7 +168,6 @@ const NewQuiz2 = () => {
         quiz: quizId,
       });
     }
-    //console.log(fields)
   };
   const navigate = useNavigate();
   const createBackendFields = () => {
@@ -192,18 +196,14 @@ const NewQuiz2 = () => {
     );
     const data = await response.json();
     if (response.ok) {
-      //console.log(data)
       setQuestions(data.question_author);
     } else {
-      //console.log(response.status)
       console.log("Failed Network request");
     }
   };
 
   const update = () => {
     var select1 = document.getElementById("questions");
-
-    //console.log(select1.options[select1.selectedIndex].value);
   };
 
   const saveQuiz = () => {
@@ -282,9 +282,19 @@ const NewQuiz2 = () => {
               id="questions"
               onChange={update}
             >
+              {/*Creates for each question an option in selection and cut shown text length */}
               {questions.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.question_text}
+                  {item.question_text.length > 70 ? (
+                    <>
+                      {item.question_text.substring(
+                        0,
+                        Math.min(item.question_text.length, 70)
+                      ) + "..."}
+                    </>
+                  ) : (
+                    <>{item.question_text}</>
+                  )}
                 </option>
               ))}
             </select>

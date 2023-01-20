@@ -8,13 +8,15 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
-
+// initial value for dropdown if navigation comes from single choice question
 var dropdownV = "MC";
-
+/**
+ * form to create a multiple choice question with 4 possible answer options. Each option can be true and have an additional image or video
+ * @returns QuestionForm
+ */
 const QuestionForm = () => {
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  const [author, setAuthorId] = useState("");
   const [questionAnswerOption1, setQuestionAnswerOption1] = useState("");
   const [questionAnswerOption2, setQuestionAnswerOption2] = useState("");
   const [questionAnswerOption3, setQuestionAnswerOption3] = useState("");
@@ -142,8 +144,6 @@ const QuestionForm = () => {
 
   function createQuestionMC(event) {
     event.preventDefault();
-
-    setAuthorId(user.user_id);
 
     axios({
       method: "POST",
@@ -412,8 +412,8 @@ const QuestionForm = () => {
     var vidurl;
     var soundonly = false;
     for (let vid = 0; vid < 5; vid++) {
-      var vidurl = null;
-      var soundonly = false;
+      vidurl = null;
+      soundonly = false;
       event.preventDefault();
       if (vid === 0 && document.getElementById("question_vid") !== null) {
         vidurl = document.getElementById("question_vid").value;

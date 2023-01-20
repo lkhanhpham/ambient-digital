@@ -1,4 +1,10 @@
 import { dark_aqua } from "../constants.ts";
+/**
+ * For each category one CatField component gets rendered
+ * it shows the name of the category
+ * @param {Object} props
+ * @returns CatField
+ */
 const CatField = (props) => {
   return (
     <>

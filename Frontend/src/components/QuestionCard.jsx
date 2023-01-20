@@ -4,9 +4,13 @@ import { React, useState } from "react";
 import { light_yellow, dark_aqua, background } from "../constants.ts";
 import pencil from "../icons/pencil.png";
 import trash from "../icons/Trash.png";
-
-// For each created question one questioncard is rendered
-
+/**
+ * For each created question one questioncard is rendered
+ *
+ * String, date, buttonaction, buttonaction
+ * @param {question_text, pub_date, deleteItem, editItem} param0
+ * @returns
+ */
 const Question = ({ question_text, pub_date, deleteItem, editItem }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
