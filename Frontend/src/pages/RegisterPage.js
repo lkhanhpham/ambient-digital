@@ -1,7 +1,10 @@
 import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
-
+/**
+ * on this side, you can registrate new user and save them in the backend
+ * @returns
+ */
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -9,12 +12,12 @@ function Register() {
   const [email, setEmail] = useState("");
   const { registerUser } = useContext(AuthContext);
   var submitDisabled = true;
-
+  //send credetials to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     registerUser(username, email, password, password2);
   };
-
+  //check uf each field is filled
   function checkIfEnabled() {
     if (
       username.length > 0 &&

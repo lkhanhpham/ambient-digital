@@ -9,8 +9,10 @@ import axios from "axios";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import AuthContext from "../context/AuthContext";
-
-// For each created quiz one quizcard is rendered
+/**
+ * add and remove categories in quiz edit
+ * @returns QuizEdit2
+ */
 const QuizEdit2 = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -334,7 +336,7 @@ const QuizEdit2 = () => {
   // showNewCat()
 
   const [old_question_text] = useState([]);
-
+  //creates grid in quiz edit
   function createGrid() {
     for (let i = 0; i < fields.length; i++) {
       // console.log("vor if")

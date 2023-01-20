@@ -1,5 +1,4 @@
 import React from "react";
-// import { Helmet } from "react-helmet";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 import Library from "./Library";
@@ -24,8 +23,10 @@ import QuizEdit1 from "./QuizEdit_step1";
 import QuizEdit2 from "./QuizEdit_step2";
 import QuizEdit3 from "./QuizEdit_step3";
 import Leaderboard from "./Leaderboard";
-
-//the Library, which contains all quizes from one author, and the header are put together
+/**
+ * each side in the website to it coresponding link and protected from the Authcontect
+ * @returns
+ */
 function App() {
   return (
     <div>

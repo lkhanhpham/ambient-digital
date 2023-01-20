@@ -10,6 +10,12 @@ import { API_BASE_URL } from "../constants.ts";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 
+/**
+ * Shows quiz in game
+ * @param {integer} quizId
+ * @returns QuizShow
+ */
+
 /* function that calls the api to get all teams and filters them for teams that are assigned to this quiz.
 it then returns an array with all teams and an array to be used by the mutli select in the point assign modal */
 const getAllTeams = async (quizId) => {

@@ -6,6 +6,12 @@ import Modal from "react-bootstrap/Modal";
 import ModalWarning from "../components/ModalWarning";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
+/**
+ * second step to create a quiz, after QuizForm
+ * the wanted categories are selected here
+ * navigation to newQuiz_step2 to select the wanted questions
+ * @returns
+ */
 const NewQuiz1 = () => {
   const { user } = useContext(AuthContext);
   const location = useLocation();
@@ -160,6 +166,7 @@ const NewQuiz1 = () => {
           {cols}
         </div>
       </div>
+      {/* Modals to  prevent user errors and not store invalid data*/}
       {/* Modal shown when clicked on the field */}
       <Modal
         size="lg"

@@ -6,7 +6,10 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
-
+/**
+ * The header shows the log in status of the user and contains the navbar
+ * @returns Header
+ */
 const Header = () => {
   const { user, logoutUser } = useContext(AuthContext);
 

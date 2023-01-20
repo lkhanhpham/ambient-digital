@@ -1,5 +1,9 @@
 import { Modal } from "react-bootstrap";
-
+/**
+ * Success Modal gets displayed to give feedback that the operation worked
+ * @param {Object} props
+ * @returns ModalSuccess
+ */
 const ModalSuccess = (props) => {
   return (
     <Modal

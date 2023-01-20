@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
 import Select from "react-select";
 import { dark_orange } from "../constants.ts";
-
+/**
+ * Team cards display member and team members can be added to one created team
+ * @returns TeamCard
+ */
 const getAllUser = async () => {
   const response = await fetch(`${API_BASE_URL}/api/user/`);
   const data = await response.json();

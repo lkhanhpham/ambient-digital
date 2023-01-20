@@ -8,9 +8,12 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
-
+// initial value for dropdown if navigation comes from single choice question
 var dropdownV = "MC";
-
+/**
+ * form to create a multiple choice question with 4 possible answer options. Each option can be true and have an additional image or video
+ * @returns QuestionForm
+ */
 const QuestionForm = () => {
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");

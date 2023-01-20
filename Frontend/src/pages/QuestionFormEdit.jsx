@@ -9,16 +9,22 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
 import { background } from "../constants.ts";
+/**
+ * edit form to edit single choice and estimation questions
+ *
+ * @param {integer} id
+ * @returns QuestionFormEdit
+ */
 const QuestionFormEdit = (id) => {
   const location = useLocation();
   const idQuestion = location.state.id;
-
+  //build url for speciic question
   const url = `${API_BASE_URL}/api/question/` + idQuestion + "/";
 
+  //constants to store question attributes
   const [questions, setQuiz] = useState([]);
   const [questionText, setQuestionText] = useState("");
   const [defaultAnswer, setDefaultAnswer] = useState("");
-  //const [author, setAuthorId] = useState("");
   const [questiontype, setQuestionType] = useState("");
   const [show, setShow] = useState(false);
   const [btnText, setBtnText] = useState("Add Images");
@@ -57,6 +63,7 @@ const QuestionFormEdit = (id) => {
   const [uploadedQuesImage, setQuesImgUploaded] = useState(true);
   const [uploadedAnsw1Image, setAnsw1ImgUploaded] = useState(true);
 
+  //Modal handle constants
   const handleClose6 = () => setUploading(false);
 
   const handleClose = () => setShow(false);
@@ -133,7 +140,7 @@ const QuestionFormEdit = (id) => {
 
     navigate("/Library");
   }
-
+  //fetch question from backend
   const getAllQuestions = async () => {
     const response = await fetch(url);
     const data = await response.json();
@@ -150,7 +157,7 @@ const QuestionFormEdit = (id) => {
       console.log("Failed Network request");
     }
   };
-
+  //fetch images to question from backend
   const getAllImages = async () => {
     const response = await fetch(
       `${API_BASE_URL}/api/imageauthor/` + user.user_id + "/"
@@ -217,7 +224,7 @@ const QuestionFormEdit = (id) => {
   useEffect(() => {
     getAllQuestions();
   }, []);
-
+  //update question in backend
   function editQuestion(event) {
     event.preventDefault();
     axios({
@@ -243,9 +250,10 @@ const QuestionFormEdit = (id) => {
     event.preventDefault();
     navigate("/Library");
   }
-
+  //change question type to EQ or SC
   function changeQuestion(value) {
     if (value === "MC") {
+      //following should never happen
       navigate("/QuestionCreator/EditQuestionMC", {
         state: {
           id: idQuestion,
@@ -269,7 +277,7 @@ const QuestionFormEdit = (id) => {
     };
     setDefaultAnswer(data);
   }
-
+  //add eventlistener to enter to submit question
   const eventListener = async () => {
     var input = document.getElementById("formidCustom");
     input.addEventListener("keypress", function (event) {
@@ -283,7 +291,7 @@ const QuestionFormEdit = (id) => {
   useEffect(() => {
     eventListener();
   }, []);
-
+  //handle Button text depending on image add or not
   const handleClick = (event) => {
     setIsShown((current) => !current);
     if (btnText === "Add Images") {
@@ -301,7 +309,7 @@ const QuestionFormEdit = (id) => {
       setvideoBtnText("Edit Videos");
     }
   };
-
+  //delete question in backend
   function deleteQuestion(event) {
     if (event === "delete_question_image") {
       setQuesImageId(null);
@@ -317,7 +325,7 @@ const QuestionFormEdit = (id) => {
       setAnswervid(null);
     }
   }
-
+  //chnage image in form
   const onImageChange = (event) => {
     if (event.target.files[0].size > 5242880) {
       setToLarge(true);
@@ -331,7 +339,7 @@ const QuestionFormEdit = (id) => {
       }
     }
   };
-
+  //upload images
   function uploadAll(event) {
     for (let image_nr = 0; image_nr < 2; image_nr++) {
       var image = null;
@@ -386,6 +394,7 @@ const QuestionFormEdit = (id) => {
         .catch((err) => console.log(err));
     }
   }
+  //prove if links are valid
   function validate(event) {
     var valid = true;
     var input;
@@ -414,7 +423,7 @@ const QuestionFormEdit = (id) => {
     }
     return valid;
   }
-
+  //upload video links
   function uploadVideoLinks(event) {
     for (let vid = 0; vid < 2; vid++) {
       event.preventDefault();

@@ -6,6 +6,11 @@ import AnsweroptionImage from "../components/AnsweroptionImage";
 import QuestionVideo from "../components/QuestionVideo";
 import Answeroptionvideo from "../components/Answeroptionvideo";
 import { dark_orange, aqua, coral } from "../constants.ts";
+/**
+ * The component gets rendered, if you click in a quiz game on one question.
+ * @param {Object} props
+ * @returns ModalQuestion
+ */
 const ModalQuestion = (props) => {
   const [isVisible, setIsVisible] = useState(false);
   const field = props.field;
@@ -47,7 +52,7 @@ const ModalQuestion = (props) => {
   };
 
   arr = shuffle(arr);
-  //ausbaufähig
+  //shuffels the answeres because answer one is always right in the database
   function shuffle(array) {
     let currentIndex = array.length,
       randomIndex;

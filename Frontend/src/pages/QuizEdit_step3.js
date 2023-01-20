@@ -9,8 +9,10 @@ import axios from "axios";
 import ModalSuccess from "../components/ModalSuccess";
 import ModalWarning from "../components/ModalWarning";
 import AuthContext from "../context/AuthContext";
-
-// For each created quiz one quizcard is rendered
+/**
+ * remove and add of rows in edit quiz, last step in quiz edit
+ * @returns QuizEdit3
+ */
 const QuizEdit3 = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();

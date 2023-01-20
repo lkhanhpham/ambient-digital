@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../constants.ts";
+/**
+ * For each uploaded video one componnent gets rendered
+ * the video links get fetched from the backend and if min. one exist this component with start, pause and restart button gets rendered
+ * the component differentiate between videos with sound only and full videos
+ * Only Youtube Videos are possible
+ *
+ * @param {Object} props
+ * @returns Answeroptionvideo
+ */
 const Answeroptionvideo = (props) => {
   const [video, setVideo] = useState([]);
   //gets the image from api

@@ -7,6 +7,10 @@ import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 import ModalWarning from "../components/ModalWarning";
 import { background } from "../constants.ts";
+/**
+ * Input form to create new Categories, can be accessed through navbar and in quiz creation
+ * @returns CategoryCreator
+ */
 const CategoryCreator = () => {
   const { user } = useContext(AuthContext);
   const [catName, setCatName] = useState("");
@@ -18,6 +22,8 @@ const CategoryCreator = () => {
   const [showWarning, setShowWarning] = useState(false);
   const handleShowWarning = () => setShowWarning(true);
   const handleCloseWarning = () => setShowWarning(false);
+  //sends post with axios to backend and creates new categorie which is saved in the Database
+  // each user has own categories
   function createCat(event) {
     if (catName === "") {
       handleShowWarning();

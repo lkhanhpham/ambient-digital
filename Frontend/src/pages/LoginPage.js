@@ -1,7 +1,10 @@
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
-
+/**
+ * already registered user can login into the applications here
+ * @returns
+ */
 const LoginPage = () => {
   const { loginUser } = useContext(AuthContext);
   const handleSubmit = (e) => {

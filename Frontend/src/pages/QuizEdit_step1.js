@@ -9,8 +9,10 @@ import axios from "axios";
 import ModalWarning from "../components/ModalWarning";
 import editButton from "../icons/editbutton.png";
 import AuthContext from "../context/AuthContext";
-
-// For each created quiz one quizcard is rendered
+/**
+ * edit quiz name in first edit step and change question and points
+ * @returns QuizEdit1
+ */
 const QuizEdit1 = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();

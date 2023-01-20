@@ -1,3 +1,11 @@
+/**
+ * This component is included in QuestionFormEditMC to reduce the redundant code
+ * The input from this form gehts rendered for each answer option in the edit view
+ * it fetches all componntnes from the answer options (videos, pictures, sound_only attribute ...)
+ *
+ * @param {Object} props
+ * @returns AnswerOptionEditComp
+ */
 const AnswerOptionEditComp = (props) => {
   //props.questionAnswerOption  ===questionAnsweroption2 in disem Fall
   //props.answerOptionNumber  ===3 in diesem Fall

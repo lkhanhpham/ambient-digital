@@ -7,6 +7,10 @@ import ModalWarning from "../components/ModalWarning";
 import { API_BASE_URL } from "../constants.ts";
 import AuthContext from "../context/AuthContext";
 import { background } from "../constants.ts";
+/**
+ * first step of quiz creation, selection of number of rows and colums
+ * @returns QuizForm
+ */
 const QuizForm = () => {
   const [quizName, setQuizName] = useState("");
   const [nrOfRows, setNrOfRows] = useState(5);
