@@ -113,7 +113,7 @@ const NewQuiz1 = () => {
   const checkValid = (chosen) => {
     // console.log(chosen)
     // console.log("cats",nr_of_categories,"length", chosen.length)
-    if (chosen.length === nr_of_categories) {
+    if (chosen.length == nr_of_categories) {
       setValid(chosen.every((element) => element === true));
     }
     //console.log("valid", valid)
